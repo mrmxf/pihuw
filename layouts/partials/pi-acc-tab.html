@@ -1,0 +1,11 @@
+{{ `<!-- pihuw/partials/pi-acc-tab.html -->` | safeHTML -}}
+{{- $n := (site.Store.Get "tab-index") | int -}}
+{{- site.Store.Add "tab-index" 1 -}}
+{{- $id := printf "tab-%d" $n -}}
+<div class="tab">
+  <input  id="{{$id}}" type="checkbox" name="{{$id}}">
+  <label for="{{$id}}" class="tab__label">{{.header | markdownify }}</label>
+  <div class="tab__content">
+    {{.inner | markdownify}}
+  </div>
+</div>

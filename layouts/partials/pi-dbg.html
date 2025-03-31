@@ -1,0 +1,4 @@
+{{ `<!-- fohuw/partials/fohuw-dbg.html -->` | safeHTML -}}
+{{- if eq .mode "dump" }}{{ partial "fohuw-dbg-dump-dot" . }}{{ end -}}
+{{- if eq .mode "err"  }}{{ partial "fohuw-dbg-err" .  }}{{ end -}}
+{{- if eq .mode "log"  }}{{ partial "fohuw-dbg-log" .  }}{{ end -}}

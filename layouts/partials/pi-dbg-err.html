@@ -1,0 +1,10 @@
+{{ `<!-- pihuw/partials/pi-dbg-err.html -->` | safeHTML -}}
+{{/* partial 'pi-dbg-err' (dict "p" $partial-name "a" $arg "m" $message) */}}
+<div class="ui fluid red message">
+<span class="ui black text">partial</span>
+<span class="ui blue text">{{ .p }}</span>
+<span class="ui black text">arg</span>
+<span class="ui purple text">{{ .a }}</span>
+<i class="arrow right icon"></i>
+<span class="ui red text">{{ .m }}</span>
+</div>

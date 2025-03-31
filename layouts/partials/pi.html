@@ -1,0 +1,14 @@
+{{ `<!-- pihuw/partials/pi.html -->` | safeHTML }}{{/*
+
+  ---* The main dispatcher for pi- partials.
+  ----   R= required
+  
+  ---* .blockClass Outer container = default "", e.g. "my-segment"
+  */}}
+{{if false}}{{partial "pi-dbg-dump-dot" .}}{{end}}
+{{- $block := "pi-help" -}}
+{{- with .t }}{{ $block = printf "pi-%s" . }}{{ end -}}
+{{- with .blockClass }}<div class="{{.}}">{{end -}}
+{{partial $block .}}
+{{- with .blockClass }}</div>{{end -}}
+

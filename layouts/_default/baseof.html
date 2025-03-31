@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
+<head>
+  {{ partial "phw-head.html" . }}
+</head>
+<body>
+
+  <header>
+    {{ partial "phw-header.html" . }}
+  </header>
+
+  <div class="flex six-800">
+
+    <div class="none sixth-800">
+      <div class="flex one three-1000">
+        <div class="none third-1000"></div>
+        <sidebar class="full two-third-1000">
+          {{ partial "phw-sidebar.html" . }}
+        </sidebar>
+      </div>
+    </div>
+
+    <main class="full two-third-800">
+      {{ block "main" . }}{{ end }}
+    </main>
+    <div class="none sixth-800"></div>
+  </div>
+
+  <footer>
+    {{ partial "phw-footer.html" . }}
+  </footer>
+</body>
+</html>

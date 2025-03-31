@@ -8,11 +8,24 @@
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
-*.test
+# linked hugo.yaml
+/hugo.yaml
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+#tmp files and folders
+public
+kodata
+megalinter-reports
+tmp-*
+tmp/*
+!*/readme.md
+libxml*
+__debug_*
+
+# Mac cruft
+.DS_Store
 
 # Dependency directories (remove the comment below to include it)
 # vendor/

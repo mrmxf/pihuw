@@ -1,0 +1,90 @@
+{{ `<!-- pihuw/partials/pi-accordion.html -->` | safeHTML -}}
+<style>
+  /* Core styles/functionality */
+  .tab {
+    position: relative;
+  }
+
+  .tab input {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+  }
+
+  .tab__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s;
+  }
+
+  .tab input:checked~.tab__content {
+    max-height: 100%;
+  }
+
+  /* Visual styles */
+  .accordion {
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .tab__label,
+  .tab__close {
+    display: flex;
+    background: var(--theme);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .tab__label {
+    justify-content: space-between;
+    padding: 0.2rem 1rem ;
+  }
+
+  .tab__label::after {
+    content: "\276F";
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    transform: rotate(90deg);
+    transition: all 0.35s;
+  }
+
+  .tab input:checked+.tab__label::after {
+    transform: rotate(270deg);
+  }
+
+  .tab__content p {
+    margin: 0;
+    padding: 0.2rem 1rem ;
+  }
+
+  .tab__close {
+    justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .accordion--radio {
+    --theme: var(--secondary);
+  }
+
+  /* Arrow animation */
+  .tab input:not(:checked)+.tab__label:hover::after {
+    animation: bounce .5s infinite;
+  }
+
+  @keyframes bounce {
+    25% {
+      transform: rotate(90deg) translate(.25rem);
+    }
+
+    75% {
+      transform: rotate(90deg) translate(-.25rem);
+    }
+  }
+</style>
+{{/* mardownify individual tabs, not the accordion */}}
+<section class="accordion">
+{{ .inner }}
+</section>
