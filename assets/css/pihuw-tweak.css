@@ -42,6 +42,12 @@
   --pi-hi-3: var(--mrx-amber);
 }
 
+/* general highlights for widgets */
+.card.hi-1 {
+  color: hsl(from var(--pi-hi-1) h s );
+  background-color: hsl(from var(--pi-hi-1) h s 95%);
+}
+
 /* specialty text styles & colors */
 code {
   color: var(--pihuw-blue);
@@ -59,6 +65,11 @@ code {
   color: var(--mm-green);
 }
 nav .brand {
+  display: inline;
+  height: 70%;
+  object-fit: contain;
+}
+section img {
   display: inline;
   height: 70%;
   object-fit: contain;

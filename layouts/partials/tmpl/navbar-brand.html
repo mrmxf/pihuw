@@ -2,7 +2,7 @@
 {{/* to support SVG files, all logos must be in static/brands */}}
 {{- if not (and site.Params.ui.hide.navbar.logo site.Params.ui.hide.navbar.title) }}
 
-{{- $logoTypes := slice ".svg" ".png" ".jpg" ".gif" }}
+{{- $logoTypes := slice ".svg" ".jpg" ".gif" ".png" }}
 {{- $searchingForLogo := true}}
 {{- $logo := ""}}
 {{- $img := ""}}
@@ -16,7 +16,7 @@
     {{end}}
     {{- if not site.Params.ui.hide.navbar.title}}<span id="siteTitleMenu">{{site.Title}}</span>{{end}}
   </a>
-{{$searchingForLogo := false}}
+{{$searchingForLogo = false}}
 {{ end }}{{ end }}{{/* searching */}}
 {{end}}{{/* end of range - file types */}}
 {{- end -}}
