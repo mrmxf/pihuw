@@ -1,34 +1,48 @@
 <!DOCTYPE html>
 {{ `<!-- pihuw/layouts/_default/baseof.html -->` | safeHTML }}
-<html itemscope itemtype="http://schema.org/WebPage" lang="{{site.Language.Lang}}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
+<html itemscope itemtype="http://schema.org/WebPage" lang="{{site.Language.Lang}}"
+  dir="{{ or site.Language.LanguageDirection `ltr` }}">
+
 <head>
   {{ partial "tmpl/head.html" . }}
 </head>
-<body {{ with .Page.Params.ui.bodyClass }}class="{{ . }}"{{ end }}">
-    <header>
-      {{ partial "tmpl/navbar" . }}
-    </header>
+{{- $bodyClass := ""}}
+{{- if isset .Page.Params.ui "bodyClass" }}{{ $bodyClass = printf "class=\"%s\"" .Page.Params.ui.bodyClass }}{{ end }}
 
-  <div class="flex six-800">
+<body {{$bodyClass | safeHTMLAttr}}>
+  <header>
+    {{ partial "tmpl/navbar" . }}
+  </header>
 
-    <div class="none sixth-800">
-      <div class="flex one three-1000">
-        <div class="none third-1000"></div>
-        <sidebar class="full two-third-1000">
-          {{ partial "phw-sidebar.html" . }}
-        </sidebar>
-      </div>
+  <!-- outer div is for gutter control-->
+  <div class="flex one four-800 six-1100 pi-nav-pad">
+    <div class="none sixth-1100"></div>
+
+    <!-- inner div turns component on and off -->
+    <div class="none third-800 sixth-1100 ">
+      <sidebar class="full">
+        {{ partial "tmpl/sidebar-section.html" . }}
+      </sidebar>
     </div>
 
-    <main class="full two-third-800">
-      {{ block "main" . }}{{ end }}
-    </main>
-    <div class="none sixth-800"></div>
-  </div>
+    <div class="full half-800">
+      <main>
+        {{ block "main" . }}{{ end }}
+      </main>
+    </div>
 
-  <footer>
+
+    <!-- final outer div gutter -->
+    <div class="none sixth-1100"></div>
+  </div>
+  <div class="flex one four-800 six-1100 pi-nav-pad">
+    <div class="none sixth-1100"></div>
+    <footer class="full">
       {{ partial "tmpl/footer" . }}
-  </footer>
+    </footer>
+    <!-- final outer div gutter -->
+    <div class="none sixth-1100"></div>
+  </div>
   {{ partial "tmpl/body-scripts" . }}
 </body>
 </html>

@@ -1,6 +1,6 @@
-/* fohuw variables */
+/* PicnicCss Hugo Wrapper - microcontroller friendly theme */
+/* pihuw variables */
 :root {
-  --fo-wide-max: 900px;
   /* mrmxf pallette */
   --mm-yellow: hsl(46, 50%, 52%);
   --mm-green: hsl(80, 45%, 49%);
@@ -22,49 +22,71 @@
   --mrx-sky: lighten(var(--mrx-amber), 40%);
   --mrx-ground: lighten(var(--mrx-purple), 25%);
 
-  /* named elements - fohuw controls */
-  --fohuw-dark-bg: var(--mm-purple);
-  --fohuw-blue: var(--mm-blue);
+  /* screen break points */
+  --pi-break-medium: 800;
+  --pi-break-wide: 1100;
+  
+  /* named elements - pihuw controls */
+  --pihuw-dark-bg: var(--mm-purple);
+  --pihuw-blue: var(--mm-blue);
 
   /* colors of the logo */
   --fomantic-theme-color: #35BDB2;
   --hugo-theme-color: #FF4088;
   --cardboard-wrapper: #D8B588;
 
-  /* fohuw named colors & highlights */
-  --fo-text: var(--mm-dark);
-  --fo-hi-1: var(--mrx-green);
-  --fo-hi-2: var(--mrx-purple);
-  --fo-hi-3: var(--mrx-amber);
+  /* pihuw named colors & highlights */
+  --pi-text: var(--mm-dark);
+  --pi-hi-1: var(--mrx-green);
+  --pi-hi-2: var(--mrx-purple);
+  --pi-hi-3: var(--mrx-amber);
 }
 
 /* specialty text styles & colors */
 code {
-  color: var(--fohuw-blue);
+  color: var(--pihuw-blue);
 }
 
-.fo-reading-time {
-  size: 80%;
-  color: var(--fo-hi-1)
+.pi-nav-pad {
+  /* padding to drop below the fixed nav bar */
+  padding-top: 9em;
 }
-.logo-fo {
+.pi-nav {
+  color: var(--mm-green);
+  margin: 0 15%;
+}
+.pi-sidebar {
+  color: var(--mm-green);
+}
+nav .brand {
+  display: inline;
+  height: 70%;
+  object-fit: contain;
+}
+.pi-reading-time {
+  size: 80%;
+  color: var(--pi-hi-1)
+}
+.logo-pi {
   color: var(--fomantic-theme-color);
 }
 .logo-hu {
   color: var(--hugo-theme-color);
 }
 .logo-w {
-  color: var(--fo-logo-w);
+  color: var(--pi-logo-w);
 }
 
 /* custom styling for the site title text in the menu*/
 #siteTitleMenu {
   font-weight: bold;
-  color: var(--fo-hi-1)
+  color: var(--pi-hi-1);
+  margin-top: auto;
+  vertical-align: middle;
 }
 
 /* a flexbox for aligning centered things with tags like buttons and tags */
-.fo-flex-with-tags {
+.pi-flex-with-tags {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -72,7 +94,7 @@ code {
 }
 
 /* a flexbox  for aligning titles and tags */
-.fo-flex-title-tags {
+.pi-flex-title-tags {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -80,29 +102,29 @@ code {
   align-items: center;
 }
 
-/* fohuw taxonomy label classes */
-.ui.fo-tax-1.label {
-  background: hsl(from var(--fo-hi-1) h s 95%);
+/* pihuw taxonomy label classes */
+.ui.pi-tax-1.label {
+  background: hsl(from var(--pi-hi-1) h s 95%);
   backdrop-filter: 200%;
-  border-color: var(--fo-hi-1);
-  color: var(--fo-hi-1);
+  border-color: var(--pi-hi-1);
+  color: var(--pi-hi-1);
 }
-.ui.fo-tax-2.label {
-  background: hsl(from var(--fo-hi-2) h s 95%);
-  border-color: var(--fo-hi-2);
-  color: var(--fo-hi-2);
+.ui.pi-tax-2.label {
+  background: hsl(from var(--pi-hi-2) h s 95%);
+  border-color: var(--pi-hi-2);
+  color: var(--pi-hi-2);
 }
-.ui.fo-tax-3.label {
-  background: hsl(from var(--fo-hi-3) h s 95%);
-  border-color: var(--fo-hi-3);
-  color: var(--fo-hi-3);
+.ui.pi-tax-3.label {
+  background: hsl(from var(--pi-hi-3) h s 95%);
+  border-color: var(--pi-hi-3);
+  color: var(--pi-hi-3);
 }
-.ui.fo-tax-4.label {
-  background: hsl(from var(--fo-hi-4) h s 95%);
-  border-color: var(--fo-hi-4);
-  color: var(--fo-hi-4);
+.ui.pi-tax-4.label {
+  background: hsl(from var(--pi-hi-4) h s 95%);
+  border-color: var(--pi-hi-4);
+  color: var(--pi-hi-4);
 }
-/* fohuw footer row*/
+/* pihuw footer row*/
 footer .row {
   color: var(--mrx-skin);
   background-color: var(--mrx-green);
@@ -125,31 +147,44 @@ footer .row .labels .label>a:hover {
   color: var(--mrx-green);
 }
 
-.fo-footer-label {
+.pi-footer-label {
   color: lighten(var(--mm-purple), 40%);
 }
 
-.fo-footer-title {
+.pi-footer-title {
   color: lighten(var(--mrx-green), 40%);
   font-size: 1.2em;
 }
 
 /* On wide screens display full menu, hide narrow menu */
-.fo-menu-w {
+.pi-menu-w {
   display: flex;
 }
 
-.fo-menu-n {
+.pi-menu-n {
   display: none;
 }
 
 /*  On narrow screens - opposite */
-@media screen and (max-width: var(--fo-wide-max)) {
-  .fo-menu-w {
-    display: none;
+@media screen and (max-width: var(--pi-break-mid)) {
+  .pi-nav-pad {
+    /* padding to drop below the fixed nav bar */
+    padding-top: 6em;
   }
+}
+@media screen and (max-width: var(--pi-break-wide)) {
+  .pi-nav-pad {
+    /* padding to drop below the fixed nav bar */
+    padding-top: 3.5em;
+  }
+}
 
-  .fo-menu-n {
-    display: flex;
-  }
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  margin: 0em 2em;
+  padding: 0;
 }

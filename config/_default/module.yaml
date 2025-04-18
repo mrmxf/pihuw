@@ -5,7 +5,9 @@
 imports:
   - path: github.com/mrmxf/pihuw
     disable: false
-    
+# uncomment line below for temporary local development of module
+# replacements: "github.com/mrmxf/pihuw->../../../pub-mrmxf/pihuw"
+
 hugoVersion:
   extended: true
   min: 0.145.0

@@ -1,5 +1,5 @@
 ---
-title: fo t="image"
+title: pi t="image"
 date:  2025-02-25
 
 usage: |
@@ -12,10 +12,10 @@ Deprecated
 
 Usage:
 ```hugo
-{{&#x25; fo t = "image" src = "path/to/img" alt = "demo image" text = "optional caption" /%}}
+{{&#x25; pi t = "image" src = "path/to/img" alt = "demo image" text = "optional caption" /%}}
 ```
 
-{{< fo
+{{< pi
   t = "image"
   src = "rexy.svg"
   alt = "metarex logo"

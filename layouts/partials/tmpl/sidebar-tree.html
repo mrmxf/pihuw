@@ -1,26 +1,24 @@
-{{ `<!-- fohuw/partials/tmpl/sidebar-tree.html -->` | safeHTML }}
+{{ `<!-- pihuw/partials/tmpl/sidebar-tree.html -->` | safeHTML }}
 {{/* The cache for bigger sites has not yet been migrated fromm Docsy . */}}
 
 {{ $sidebarCacheLimit := 2000 }}
 {{if .Site.Params.ui.sidebar_cache_limit}}{{ $sidebarCacheLimit = .Site.Params.ui.sidebar_cache_limit}}{{- end -}}
 {{ $shouldDelayActive := ge (len .Site.Pages) $sidebarCacheLimit -}}
-<div class="ui segment">
-  <nav class="ui list" id="section-nav">
-    {{/* --- setup -------------------------------------------------------- */}}
-    {{ $navRoot := cond (and (ne .Params.toc_root true) (eq .Site.Home.Type "docs")) .Site.Home .FirstSection -}}
-    {{ $depth := 0 -}}
-    {{/* --- max depth=50 -------------------------------------------------------- */}}
-    {{ $sidebarMenuTruncate := 50}}
-    {{if .Site.Params.ui.sidebar_menu_truncate}}{{ $sidebarMenuTruncate = .Site.Params.ui.sidebar_menu_truncate}}{{- end
-    -}}
-    {{ template "section-tree-nav-section"
-    (dict "page" .
-    "section" $navRoot
-    "shouldDelayActive" $shouldDelayActive
-    "sidebarMenuTruncate" $sidebarMenuTruncate
-    "depthNum" $depth)
-    }}
-  </nav>
+<div class="pi-sidebar" id="section-nav">
+  {{/* --- setup -------------------------------------------------------- */}}
+  {{ $navRoot := cond (and (ne .Params.toc_root true) (eq .Site.Home.Type "docs")) .Site.Home .FirstSection -}}
+  {{ $depth := 0 -}}
+  {{/* --- max depth=50 -------------------------------------------------------- */}}
+  {{ $sidebarMenuTruncate := 50}}
+  {{if .Site.Params.ui.sidebar_menu_truncate}}{{ $sidebarMenuTruncate = .Site.Params.ui.sidebar_menu_truncate}}{{- end
+  -}}
+  {{ template "section-tree-nav-section"
+  (dict "page" .
+  "section" $navRoot
+  "shouldDelayActive" $shouldDelayActive
+  "sidebarMenuTruncate" $sidebarMenuTruncate
+  "depthNum" $depth)
+  }}
 </div>
 
 {{ define "section-tree-nav-section" -}}

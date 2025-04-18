@@ -1,15 +1,14 @@
-{{ `<!-- fohuw/partials/tmpl/head-css -->` | safeHTML }}
-{{/*
-  Pull in css & scripts in the following order:
-  1. CDN resources
-  2. css for fohuw from the /assets/css folder
-  3. js  for fohuw from the /assets/js folder
-  4. User overrides per site
-  most scripts are loaded in the tmpl/body-scripts.html partial
-*/}}
-
-{{-  partial "tmpl/head-cdn" . -}}
-
-{{with resources.Get "css/fohuw-tweak.css"}}<link href="{{.RelPermalink}}" rel="stylesheet">{{end}}
-
-<link href="/css/site.css" rel="stylesheet">
+{{ `<!-- pihuw/partials/tmpl/head-css -->` | safeHTML }}
+{{- $pihuw := resources.Get "css/pihuw-tweak.css" }}
+{{- with resources.Get "css/picnic.min.css" }}
+ {{- if eq hugo.Environment "development" }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}">
+  <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
+ {{- else }}
+  {{- with . | minify | fingerprint }}
+   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+  {{- end }}
+  <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
+ {{- end }}
+{{- end }}
+{{- if fileExists "/static/css/site.css" }}<link href="/css/site.css" rel="stylesheet">{{end -}}

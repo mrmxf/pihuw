@@ -1,5 +1,5 @@
 ---
-title: fo t = "banner"
+title: pi t = "banner"
 date:  2025-02-25
 
 ---
@@ -18,5 +18,5 @@ name
 ## Examples
 
 ```hugo
-{{ % fo t = "banner" header = "header" text = "This is a default banner" /%}}
+{{ % pi t = "banner" header = "header" text = "This is a default banner" /%}}
 ```

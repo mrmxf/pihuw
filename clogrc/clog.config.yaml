@@ -20,13 +20,13 @@ snippets:
     [ "prod" == "$(yq -r '.[0].build'  assets/data/releases.yaml)" ]
   git:
     tag:
-      # fohuw, like Hugo & golang requires a "v"
+      # pihuw, like Hugo & golang requires a "v"
       ref: echo "v$(yq -r '.[0].version'  assets/data/releases.yaml)"
     message:
       ref:  yq -r '.[0].note'  assets/data/releases.yaml
   project:
     config: |
-      PROJECT=fohuw
+      PROJECT=pihuw
       DOCKER_NS=mrmxf
     has:
       fomantic: cat layouts/partials/tmpl/head-cdn|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'|tail -1
@@ -40,7 +40,7 @@ snippets:
       git-lfs: echo "3.6.0"
   watch: |
     [ ! -d content ] && ln -s documentation/content content
-    hugo server --port=1313 --buildDrafts --buildFuture --buildExpired --cleanDestinationDir
+    hugo server --port=1313 --logLevel debug --buildDrafts --buildFuture --buildExpired --cleanDestinationDir
     rm content
 # =============================================================================
 #    ___   _                 _

@@ -8,7 +8,7 @@ url:       /contact
 <div class="ui container segment">
 <div class="ui red segment">
  <h3>Forms</h3>
- <p>Fomantic-ui has good styling for forms. FoHuW is intended to be a static site.
+ <p>Fomantic-ui has good styling for forms. pihuw is intended to be a static site.
  Responding to a Form needs a server to gather results.</p>
  <p>There are 2 easy solutions to make this work:
  <ol>

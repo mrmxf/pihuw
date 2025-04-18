@@ -1,5 +1,5 @@
-# fohuw theme
-# core configuration to build the fohuw documentation
+# pihuw theme
+# core configuration to build the pihuw documentation
 # change this to values you like for your site.
 
 # cSpell:ignore docsy fortawesome fontawesome webfonts
@@ -16,17 +16,16 @@ title: FoHuW Docs
 
 menus:
   main:
-    - name: Home
-      identifier: home
-      URL: /
+  - name: 'Home'
+    pageRef: '/'
+    weight: 10
+  - name: 'Posts'
+    pageRef: '/posts'
+    weight: 20
+  - name: 'Tags'
+    pageRef: '/tags'
+    weight: 30
 
-  menu2:
-    - name: Features
-      URL: 
-      identifier: features
-      pre: '<i class="linkedin icon"></i>'
-      post: " 🦖"
-      weight: 100
 
   footer:
     - name: Copyright

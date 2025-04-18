@@ -2,7 +2,7 @@
 {{ $pt := "ui blue text param-type" }}
 <div class="ui fluid orange card">
   <div class="ui header">
-    <p><code>&#x7b;{&lt; fo t = "include" ... >}}</code></p>
+    <p><code>&#x7b;{&lt; pi t = "include" ... >}}</code></p>
   </div>
 
   <div class="ui content">
@@ -37,14 +37,14 @@
               <i class="code icon"></i>
               <div class="content">
                 The following code will include the file <code>content/headless/include-example.md</code> 
-                <pre><code>&#x7b;{&lt; fo t = "include" from = "headless/include-example.md" }}</code></pre>
+                <pre><code>&#x7b;{&lt; pi t = "include" from = "headless/include-example.md" }}</code></pre>
               </div>
             </div>
             <div class="item">
               <i class="code icon"></i>
               <div class="content">
                 The following code will include the file <code>content/blog/monday/index.md</code> 
-                <pre><code>&#x7b;{&lt; fo t = "include" from = "blog/monday" }}</code></pre>
+                <pre><code>&#x7b;{&lt; pi t = "include" from = "blog/monday" }}</code></pre>
                 Note that using Hugo path overrides may sometimes cause this method to fail.
                 Linking to the markdown file always works
               </div>

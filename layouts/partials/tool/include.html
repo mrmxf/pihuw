@@ -1,8 +1,9 @@
-{{ `<!-- fohuw/partials/tool/include.html -->` | safeHTML }}{{/*
+{{ `<!-- pihuw/partials/tool/include.html -->` | safeHTML }}{{/*
    Include another page as a block File path is relative to content/ */}}
 {{- $f := .from -}}
-{{- if fileExists $f -}}
+{{ if $f}}
 
+{{- if fileExists $f -}}
 {{/* --- trim front matter and spew out the rest of the included file --- */}}
 {{ $content := "" }}
 {{/* check the page for a Params.IncludeSummary substitution */}}
@@ -20,8 +21,11 @@
 {{end -}}{{/* end of content unset */}}
 {{$content}}
 {{- else -}}
-
-{{ $err := dict "p" "tool/include" "a" "from" "m" (printf "cannot include unknown file content%s" $f) }}
+{{ $err := dict "p" "tool/include" "a" "from" "m" (printf "from field does not point to a valid file:%s" $f) }}
 {{ partial "tool/dbg-err.html" $err }}
 
 {{- end -}}{{/* end of if file exists */}}
+{{else}}
+{{ $err := dict "p" "tool/include" "a" "from" "m" (printf "from field seems to be empty!") }}
+{{ partial "tool/dbg-err.html" $err }}
+{{end}}
