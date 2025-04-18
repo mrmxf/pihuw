@@ -1,0 +1,22 @@
+{{ `<!-- fohuw/partials/fo.html -->` | safeHTML }}{{/*
+   print a full width banner
+header = "Figure 1" etc
+text = the caption content
+*/}}
+{{if .text}}
+{{$imgClass := .srcClass | default "ui mini image"}}
+{{$class := .class | default "ui message"}}
+<div style="text-align:center;">
+  <div class={{$class}} style="display:flex;justify-content: space-around;align-items:center;">
+    {{if .src}}
+    {{with .srcLink}}<a href="{{.}}">{{end}}
+    <div class="{{$imgClass}}"><img src="{{.src}}" {{with .alt }}alt="{{.}}"{{end}} /></div>
+    {{with .srcLink}}</a>{{end}}
+    {{end}}
+    <div class="content" style="display:flexbox;flex-grow: 8;">
+    {{with .header}}<span class="ui blue text"><strong><em>{{printf "%s" . | safeHTML}} - </em></strong></span>{{end}}
+    {{.text | safeHTML}}
+    </div>
+  </div>
+</div>
+{{end}}

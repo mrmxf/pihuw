@@ -1,0 +1,16 @@
+{{ `<!-- fohuw/partials/head-css(old-dodgy).html -->` | safeHTML }}
+{{/*
+  Update from the docsy default css to include fomantic UI elements from CDN
+  Note that usually this is safe because they don't talk to bootstrap
+*/}}
+{{ $scssMain := "scss/main.scss"}}
+{{ if not hugo.IsProduction }}
+{{/* Note the missing postCSS. This makes it snappier to develop in Chrome, but makes it look sub-optimal in other browsers. */}}
+{{ $css := resources.Get $scssMain | toCSS (dict "enableSourceMap" true) }}
+<!-- <link href="{{ $css.RelPermalink }}" rel="stylesheet"> -->
+{{ else }}
+{{ $css := resources.Get $scssMain | toCSS (dict "enableSourceMap" false) | postCSS | minify | fingerprint }}
+<!-- <link rel="preload" href="{{ $css.RelPermalink }}" as="style"> -->
+<!-- <link href="{{ $css.RelPermalink }}" rel="stylesheet" integrity="{{ $css.Data.integrity }}"> -->
+{{ end }}
+

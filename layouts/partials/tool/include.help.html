@@ -1,0 +1,63 @@
+{{ $pc := "ui orange text param" }}
+{{ $pt := "ui blue text param-type" }}
+<div class="ui fluid orange card">
+  <div class="ui header">
+    <p><code>&#x7b;{&lt; fo t = "include" ... >}}</code></p>
+  </div>
+
+  <div class="ui content">
+    <p>Include a summary of another page as a block</p>
+
+    <div class="ui list">
+      <div class="item">
+        <i class="question circle icon"></i>
+        <div class="content">
+          <div class="header">Params (<small><i class="exclamation triangle icon"></i> indicates required</small>)</div>
+
+          <div class="ui list">
+            <div class="item">
+              <i class="exclamation triangle icon"></i>
+              <div class="content">
+                <span class="param">from</span> = "<span class="{{$pt}}">filePath</span>"<br>
+                the path to the included page relative to the <code>content/</code> folder
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end of params-->
+
+      <div class="item">
+        <i class="list alternate outline icon"></i>
+        <div class="content">
+          <div class="header">Examples</div>
+
+          <div class="ui list">
+            <div class="item">
+              <i class="code icon"></i>
+              <div class="content">
+                The following code will include the file <code>content/headless/include-example.md</code> 
+                <pre><code>&#x7b;{&lt; fo t = "include" from = "headless/include-example.md" }}</code></pre>
+              </div>
+            </div>
+            <div class="item">
+              <i class="code icon"></i>
+              <div class="content">
+                The following code will include the file <code>content/blog/monday/index.md</code> 
+                <pre><code>&#x7b;{&lt; fo t = "include" from = "blog/monday" }}</code></pre>
+                Note that using Hugo path overrides may sometimes cause this method to fail.
+                Linking to the markdown file always works
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end of examples-->
+
+
+
+
+    </div>
+  </div>
+
+</div>

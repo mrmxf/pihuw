@@ -1,0 +1,36 @@
+{{ `<!-- fohuw/partials/tool/fblock.html -->` | safeHTML }}
+
+<section class="container">
+<div class="ui stackable two column middle aligned grid">
+<div class="row">
+ {{- if and .src (eq .srcOn "left") -}}
+ <div class="{{.srcGrid}} column">
+ {{- if .srcIsVideo }}{{ partial "f/block-video" . }}{{ end -}}
+ {{- if .srcIsImage }}{{ partial "f/block-image" . }}{{ end -}}
+ </div>
+ {{- end -}}
+ <div class="ui {{.txtGrid}} column">
+ <div class="ui fluid left aligned segment">
+ <div class="content">
+ {{- with .header -}}<div class="header">{{ .header }}</div>{{- end -}}
+ {{- with .meta -}}
+ <div class="meta">
+ <span class="category">{{ . }}</span>
+ </div>
+ {{- end -}}
+ <div class="description">
+ {{- .description | markdownify -}}
+ {{- .inner | markdownify -}}
+ </div>
+ </div>
+ </div>
+ </div>
+ {{ if and .src (eq .srcOn "right") }}
+ <div class="{{.srcGrid}} column">
+ {{- if .srcIsVideo }}{{ partial "f/block-video" . }}{{ end -}}
+ {{- if .srcIsImage }}{{ partial "f/block-image" . }}{{ end -}}
+ </div>
+ {{end}}
+</div>
+</div>
+</section>

@@ -1,0 +1,155 @@
+/* fohuw variables */
+:root {
+  --fo-wide-max: 900px;
+  /* mrmxf pallette */
+  --mm-yellow: hsl(46, 50%, 52%);
+  --mm-green: hsl(80, 45%, 49%);
+  --mm-purple: hsl(324, 45%, 42%);
+  --mm-blue: hsl(243, 36%, 39%);
+  --mm-black: hsl(0, 0%, 0%);
+  --mm-dark: hsl(0, 0%, 20%);
+  --mm-light: hsl(0, 0%, 93%);
+  --mm-white: hsl(0, 0%, 100%);
+  /* metarex.media pallette */
+  --mrx-amber: var(--mm-yellow);
+  --mrx-purple: var(--mm-purple);
+  --mrx-green: hsl(88, 45%, 30%);
+  --mrx-grey: var(--mm-dark);
+  /* named elements - visual objects */
+  --mrx-skin: hsl(88, 45%, 60%);
+  --mrx-eye: hsl(354, 45%, 42%);
+  --mrx-trainFill: lighten(var(--mrx-grey), 25%);
+  --mrx-sky: lighten(var(--mrx-amber), 40%);
+  --mrx-ground: lighten(var(--mrx-purple), 25%);
+
+  /* named elements - fohuw controls */
+  --fohuw-dark-bg: var(--mm-purple);
+  --fohuw-blue: var(--mm-blue);
+
+  /* colors of the logo */
+  --fomantic-theme-color: #35BDB2;
+  --hugo-theme-color: #FF4088;
+  --cardboard-wrapper: #D8B588;
+
+  /* fohuw named colors & highlights */
+  --fo-text: var(--mm-dark);
+  --fo-hi-1: var(--mrx-green);
+  --fo-hi-2: var(--mrx-purple);
+  --fo-hi-3: var(--mrx-amber);
+}
+
+/* specialty text styles & colors */
+code {
+  color: var(--fohuw-blue);
+}
+
+.fo-reading-time {
+  size: 80%;
+  color: var(--fo-hi-1)
+}
+.logo-fo {
+  color: var(--fomantic-theme-color);
+}
+.logo-hu {
+  color: var(--hugo-theme-color);
+}
+.logo-w {
+  color: var(--fo-logo-w);
+}
+
+/* custom styling for the site title text in the menu*/
+#siteTitleMenu {
+  font-weight: bold;
+  color: var(--fo-hi-1)
+}
+
+/* a flexbox for aligning centered things with tags like buttons and tags */
+.fo-flex-with-tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* a flexbox  for aligning titles and tags */
+.fo-flex-title-tags {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* fohuw taxonomy label classes */
+.ui.fo-tax-1.label {
+  background: hsl(from var(--fo-hi-1) h s 95%);
+  backdrop-filter: 200%;
+  border-color: var(--fo-hi-1);
+  color: var(--fo-hi-1);
+}
+.ui.fo-tax-2.label {
+  background: hsl(from var(--fo-hi-2) h s 95%);
+  border-color: var(--fo-hi-2);
+  color: var(--fo-hi-2);
+}
+.ui.fo-tax-3.label {
+  background: hsl(from var(--fo-hi-3) h s 95%);
+  border-color: var(--fo-hi-3);
+  color: var(--fo-hi-3);
+}
+.ui.fo-tax-4.label {
+  background: hsl(from var(--fo-hi-4) h s 95%);
+  border-color: var(--fo-hi-4);
+  color: var(--fo-hi-4);
+}
+/* fohuw footer row*/
+footer .row {
+  color: var(--mrx-skin);
+  background-color: var(--mrx-green);
+}
+
+/* all labels in the row */
+footer .row .labels .label {
+  color: var(--mrx-green);
+  background-color: var(--mrx-skin);
+}
+
+/* all text in the row with a link*/
+footer .row .labels .label>a {
+  color: var(--mrx-eye);
+  opacity: 1;
+}
+
+/* all text in the row with a link*/
+footer .row .labels .label>a:hover {
+  color: var(--mrx-green);
+}
+
+.fo-footer-label {
+  color: lighten(var(--mm-purple), 40%);
+}
+
+.fo-footer-title {
+  color: lighten(var(--mrx-green), 40%);
+  font-size: 1.2em;
+}
+
+/* On wide screens display full menu, hide narrow menu */
+.fo-menu-w {
+  display: flex;
+}
+
+.fo-menu-n {
+  display: none;
+}
+
+/*  On narrow screens - opposite */
+@media screen and (max-width: var(--fo-wide-max)) {
+  .fo-menu-w {
+    display: none;
+  }
+
+  .fo-menu-n {
+    display: flex;
+  }
+}

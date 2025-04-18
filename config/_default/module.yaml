@@ -1,0 +1,17 @@
+# fohuw theme
+# module: configuration
+#     derived from docsy.dev
+#     all commented out for now...
+
+# hugoVersion:
+#   extended: true
+#   min: 0.73.0
+# mounts:
+#   - source: assets
+#     target: assets
+#   - source: i18n
+#     target: i18n
+#   - source: layouts
+#     target: layouts
+#   - source: static
+#     target: static

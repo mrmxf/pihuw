@@ -1,0 +1,27 @@
+{{ `<!-- fohuw/partials/tool/include.html -->` | safeHTML }}{{/*
+   Include another page as a block File path is relative to content/ */}}
+{{- $f := .from -}}
+{{- if fileExists $f -}}
+
+{{/* --- trim front matter and spew out the rest of the included file --- */}}
+{{ $content := "" }}
+{{/* check the page for a Params.IncludeSummary substitution */}}
+{{ $p := site.GetPage $f }}
+{{ if $p.Page.Params.IncludeSummary }}
+{{ $content = $p.Page.Params.IncludeSummary | markdownify }}
+{{end -}}{{/* end of GetPage */}}
+
+{{ if not $content }}
+{{ if eq ".md" (path.Ext $f) }}
+{{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | markdownify }}
+{{else}}
+{{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | safeHTML }}
+{{end}}{{/* end of md / html switch */}}
+{{end -}}{{/* end of content unset */}}
+{{$content}}
+{{- else -}}
+
+{{ $err := dict "p" "tool/include" "a" "from" "m" (printf "cannot include unknown file content%s" $f) }}
+{{ partial "tool/dbg-err.html" $err }}
+
+{{- end -}}{{/* end of if file exists */}}

@@ -1,0 +1,13 @@
+{{ `<!-- fohuw/partials/tool/dbg-err.html -->` | safeHTML -}}
+{{/* partial 'tool/dbg-err' (dict "p" $partial-name "a" $arg "m" $message) */}}
+<div class="ui fluid red message">
+<span class="ui black text">partial</span>
+<span class="ui blue text">{{ .p | safeHTML}}</span>
+{{- with .a }}
+<span class="ui black text">arg</span>
+<span class="ui purple text">{{ . | safeHTML}}</span>
+{{ end -}}
+<i class="arrow right icon"></i>
+<span class="ui red text">{{ .m | safeHTML}}</span>
+</div>
+{{- warnidf "fohuw" "partial (%s) arg (%s) ⇒ %s" .p .a .m -}}

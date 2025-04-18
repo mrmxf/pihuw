@@ -1,0 +1,12 @@
+{{ `<!-- fohuw/partials/tmpl/head-cdn -->` | safeHTML }}
+{{/*--  iterate over the site parameters for your site, pulling from cdn -------------------------*/}}
+{{- range site.Params.cdn }}
+{{ $integrity := "" }}
+{{with .integrity}}{{$integrity = printf "integrity=\"%s\"" . }}{{end}}
+{{if eq ".js" (path.Ext .suffix)}}
+<script src="{{.prefix}}{{.version}}{{.suffix}}"  {{$integrity}}  crossorigin="anonymous"></script>
+{{end}}
+{{- if eq ".css" (path.Ext .suffix)}}
+<link  href="{{.prefix}}{{.version}}{{.suffix}}" {{$integrity}} crossorigin="anonymous" rel="stylesheet" >
+{{end}}
+{{end -}}

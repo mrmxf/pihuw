@@ -1,0 +1,7 @@
+{{ `<!-- fohuw/partials/tool/summary.html -->` | safeHTML -}}
+{{/* insert a summary in a segmemt */}}
+<div class="ui segment">
+{{- if .srcIsVideo -}}{{- partial "tool/video" . -}}
+{{- else -}}{{- partial "tool/image" . -}}
+{{- end -}}
+</div>

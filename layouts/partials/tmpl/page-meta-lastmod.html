@@ -1,0 +1,19 @@
+{{ `<!-- fohuw/partials/tmpl/page-meta-lastmod -->` | safeHTML }}
+{{ if and (.GitInfo) (.Site.Params.github_repo) -}}
+<div class="ui gray basic labels">
+  <div class="ui label">
+    <span class="ui info text">
+      {{ T "post_last_mod" }} {{ .Lastmod.Format .Site.Params.time_format_default -}}
+    </span>
+  </div>
+  {{ with .GitInfo }}: {{/* Trim WS */ -}}
+  <div class="ui label">
+    <a href="{{ $.Site.Params.github_repo }}/commit/{{ .Hash }}">
+      <span class="ui info text">{{- .Subject }}(</span>
+      <span class="ui gray text">{{ .AbbreviatedHash }}</span>
+      <span class="ui info text">)</span>{{- /* Trim WS */ -}}
+    </a>
+  </div>
+  {{- end }}
+</div>
+{{ end -}}

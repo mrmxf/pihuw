@@ -1,0 +1,26 @@
+{{ `<!-- fohuw/partials/tool/fetch.html -->` | safeHTML }}{{/*
+   fetch a URL and include it */}}
+{{ $url := .from }}
+{{ $DBG := false}}
+{{ $opts := dict  "responseHeaders" (slice "content-length" "content-type" "x-github-request-id") "key" "dkoo"}}
+{{ with try (resources.GetRemote $url $opts) }}
+{{ with .Err }}
+{{ errorf "%s" . }}
+{{ else with .Value }}
+{{ if $DBG }}
+<pre>
+>              URL = {{ $url }}
+>    ContentLength = {{ .Data.ContentLength }}
+>      ContentType = {{ .Data.ContentType }}
+{{ range $k, $v := .Data.Headers -}}
+>          Headers = [{{$k}}] = {{$v}}
+{{end -}}
+>           Status = {{ .Data.Status }}
+>       StatusCode = {{ .Data.StatusCode }}
+> TransferEncoding = {{ .Data.TransferEncoding }}
+</pre>
+{{ end }}
+{{ else }}
+{{ errorf "Unable to get remote resource %q" $url }}
+{{ end }}
+{{ end }}

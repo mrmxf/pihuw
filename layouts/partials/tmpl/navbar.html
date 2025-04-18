@@ -1,0 +1,22 @@
+{{ `<!-- fohuw/partials/tmpl/navbar.html -->` | safeHTML }}
+{{ $isCovePage := and
+(.HasShortcode "blocks/cover")
+(not .Site.Params.ui.navbar_translucent_over_cover_disable)
+-}}
+
+{{- $menu2 := site.Params.ui.navbar2 -}}
+
+<div style="display:flex;align-items:stretch;column-gap:0.5em;margin-bottom:0.5em;">
+
+    {{- partial "tmpl/navbar-brand" . -}}
+
+  <div style="flex-basis:90%;">
+    {{/* --- main navbar ------------------------------------------------- */}}
+    {{ partial "tmpl/navbar-main" .}}
+    {{- if $menu2 -}}
+    <div class="ui bottom attached fluid menu">
+      <br>{{ partial $menu2 .}}
+    </div>
+    {{- end -}}
+  </div>
+</div>

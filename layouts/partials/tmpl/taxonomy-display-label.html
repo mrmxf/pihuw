@@ -1,0 +1,18 @@
+{{ "<!-- partial/taxonomy-display-label.html -->" | safeHTML }}
+{{/*
+  map display classes to a taxonomy based on its position in the
+  range of taxonomies.
+
+  Styles are defined in fohuw-tweak.css or your own custom css
+*/}}
+{{$label := ""}}
+{{$matchTaxo := .taxo }}
+
+{{if isset site.Params.Taxonomy "label"}}
+  {{range $name, $userLabel := site.Params.Taxonomy.Label}}
+    {{if eq $name $matchTaxo}}
+      {{$label = printf "%s: " $userLabel}}
+    {{end}}
+  {{end}}
+{{end}}
+{{return $label}}

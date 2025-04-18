@@ -24,7 +24,7 @@ information on using pull requests.
 ## Community Guidelines
 
 To participate in the project you're agreeing to follow the unmodified
-Contributor Covenant [Code of Conduct[3]] and acknowledge that any abuse may be
+Contributor Covenant [Code of Conduct][3] and acknowledge that any abuse may be
 report at [mrmxf.com/contact][4].
 
 [1]: http://oss-watch.ac.uk/resources/cla

@@ -1,0 +1,25 @@
+{{ `<!-- fohuw/partials/tmpl/navbar-brand -->` | safeHTML }}
+{{/* to support SVG files, all logos must be in static/brands */}}
+{{- if not (and site.Params.ui.hide.navbar.logo site.Params.ui.hide.navbar.title) }}
+
+{{- $ext := slice ".svg" ".png" ".jpg" ".gif" }}
+{{- $searchingForLogo := true}}
+{{- $logo := ""}}
+{{- $img := ""}}
+{{- range $k, $v := $ext}}
+{{- $imgPath := printf "brand/logo%s" $v}}
+{{- if $searchingForLogo}}
+{{- if fileExists  (printf "static/brand/logo%s" $v) }}
+<div class="ui labelled borderless icon menu" style="flex-wrap:nowrap;">
+  <a class="item" href="{{ site.Home.RelPermalink }}" style="height:100%">
+    {{- if not site.Params.ui.hide.navbar.logo }}
+    {{ printf "<img src=\"%s\" class=\"ui mini image\" alt=\"logo\">" (relURL (printf "/brand/logo%s" $v)) | safeHTML}}
+    &nbsp;
+    {{end}}
+    {{- if not site.Params.ui.hide.navbar.title}}<span id="siteTitleMenu">{{site.Title}}</span>{{end}}
+  </a>
+</div>
+{{$searchingForLogo := false}}
+{{ end }}{{ end }}{{/* searching */}}
+{{end}}{{/* end of range - file types */}}
+{{- end -}}

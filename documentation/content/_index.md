@@ -10,7 +10,7 @@ It has a small footprint and is aimed at creating embedded webservers on Pi-PICO
 
 {{< pi t = "accordion" >}}
 
-{{< pi t = "acc-tab" header = "**heading 1**" >}}
+{{< pi t = "accordi-tab" header = "**heading 1**" >}}
 
 content 1
 
@@ -18,7 +18,7 @@ content 2
 
 {{< /pi >}}
 
-{{< pi t = "acc-tab" header = "**ywo**" >}}
+{{< pi t = "accordi-tab" header = "**ywo**" >}}
 content two
 {{< /pi >}}
 

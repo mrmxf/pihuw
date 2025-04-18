@@ -1,0 +1,9 @@
+{{ `<!-- fohuw/partials/tool/video.html -->` | safeHTML }}
+{{ $color := "purple"}}
+{{- $p := "f/image" -}}
+{{- if not .src -}}{{- partial "tool/dbg-err" (dict "p" $p "a" ".src" "m" "is nil" ) -}}{{- end -}}
+{{- if not .alt -}}{{- partial "tool/dbg-err" (dict "p" $p "a" ".alt" "m" "is nil" ) -}}{{- end -}}
+{{- if .link -}}<a href="{{.link}}">{{- end -}}
+<img class="{{.srcClass}}" src="{{.src}}" {{with .alt }}alt="{{.}}"{{end}} />
+{{- partial "tool/caption" . -}}
+{{- if .link -}}</a>{{- end -}}

@@ -28,10 +28,6 @@
     80,
     120
   ],
-  "[go]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnSaveMode": "file"
-  },
   "[html]": {
     "editor.tabSize": 2,
     "editor.rulers": [
@@ -50,22 +46,14 @@
     ],
     "editor.tabSize": 2
   },
-  "[python]": {
-    "editor.tabSize": 4,
-    "editor.rulers": [
-      79,
-      80,
-      120
-    ]
-  },
   "[markdown]": {
-    "editor.tabSize": 4,
+    "editor.tabSize": 3,
     "editor.rulers": [
       120
     ]
   },
   "[md]": {
-    "editor.tabSize": 4,
+    "editor.tabSize": 3,
     "editor.rulers": [
       120
     ]

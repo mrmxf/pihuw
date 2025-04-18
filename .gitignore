@@ -8,15 +8,17 @@
 *.so
 *.dylib
 
-# linked hugo.yaml
-/hugo.yaml
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# any soft link to the content/ folder
+/content/
 
 #tmp files and folders
 public
 kodata
+resources/
+
+# ignore npm or yarn generated postcss source files
+node_modules/
+# ignore the tmp folder but not the readme inside it
 megalinter-reports
 tmp-*
 tmp/*
@@ -33,6 +35,10 @@ __debug_*
 # Go workspace file
 go.work
 go.work.sum
-
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
 # env file
 .env
+# vim temporary files
+*~
+*.sw?

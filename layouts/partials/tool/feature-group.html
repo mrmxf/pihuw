@@ -1,0 +1,7 @@
+{{ `<!-- fohuw/partials/tool/feature-group.html -->` | safeHTML -}}
+{{/*
+---* A feature-group block organises feature children
+---* .blockClass Outer container = default "ui horizontal equal width segments"
+*/}}
+{{- $blockClass := .blockClass | default "ui horizontal equal width segments" -}}
+<div class="{{.blockClass}}">{{ .inner }}</div>

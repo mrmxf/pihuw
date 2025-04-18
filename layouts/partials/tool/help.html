@@ -1,0 +1,179 @@
+{{ `<!-- fohuw/partials/tool/help.html -->` | safeHTML -}}{{/*
+Use t="help" while drafting to remind you of the props and shortcodes
+*/}}
+<div class="ui container">
+  <div class="ui two item menu">
+    <a href="#props" class="blue item">Shortcode Props</a>
+    <a href="#types" class="green item">Shortcode Types</a>
+  </div>
+  <a id="props"></a>
+  <table class="ui blue compact selectable celled table">
+    <thead>
+      <tr>
+        <td></td>
+        <td colspan="2" class="blue">
+          <h1><code>fo</code> shortcode help</h1>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="2" class="blue">
+          <p>Usage:</p>
+          <ul>
+            <li>
+              <code>&#123;&#123;% fo t = "image" src = "path-to.png" alt = "alt-text"  text = "optional caption" %&#125;&#125;</code>
+            </li>
+            <li> you <span class="ui red header text">MUST</span> have spaces around the <strong>=</strong> sign or you'll get errors</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>shortcode prop</th>
+        <th>Function</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="positive">
+        <td>❓</td>
+        <td class="right aligned"><code>t</code></td>
+        <td> "partial tool/$t ."</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> help</code></td>
+        <td>"any string and the help for that partial will be rendered"</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>alt</code></td>
+        <td>alt text for image/ video/resource</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>blockClass</code></td>
+        <td>"class for the containing div"</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> count</code></td>
+        <td>number of things to show e.g. blogs</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>description</code></td>
+        <td>hover text or similar</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> from</code></td>
+        <td>path to source file (instead of a Page) when t=include</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>header</code></td>
+        <td>is the markdown h1 text</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>headerLink</code></td>
+        <td> href around header element</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> id</code></td>
+        <td>"some id to create an anchor"</td>
+      </tr>
+      <tr class="positive">
+        <td>❓</td>
+        <td class="right aligned"><code> link</code></td>
+        <td>default href around any element</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> meta</code></td>
+        <td>shown in grey below the header</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> mode</code></td>
+        <td>"mode defining string" e.g. "log" or "dump" for tool/dbg</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> page</code></td>
+        <td>"name of page to get with .Site.GetPage $page"</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> skip</code></td>
+        <td>number of things to skip before output e.g. blogs</td>
+      </tr>
+      <tr class="positive">
+        <td>🖼️</td>
+        <td class="right aligned"><code>src</code></td>
+        <td>"relative path or URL image/video/resource"</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>srcClass</code></td>
+        <td>"class string surrounding the src"</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> srcId</code></td>
+        <td>"an anchor id for the image/video/resource"</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code> srcOn</code></td>
+        <td>left | right | none - to control formatting of blog summaries etc</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>srcPoster</code></td>
+        <td>image displayed if src is a video or non-image resource</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>srcWidth</code></td>
+        <td>float from 0.0 ↔ 1.0 for the proportion of the column that is image/video/resource</td>
+      </tr>
+      <tr>
+        <td>❓</td>
+        <td class="right aligned"><code>srcLink</code></td>
+        <td> href around src. defaults to `link`</td>
+      </tr>
+      <tr class="positive">
+        <td>📄</td>
+        <td class="right aligned"><code> text</code></td>
+        <td>"short markdown to be rendered"</td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          Inner contains markdown and is after the rendered description
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a id="types"></a>
+  <table class="ui green compact selectable celled table">
+    <thead>
+      <tr>
+        <td></td>
+        <td colspan="2" class="green">
+          <h1><code>fo</code> shortcode types</h1>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="3">
+          Inner contains markdown and is after the rendered description
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

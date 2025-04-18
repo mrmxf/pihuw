@@ -1,0 +1,6 @@
+# there are a few lines > 80 chars in the theme so turn the nagging rule off
+MD013: false
+# the theme uses quite a bit of inline HTML so turn the nagging rule off
+MD033: false
+# markdownlint whines about shortcode args that are URLs - turn nag off
+MD034: false

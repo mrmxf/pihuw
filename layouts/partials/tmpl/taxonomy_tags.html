@@ -1,0 +1,12 @@
+{{ "<!-- partial/taxonomy_tags.html -->" | safeHTML }}
+{{- $ctx := .ctx }}
+{{- $taxo := .taxo }}
+{{- if (gt (len ($ctx.GetTerms $taxo)) 0)}}
+{{- $class := partial "tmpl/taxonomy-display-class" (dict "taxo" $taxo) }}
+{{- $label := partial "tmpl/taxonomy-display-label" (dict "taxo" $taxo) }}
+  <span class="content">
+    {{ range ($ctx.GetTerms $taxo) }}
+      <a class="ui tag tiny basic label {{$class}}" href="{{ .Permalink }}" data-taxonomy-term="{{ urlize .LinkTitle }}">{{$label}}{{.LinkTitle}}</a>
+    {{ end }}
+  </span>
+{{ end }}

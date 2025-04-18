@@ -1,0 +1,25 @@
+{{ `<!-- fohuw/partials/tool/cover.html -->` | safeHTML }}{{/*
+   Include another page as a block File path is relative to project root */}}
+{{- $f := .from -}}
+{{- if $f -}}
+{{/* --- create a page object for the included page ---------------------- */}}
+{{- $p := .page.GetPage $f }}
+{{- if eq $p nil -}}{{- $p = .page.Site.GetPage $f }}{{end -}}
+{{/* --- update the dict for the block -----------------------------------*/}}
+{{- $d := merge . (dict "from" $f) -}}
+
+{{ $featured := ($p.Resources.ByType "image").GetMatch "*featured*" }}
+{{if $featured}}
+{{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
+{{end}}
+{{- $d = merge $d (dict "header" $p.Page.Title) -}}
+{{- $d = merge $d (dict "headerLink" $p.Page.RelPermalink) -}}
+{{- $d = merge $d (dict "srcClass"  "ui fluid image") -}}
+{{- $d = merge $d (dict "srcLink" $p.Page.RelPermalink) -}}
+{{- $d = merge $d (dict "description" ($p.Plain | safeHTML | truncate 300)) -}}
+{{- $min := add ( div ( countwords $p.Plain ) 220 ) 1 -}}
+{{- $d = merge $d (dict "meta" (printf "~%v min read" $min)) -}}
+{{- partial "tool/block" $d -}}
+{{- else -}}
+<p>partial <code style="color:blue;">o/include</code> needs parameter <code style="color:red;">from</code> as a path in {{.page.Path}}{{.page.File}}</p>
+{{- end -}}

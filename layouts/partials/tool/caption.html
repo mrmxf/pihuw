@@ -1,0 +1,11 @@
+{{ `<!-- fohuw/partials/tool/caption.html -->` | safeHTML }}{{/*
+   tool/caption - print a caption styled on a line by itself
+header = "Figure 1" etc
+text = the caption content
+*/}}
+{{if .text}}
+<div style="text-align:center;"><div class="ui message" style="width:60%;display:inline-block;">
+  {{with .header}}<span class="ui blue text"><strong><em>{{.}} - </em></strong></span>{{end}}
+  {{.text}}
+</div></div>
+{{end}}

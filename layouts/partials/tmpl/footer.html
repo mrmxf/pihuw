@@ -1,0 +1,50 @@
+{{ `<!-- fohuw partials/tmpl/footer -->` | safeHTML }}
+{{/* The footer is already a row in the overall page grid ----------------- */}}
+{{ $links := site.Params.ui.footer.links }}
+{{ $color := site.Params.ui.footer.backgroundColor }}
+{{ $textClass := "text-white" }}
+<br>
+<div class="fluid column">
+  <footer class="ui fluid equal width center aligned padded grid">
+    <div class="row fo-footer">
+      {{template "footer-fohuw-title-column" .}}
+      <div class="column">
+        <div class="ui small labels">
+          {{range site.Params.ui.footer.links}}
+          {{template "footer-fohuw-label" .}}
+          {{end}}
+        </div>
+      </div>
+      <div class="column">
+        {{ partial "tmpl/footer-github-links" . }}
+      </div>
+    </div>
+  </footer>
+</div>
+
+{{ define "footer-fohuw-title-column" -}}
+{{if or site.Params.ui.footer.showSiteTitle site.Params.ui.footer.showSiteVersion}}
+<div class="column">
+  {{$title := ""}}
+  {{if site.Params.ui.footer.showSiteTitle}}{{$title = site.Title}}{{end}}
+  {{if site.Params.ui.footer.showSiteVersion}}
+  {{$v := (partial "tmpl/get-version-data" .)}}
+  {{ $title = printf "%s v%s" $title $v.version}}
+  {{end}}
+  {{$title}}
+</div>
+{{end}}
+{{end}}
+
+{{ define "footer-fohuw-label" -}}
+{{$target := ""}}
+{{if hasPrefix .link "http"}}{{$target = " target=\"_blank\""}}{{end}}
+<div class="ui label">
+  {{ with .label -}}{{.}}{{end}}
+  {{ if .title -}}
+  {{with .link}}<a href="{{relURL .}}" {{$target|safeHTMLAttr}}>{{end}}
+    {{.title}}
+    {{with .link}}</a>{{end}}
+  {{end}}
+</div>
+{{end}}

@@ -1,0 +1,19 @@
+{{ "<!-- partial/taxonomy_display_class.html -->" | safeHTML }}
+{{/*
+  map display classes to a taxonomy based on its position in the
+  range of taxonomies.
+
+  Styles are defined in fohuw-tweak.css or your own custom css
+*/}}
+{{$i := 0}}
+{{$class := "fo-tax-default"}}
+{{ $matchTaxo := .taxo }}
+
+{{range $name, $map := site.Taxonomies}}
+  {{$i = math.Add $i 1}}
+  {{if eq $name $matchTaxo}}
+    {{$class = printf "fo-tax-%d" $i}}
+  {{end}}
+  {{end}}
+{{/* choose a taxonomy class */}}
+{{return $class}}

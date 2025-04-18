@@ -1,0 +1,13 @@
+{{ `<!-- fohuw/partials/tmpl/get-version.html -->` | safeHTML }}
+{{/* returns a dict of the first entry in assets/data/releases.yaml */}}
+{{ $file := site.Params.releaseTracking | default "data/releases.yaml" }}
+{{$v := ""}}{{$data := ""}}
+{{ with try (resources.Get $file) }}
+  {{ with .Err }}
+    {{ warnf "partial tmpl/get-version: %s" . }}
+  {{else}}
+    {{with .Value | transform.Unmarshal}}{{$data = .}}{{end}}
+    {{$v = (index $data 0)}}
+  {{ end }}
+{{ end }}
+{{return $v}}

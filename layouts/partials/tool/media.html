@@ -1,0 +1,5 @@
+{{ `<!-- fohuw/partials/tool/media.html -->` | safeHTML -}}
+{{/* insert a media element tool/image or tool/video */}}
+{{- if .srcIsVideo -}}{{- partial "tool/video" . -}}
+{{- else -}}{{- partial "tool/image" . -}}
+{{- end -}}

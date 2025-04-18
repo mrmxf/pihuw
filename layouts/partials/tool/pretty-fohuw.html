@@ -1,0 +1,26 @@
+{{ `<!-- fohuw/partials/tool/fohuw.html -->` | safeHTML }}{{/*
+Display stylized FoHuW text:
+- {{%fohuw%}} ------------------------------- FoHuW
+- {{% fo t = "fohuw" %}} -------------------- FoHuW
+- {{% fo t = "fohuw" args = "-v" %}} -------- FoHuW v1.x.y
+- {{% fo t = "fohuw" "-qv" %}} ----------- v1.x.y
+- {{% fohuw "-qv" %}} -------------------------- v1.x.y
+*/}}
+{{$showText := true}}
+{{$showVersion := false}}
+{{- with .args}}
+{{if strings.Contains . "q"}}{{$showText = false}}{{end}}
+{{if strings.Contains . "v"}}{{$showVersion = true}}{{end}}
+{{ end -}}
+<a href="https://github.com/mrmxf/fohuw" target="_blank">
+  {{- if $showText}}<span class="logo-fo">F</span><span class="ui grey text">o</span><span class="logo-hu">H</span><span class="ui grey text">u</span><span class="logo-w">W</span>{{end}}
+  {{if $showVersion}}
+  {{$versionData := (partial "tmpl/get-version-data")}}
+  {{$v := $versionData.version}}
+  {{$bits := split $v "."}}
+  {{$maj := index $bits 0 | default ""}}
+  {{$min := index $bits 1 | default ""}}
+  {{$pat := index $bits 2 | default ""}}
+  v<span class="logo-fo">{{$maj}}</span>.<span class="logo-hu">{{$min}}</span>.<span class="logo-w">{{$pat}}</span>
+  {{end -}}
+</a>

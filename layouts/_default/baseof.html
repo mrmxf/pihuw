@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
+{{ `<!-- pihuw/layouts/_default/baseof.html -->` | safeHTML }}
+<html itemscope itemtype="http://schema.org/WebPage" lang="{{site.Language.Lang}}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
 <head>
-  {{ partial "phw-head.html" . }}
+  {{ partial "tmpl/head.html" . }}
 </head>
-<body>
-
-  <header>
-    {{ partial "phw-header.html" . }}
-  </header>
+<body {{ with .Page.Params.ui.bodyClass }}class="{{ . }}"{{ end }}">
+    <header>
+      {{ partial "tmpl/navbar" . }}
+    </header>
 
   <div class="flex six-800">
 
@@ -27,7 +27,8 @@
   </div>
 
   <footer>
-    {{ partial "phw-footer.html" . }}
+      {{ partial "tmpl/footer" . }}
   </footer>
+  {{ partial "tmpl/body-scripts" . }}
 </body>
 </html>

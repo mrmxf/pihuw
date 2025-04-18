@@ -1,0 +1,83 @@
+{{ `<!-- fohuw/partials/tmpl/navbar-main.html -->` | safeHTML }}
+{{- $menu2 := .Site.Params.ui.navbar2 -}}
+{{ $mclassTop := "" }}
+{{ $mclassBot := "" }}
+{{- if $menu2 -}}
+{{ $mclassTop = "top attached" }}
+{{ $mclassBot = "bottom attached" }}
+{{- end -}}
+
+<nav class="ui {{$mclassTop}} centered fluid wrapping menu">
+  {{ $thisPage := . -}}
+  {{/* ---- iterative over menu items --------------------------------- */}}
+  {{ range .Site.Menus.main.ByWeight -}}
+
+  {{- if .HasChildren -}}
+  {{- template "navChild" (dict "page" $thisPage "menu" .) }}
+  {{- else}}
+  {{- template "navBasic" (dict "page" $thisPage "menu" .) }}
+  {{ end -}}
+
+  {{ end -}}
+  {{/* ---- end of menu loop ---------------------------------------- */}}
+  {{/* --------------------------------------------------------------
+  ------------------------------------------------------------------- */}}
+  {{/* ---- languages ----------------------------------------------- */}}
+  {{- if (gt (len .Site.Home.Translations) 0) -}}
+  <a class="item">{{ partial "tmpl/navbar-lang-selector.html" . -}}</a>
+  {{ end -}}
+  {{/* <a class="item">{{ partial "tmpl/search-input.html" . }}</a> */}}
+</nav>
+
+{{/* navChild takes
+... page: .Page
+... menu: .Site.Menus.main.ByWeight
+... ..... and outputs a dropdown with children
+*/}}
+{{- define "navChild" -}}
+{{ $page := .page}}
+{{$pre := ""}}{{ if .menu.Pre}}{{$pre = .menu.Pre}}{{end}}
+{{$post := ""}}{{ if .menu.Post}}{{$post = .menu.Post}}{{end}}
+<div class="ui dropdown item">
+  {{ .menu.Pre | safeHTML }}{{- .menu.Name | safeHTML -}}{{ $post | safeHTML }}
+  <i class="dropdown icon"></i>
+  <div class="ui menu">
+    {{if .menu.URL}}{{ template "navBasic" (dict "page" $page "menu" .menu) }}{{end}}
+    {{range .menu.Children}}
+    {{ template "navBasic" (dict "page" $page "menu" .) }}
+    {{end}}
+  </div>
+</div>
+
+{{- end -}}
+
+
+{{/* navBasic takes
+page: .Page
+menu: .Site.Menus.main.ByWeight
+and outputs a top level menu - no children
+needs URL and make it a relref for re-prefix inside docker
+*/}}
+{{- define "navBasic" -}}
+{{$pre := ""}}{{ if .menu.Pre}}{{$pre = .menu.Pre}}{{end}}
+{{$post := ""}}{{ if .menu.Post}}{{$post = .menu.Post}}{{end}}
+{{/* ----- ----- ----- ----- ----- ----- */}}
+{{ $isActive := or (.page.IsMenuCurrent "main" .menu) (.page.HasMenuCurrent "main" .menu) -}}
+{{ if .page }}{{ $isActive = or $isActive ( .page.IsDescendant .menu) }}{{ end }}
+{{ $active := cond ($isActive) "active" "" -}}
+{{/* ----- ----- ----- ----- ----- ----- */}}
+{{ $url := urls.Parse .menu.URL -}}
+{{ $baseurl := urls.Parse .page.Site.Params.Baseurl -}}
+{{/* ----- ----- ----- ----- ----- ----- */}}
+{{ $href := .menu.URL }}
+{{ with .menu.Page }}{{ $href = .RelPermalink }}
+{{else}}{{ $href = .menu.URL | relLangURL }}
+{{ end }}
+{{/* ----- ----- ----- ----- ----- ----- */}}
+{{ $target :=""}}
+{{- if ne $url.Host $baseurl.Host }}{{ $target = "target=\"_blank\"" }}{{- end -}}
+{{/* ----- ----- ----- ----- ----- ----- */}}
+<a class="{{ $active }} item" href="{{ $href }}" {{ $target }}>
+  {{ $pre | safeHTML }}{{- .menu.Name | safeHTML -}}{{ $post | safeHTML }}
+</a>
+{{- end -}}

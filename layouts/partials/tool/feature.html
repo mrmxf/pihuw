@@ -1,0 +1,23 @@
+{{ `<!-- fohuw/partials/tool/feature.html -->` | safeHTML -}}
+{{$h := slice "A feature is a block in a feature-group" }}
+{{$h = $h | append (dict "a" "class " "h" "inner class of the block" "d" "message" "eg" "green messsage")}}
+{{$h = $h | append (dict "a" "header" "h" "bold heading above media" "d" "nil" "eg" "Spring Sale")}}
+{{$h = $h | append (dict "a" "text" "h" "body text above media" "d" "nil" "eg" "green messsage")}}
+{{$h = $h | append (dict "a" "link" "h" "link when feature is clicked" "d" "nil" "eg" "green messsage")}}
+{{/*
+------------------------------------------------------------------------------------------------------------------------
+*/}}
+{{/* --- create a page object for the included page ---------------------- */}}
+{{- $headerClass := .headerClass | default "header" -}}
+{{- $featureClass := .class | default "message" -}}
+<div class="{{.class}}">
+  {{- with .link -}}
+  <a href="{{ relref . }}">
+    {{ end }}
+    {{- with .header}}<h2 class="{{$headerClass}}">{{.}}</h2>{{- end -}}
+    {{- with .text}}<p>{{.}}</p>{{- end -}}
+    {{ partial "tool/media" . }}
+    {{- with .link -}}
+  </a>
+  {{- end -}}
+</div>

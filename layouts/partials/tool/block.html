@@ -1,0 +1,68 @@
+{{ `<!-- fohuw/partials/fohuw-block.html -->` | safeHTML }}
+{{/*
+.srcWidth is ignored
+.src
+.srcOn "left"
++--srcGrid-+----txtGrid------------------------------------------+
+| -------- | -----.header--------------------------------------- |
+| -------- | -----.meta----------------------------------------- |
+| -------- | -----.description----.inner------------------------ |
++----------+-----------------------------------------------------+
+.srcOn "right"
++-----------------------------------------txtGrid-----+-srcGrid--+
+| -----.header--------------------------------------- | -------- |
+| -----.meta----------------------------------------- | -------- |
+| -----.description----.inner------------------------ | -------- |
++-----------------------------------------------------+----------+
+
+*/}}
+{{- $DBG := false -}}
+{{with $DBG}}<p>
+  <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(60,255,180);">start tool/block
+</p>{{end}}
+{{/* ---handle src type--------------------------------------------------- */}}
+{{- $ext := strings.ToLower (path.Ext .src) -}}
+{{- $imgExt := slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".svg" -}}
+{{- $vidExt := slice ".mp4" ".mkv" -}}
+{{- $srcIsVideo := in $vidExt $ext -}}
+{{- $srcIsImage := in $imgExt $ext -}}
+{{- $srcGrid := .srcGrid | default "zero wide" }}
+{{- $txtGrid := .txtGrid | default "sixteen wide" }}
+{{/* ---make src dict----------------------------------------------------- */}}
+{{ $srcDict := dict "src" .src "srcLink" .srcLink "srcClass" .srcClass}}
+{{/* --------------------------------------------------------------------- */}}
+{{- if .id -}}<section id="{{ .id }}">{{- end -}}
+  {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ {{$srcGrid}}{{end}}
+  <div class="ui stackable two column middle aligned grid">
+    <div class="row">
+      {{- if and .src (eq .srcOn "left") -}}
+      <div class="{{$srcGrid}} column">{{ partial "tool/media" $srcDict }}</div>
+      {{- end -}}
+      <div class="ui {{$txtGrid}} column">
+        <div class="ui horizontal fluid card">
+          <div class="content">
+            {{- if .header -}}
+            <div class="header">
+              {{if .headerLink}}<a href="{{.headerLink}}">{{.header}}</a>
+              {{else}}{{ .header }}{{end}}
+            </div>{{- end -}}
+            {{- with .meta -}}
+            <div class="meta"><span class="category">{{ . }}</span></div>
+            {{- end -}}
+            <div class="description">
+              {{- .description | markdownify -}}
+              {{- .inner | markdownify -}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{ if and .src (eq .srcOn "right") }}
+      <div class="{{$srcGrid}} column">{{ partial "tool/media" $srcDict }}</div>
+      {{end}}
+    </div>
+  </div>
+  {{- if .id -}}
+</section>{{- end -}}
+{{with $DBG}}<p>END fohuw-block
+  <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(255,90,180);">
+</p>{{end}}

@@ -1,0 +1,19 @@
+{{ `<!-- fohuw/layouts/partials/tmpl/taxonomy_tags_logic.html -->` | safeHTML }}
+{{ $ctx := . }}
+{{ if isset site.Params "taxonomy" }}
+  {{ if isset site.Params.Taxonomy "showOnPage" }}
+    {{/* if the user is controlling what taxonomies to show ...*/}}
+    {{ range $index, $taxo := site.Params.Taxonomy.ShowOnPage }}
+      {{ partial "tmpl/taxonomy_tags.html" (dict "ctx" $ctx "taxo" $taxo) }}
+    {{ end }}
+  {{ else }}
+    {{/* show all taxonomies if no instruction given ...*/}}
+    {{ range $taxo, $taxo_map := site.Taxonomies }}
+      {{ partial "tmpl/taxonomy_tags.html" (dict "ctx" $ctx "taxo" $taxo) }}
+    {{ end }}
+  {{ end }}
+{{ else }}
+  {{ range $taxo, $taxo_map := site.Taxonomies }}
+    {{ partial "tmpl/taxonomy_tags.html" (dict "ctx" $ctx "taxo" $taxo) }}
+  {{ end }}
+{{ end }}

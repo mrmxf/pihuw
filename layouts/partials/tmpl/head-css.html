@@ -1,0 +1,15 @@
+{{ `<!-- fohuw/partials/tmpl/head-css -->` | safeHTML }}
+{{/*
+  Pull in css & scripts in the following order:
+  1. CDN resources
+  2. css for fohuw from the /assets/css folder
+  3. js  for fohuw from the /assets/js folder
+  4. User overrides per site
+  most scripts are loaded in the tmpl/body-scripts.html partial
+*/}}
+
+{{-  partial "tmpl/head-cdn" . -}}
+
+{{with resources.Get "css/fohuw-tweak.css"}}<link href="{{.RelPermalink}}" rel="stylesheet">{{end}}
+
+<link href="/css/site.css" rel="stylesheet">

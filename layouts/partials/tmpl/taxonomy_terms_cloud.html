@@ -1,0 +1,25 @@
+{{ "<!-- partial/taxonomy_terms_cloud.html -->" | safeHTML }}
+{{ $context := .context }}
+{{ $taxo := .taxo }}
+{{ $title := .title }}
+{{ if and $context.Site.Taxonomies $taxo }}
+{{ if isset $context.Site.Taxonomies (lower $taxo) }}
+{{ $taxonomy := index $context.Site.Taxonomies (lower $taxo) }}
+{{ if (gt (len $taxonomy) 0)}}
+{{ $style := "grey" }}
+{{ if eq "Tags" $title }}{{ $style = "small purple basic tag" }}{{end}}
+{{ if eq "Categories" $title }}{{ $style = "blue small" }}{{end}}
+{{ with $title }}
+<br />
+<h5 class="ui {{$style}} label">{{ . }}</h5>
+{{ end }}
+<div class="ui mini gray compact labels" style="display:inline;">
+  {{ range $taxonomy }}
+  <a class="ui label" href="{{ .Page.Permalink }}" data-taxonomy-term="{{ urlize .Page.Title }}">
+    <span class="ui grey text" style="font-weight:200;"> {{ .Page.Title }} ({{ .Count }}) </span>
+  </a>
+  {{ end }}
+</div>
+{{ end }}
+{{ end }}
+{{ end }}
