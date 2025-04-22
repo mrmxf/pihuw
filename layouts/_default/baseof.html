@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{{ `<!-- pihuw/layouts/_default/baseof.html -->` | safeHTML }}
+<html itemscope itemtype="http://schema.org/WebPage" lang="{{site.Language.Lang}}"
+  dir="{{ or site.Language.LanguageDirection `ltr` }}">
+
+<head>
+  {{ partial "tmpl/head.html" . }}
+</head>
+{{- $bodyClass := ""}}
+{{- if isset .Page.Params.ui "bodyClass" }}{{ $bodyClass = printf "class=\"%s\"" .Page.Params.ui.bodyClass }}{{ end }}
+
+<body {{$bodyClass | safeHTMLAttr}}>
+  <header>
+    {{ partial "tmpl/navbar" . }}
+  </header>
+
+  <!-- outer div is for gutter control-->
+  <div class="flex one six-800 six-1100 pi-nav-pad">
+    <div class="none sixth-1100"></div>
+
+    <!-- inner div turns component on and off -->
+    <div class="none third-800 sixth-1100 " style="align-content: stretch;">
+      <sidebar class="four-fifth">
+        {{ partial "tmpl/sidebar.html" . }}
+      </sidebar>
+    </div>
+
+    <div class="full two-third-800 half-1100"  style="align-content: stretch;">
+      <main>
+        {{ block "main" . }}{{ end }}
+      </main>
+    </div>
+
+
+    <!-- final outer div gutter -->
+    <div class="none sixth-1100"></div>
+  </div>
+
+  <!-- footer is 3 columns + gutters -->
+  <footer class="flex three five-800 seven-1100">
+    <div class="full fifth-800"></div>
+    <div class="full three-fifth-800 footer">
+      {{ partial "tmpl/footer" . }}
+    </div>
+  </footer>
+  {{ partial "tmpl/body-scripts" . }}
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+{{ `<!-- pihuw/partials/pager.html -->` | safeHTML }}
+<div class="ui fluid grey message">
+  <h5 class="ui left pointing purple basic label">
+    <a {{if .PrevInSection}}href="{{.PrevInSection.RelPermalink}}" aria-label="{{ T "ui_pager_prev" }} - {{.PrevInSection.Title}}" {{end}}class="btn btn-primary{{if not .PrevInSection}} disabled{{end}}">
+      <i class="arrow left icon"></i>
+      {{ T "ui_pager_prev" }}
+    </a>
+  </h5>
+  <h5 class="ui right pointing purple basic label">
+    <a {{if .NextInSection}}href="{{.NextInSection.RelPermalink}}" aria-label="{{ T "ui_pager_next" }} - {{.NextInSection.Title}}" {{end}}class="btn btn-primary{{if not .NextInSection}} disabled{{end}}">
+      {{ T "ui_pager_next" }}
+      <i class="arrow right icon"></i>
+    </a>
+
+  </h5>
+</div>

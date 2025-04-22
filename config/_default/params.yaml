@@ -1,0 +1,150 @@
+# pihuw theme
+# This file contains all the sites.Params.xxx properties
+# These values here are used to build the documentation site.
+# Change them to your favourite values for your website
+baseURL: /
+time_format_blog: Monday, 02 Jan 2006
+time_format_default: "2006-01-02"
+# the releases file is in assets/data/releases.yaml
+releaseTracking: data/releases.yaml
+
+#                                             _
+#   _ _   ___   ___  _ __   ___   _ _    ___ (_) __ __  ___
+#  | '_| / -_) (_-< | '_ \ / _ \ | ' \  (_-< | | \ V / / -_)
+#  |_|   \___| /__/ | .__/ \___/ |_||_| /__/ |_|  \_/  \___|
+#                   |_|
+# pihuw defines 3 responsive break widths in pixels. These adapt the layout.
+# thin - the portrait mobile mode. hamburger menu, no gutters, no sidebars
+# medium - not-quite-wide mode. normal menu, no gutters, one sidebar
+# wide - desktop mode: full menu, gutters, one/two sidebars
+
+responsive:
+  thin: 500
+  medium: 800
+  wide: 1100
+#                 _                                       _
+#   __ _   _  _  | |_   ___   ___   _ _    _  _   _ __   | |__   ___   _ _
+#  / _` | | || | |  _| / _ \ |___| | ' \  | || | | '  \  | '_ \ / -_) | '_|
+#  \__,_|  \_,_|  \__| \___/       |_||_|  \_,_| |_|_|_| |_.__/ \___| |_|
+# pihuw can number headings : ## {{% H 2 %}} Level-2-Heading 
+# These are the default settings that can be overridden per-page in frontmatter
+heading:
+  prefix: ""
+  separator: "."
+  suffix: ""
+#          _   _     _             _
+#   __ _  (_) | |_  | |_    _  _  | |__
+#  / _` | | | |  _| | ' \  | || | | '_ \
+#  \__, | |_|  \__| |_||_|  \_,_| |_.__/
+#  |___/
+# github information for providing "edit page" or "issues"
+github:
+  # Account URL for in-page links to opening issues and suggesting changes
+  url: https://github.com/mrmxf
+  # Repository name for in-page links to opening issues and suggesting changes
+  repo: pihuw
+  # what branch should the generated site point to e.g. main
+  branch: main
+  # path to the content folder relative to project root e.g. sample/pihuw-docs/
+  contentParent: documentation
+  # If one of your languages is in "/content" (not /content/de) mark it here
+  # this is a workaround because a partial cannot read site.DefaultContentLanguageinSubdir
+  languageInContentFolder: en
+
+# Specify a value here if your content directory is not in your repo's root directory
+
+#          _
+#   _  _  (_)
+#  | || | | |
+#   \_,_| |_|
+ui:
+  # look for logo.svg or logo.png or logo.jpg, set baseURL for this to work right
+  logo: /brand/logo
+  # some elements of the ui can be hidden
+  hide:
+    navbar:
+      logo: false
+      title: false
+  footer:
+    showSiteTitle: true
+    showSiteVersion: true
+    links:
+      - label: Built with
+        title: pihuw
+        url: https://github.com/mrmxf/pihuw
+      - label: by
+        title: Mr MXF
+        url: https://mrmxf.com
+      - label: copyright ©
+        title: Mr MXF
+        link: https://mrmxf.com
+      - title: Privacy Policy
+        link: https://termly.io/resources/templates/privacy-policy-template/
+      - title: Contact
+        link: /contact
+      - title: About
+        link: /about
+  readingTime:
+    enable: true
+#           _                         _
+#   __   __| |  _ _      _  _   _ _  | |  ___
+#  / _| / _` | | ' \    | || | | '_| | | (_-<
+#  \__| \__,_| |_||_|    \_,_| |_|   |_| /__/
+# certain resources will be pulled from cdn in partials/tmpl/head-cdn.html
+# each url is {{prefix}}{{version}}{{suffix}} with no extra processing
+# .integrity is optional
+cdn:
+  - name: jQuery
+    version: 3.7.1
+    prefix: https://cdn.jsdelivr.net/npm/jquery@
+    suffix: /dist/jquery.min.js
+    integrity: sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=
+  - name: fomantic-ui css
+    version: 2.9.4
+    prefix: https://cdn.jsdelivr.net/npm/fomantic-ui@
+    suffix: /dist/semantic.min.css
+    integrity: sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=
+  - name: fomantic-ui js
+    version: 2.9.4
+    prefix: https://cdn.jsdelivr.net/npm/fomantic-ui@
+    suffix: /dist/semantic.min.js
+    integrity: sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=
+  - name: mermaid
+    version: 11.6.0
+    prefix: https://cdn.jsdelivr.net/npm/mermaid@
+    suffix: /dist/mermaid.min.js
+    integrity: sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=
+
+#   _
+#  | |_   __ _  __ __  ___   _ _    ___   _ __    _  _
+#  |  _| / _` | \ \ / / _ \ | ' \  / _ \ | '  \  | || |
+#   \__| \__,_| /_\_\ \___/ |_||_| \___/ |_|_|_|  \_, |
+#                                                 |__/
+# all taxonomies are defined in hugo.yaml Their display control happens here.
+# https://gohugo.io/content-management/taxonomies/#what-is-a-taxonomy
+# A taxonomy allows you to create labels that you can stick on pages. Typically
+# this will comprise categories and tags. You might also have genres and authors
+# if you're writing a blog about books.
+#
+# You can call the taxonomies anything you like, but it's up to you to manage
+# the, Hugo doesn't add the labels automatically - that's your job!
+#
+# comment out this section to turn taxonomies off
+taxonomy:
+  # which taxonomies get shown in the tag-cloud?
+  taxonomyCloud:
+    - tags
+    - categories
+  # these are the titles displayed on the pages then you list taxonomies
+  titles:
+    - Tags
+    - Categories
+  # if a label matches one of the categories then the label will be added to
+  # any tag displayed on a page
+  label:
+    tags: tag
+    categories: cat
+  # these are the taxonomies that will appear at the top of pages
+  showOnPage:
+    - tags
+    - categories

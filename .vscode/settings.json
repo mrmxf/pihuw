@@ -1,0 +1,61 @@
+{
+  "cSpell.customDictionaries": {
+    "cspell-pihuw": {
+      "name": "cspell-pihuw",
+      "path": "${workspaceRoot}/.vscode/cspell-pihuw.txt",
+      "description": "Words used in this project",
+      "addWords": true
+    },
+    "custom": true, // Enable the `custom` dictionary
+    "internal-terms": false // Disable the `internal-terms` dictionary
+  },
+  "cSpell.dictionaries": [
+    "cspell-pihuw"
+  ],
+    "workbench.colorTheme": "Bearded Theme Milkshake Mango",
+    "editor.wordWrap": "on",
+    "markdown.preview.fontSize": 12,
+    "markdown.preview.lineHeight": 1.5,
+  // Default number of spaces a tab is equal to.
+  "editor.tabSize": 2,
+  // Insert spaces when pressing Tab.
+  "editor.insertSpaces": true,
+  // Guess the settings, then use overrides below else defaults
+  "editor.detectIndentation": true,
+  // Default rulers
+  "editor.rulers": [
+    79,
+    80,
+    120
+  ],
+  "[html]": {
+    "editor.tabSize": 2,
+    "editor.rulers": [
+      120
+    ]
+  },
+  "[javascript]": {
+    "editor.rulers": [
+      120
+    ],
+    "editor.tabSize": 2
+  },
+  "[typescript]": {
+    "editor.rulers": [
+      120
+    ],
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.tabSize": 3,
+    "editor.rulers": [
+      120
+    ]
+  },
+  "[md]": {
+    "editor.tabSize": 3,
+    "editor.rulers": [
+      120
+    ]
+  },
+}

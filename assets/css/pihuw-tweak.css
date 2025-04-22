@@ -1,0 +1,242 @@
+/* PicnicCss Hugo Wrapper - microcontroller friendly theme */
+/* pihuw variables */
+:root {
+  /* mrmxf pallette */
+  --mm-yellow: hsl(46, 50%, 52%);
+  --mm-green: hsl(80, 45%, 49%);
+  --mm-purple: hsl(324, 45%, 42%);
+  --mm-blue: hsl(243, 36%, 39%);
+  --mm-black: hsl(0, 0%, 0%);
+  --mm-dark: hsl(0, 0%, 20%);
+  --mm-light: hsl(0, 0%, 93%);
+  --mm-white: hsl(0, 0%, 100%);
+  /* metarex.media pallette */
+  --mrx-amber: var(--mm-yellow);
+  --mrx-purple: var(--mm-purple);
+  --mrx-green: hsl(88, 45%, 30%);
+  --mrx-grey: var(--mm-dark);
+  /* named elements - visual objects */
+  --mrx-skin: hsl(88, 45%, 60%);
+  --mrx-eye: hsl(354, 45%, 42%);
+  --mrx-trainFill: lighten(var(--mrx-grey), 25%);
+  --mrx-sky: lighten(var(--mrx-amber), 40%);
+  --mrx-ground: lighten(var(--mrx-purple), 25%);
+
+  /* screen break points */
+  --pi-break-medium: 800;
+  --pi-break-wide: 1100;
+  
+  /* named elements - pihuw controls */
+  --pihuw-dark-bg: var(--mm-purple);
+  --pihuw-blue: var(--mm-blue);
+
+  /* colors of the logo */
+  --fomantic-theme-color: #35BDB2;
+  --hugo-theme-color: #FF4088;
+  --cardboard-wrapper: #D8B588;
+
+  /* pihuw named colors & highlights */
+  --pi-text: var(--mm-dark);
+  --pi-hi-1: var(--mrx-green);
+  --pi-hi-2: var(--mrx-purple);
+  --pi-hi-3: var(--mrx-amber);
+}
+
+/* general highlights for widgets */
+.card.hi-1 {
+  color: hsl(from var(--pi-hi-1) h s );
+  background-color: hsl(from var(--pi-hi-1) h s 95%);
+}
+
+/* specialty text styles & colors */
+code {
+  color: var(--pihuw-blue);
+}
+/*                      */
+/*  _ _    __ _  __ __  */
+/* | ' \  / _` | \ V /  */
+/* |_||_| \__,_|  \_/   */
+.pi-nav-pad {
+  /* padding to drop below the fixed nav bar */
+  padding-top: 9em;
+}
+.pi-nav {
+  color: var(--mm-green);
+  margin: 0 15%;
+}
+nav .brand {
+  display: inline;
+  height: 70%;
+  object-fit: contain;
+}
+section img {
+  display: inline;
+  height: 70%;
+  object-fit: contain;
+}
+.pi-reading-time {
+  size: 80%;
+  color: var(--pi-hi-1)
+}
+/*       _      _         _                  */
+/*  ___ (_)  __| |  ___  | |__   __ _   _ _  */
+/* (_-< | | / _` | / -_) | '_ \ / _` | | '_| */
+/* /__/ |_| \__,_| \___| |_.__/ \__,_| |_|   */
+sidebar {
+  display: inline-flex;
+  color: var(--pi-hi-2);
+  background-color: hsl(from var(--pi-hi-2) h s 95%);
+  border: 1px solid var(--pi-hi-2);
+  border-radius: 0.5em;
+  padding: 0.6em;
+  height: 100%;
+}
+/* #          _   _                        _                      */
+/* #   _ __  (_) | |_    _  _  __ __ __   | |  ___   __ _   ___   */
+/* #  | '_ \ | | | ' \  | || | \ V  V /   | | / _ \ / _` | / _ \  */
+/* #  | .__/ |_| |_||_|  \_,_|  \_/\_/    |_| \___/ \__, | \___/  */
+/* #  |_|                                           |___/         */
+.logo-pi {
+  color: var(--fomantic-theme-color);
+}
+.logo-hu {
+  color: var(--hugo-theme-color);
+}
+.logo-w {
+  color: var(--pi-logo-w);
+}
+
+/* custom styling for the site title text in the menu*/
+#siteTitleMenu {
+  font-weight: bold;
+  color: var(--pi-hi-1);
+  margin-top: auto;
+  vertical-align: middle;
+}
+/*   _                                                      */
+/*  | |_   __ _  __ __  ___   _ _    ___   _ __    _  _     */
+/*  |  _| / _` | \ \ / / _ \ | ' \  / _ \ | '  \  | || |    */
+/*   \__| \__,_| /_\_\ \___/ |_||_| \___/ |_|_|_|  \_, |    */
+/*                                                 |__/     */
+
+/* a flexbox for aligning centered things with tags like buttons and tags */
+.pi-flex-with-tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* a flexbox  for aligning titles and tags */
+.pi-flex-title-tags {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* pihuw taxonomy label classes */
+.ui.pi-tax-1.label {
+  background: hsl(from var(--pi-hi-1) h s 95%);
+  backdrop-filter: 200%;
+  border-color: var(--pi-hi-1);
+  color: var(--pi-hi-1);
+}
+.ui.pi-tax-2.label {
+  background: hsl(from var(--pi-hi-2) h s 95%);
+  border-color: var(--pi-hi-2);
+  color: var(--pi-hi-2);
+}
+.ui.pi-tax-3.label {
+  background: hsl(from var(--pi-hi-3) h s 95%);
+  border-color: var(--pi-hi-3);
+  color: var(--pi-hi-3);
+}
+.ui.pi-tax-4.label {
+  background: hsl(from var(--pi-hi-4) h s 95%);
+  border-color: var(--pi-hi-4);
+  color: var(--pi-hi-4);
+}
+/*   __               _                   */
+/*  / _|  ___   ___  | |_   ___   _ _     */
+/* |  _| / _ \ / _ \ |  _| / -_) | '_|    */
+/* |_|   \___/ \___/  \__| \___| |_|      */
+/* pihuw footer row*/
+.footer {
+  color: var(--mrx-skin);
+  background-color: var(--mrx-green);
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 1px;
+}
+.footer .left {
+  text-align: center;
+  width: 25%;
+}
+.footer .middle {
+  text-align: center;
+  width: 50%;
+}
+.footer .right {
+  text-align: center;
+  width: 25%;
+}
+/* all labels in the row */
+.footer .left .label, .footer .middle .label, .footer .right .label {
+  color: var(--mrx-green);
+  background-color: var(--mrx-skin);
+}
+
+/* all text in the row with a link*/
+.footer .label>a {
+  color: var(--mrx-eye);
+  opacity: 1;
+}
+
+/* all text in the row with a link*/
+.footer .label>a:hover {
+  color: red;
+}
+
+.pi-footer-label {
+  color: lighten(var(--mm-purple), 40%);
+}
+
+.pi-footer-title {
+  color: lighten(var(--mrx-green), 40%);
+  font-size: 1.2em;
+}
+
+/* On wide screens display full menu, hide narrow menu */
+.pi-menu-w {
+  display: flex;
+}
+
+.pi-menu-n {
+  display: none;
+}
+
+/*  On narrow screens - opposite */
+@media screen and (max-width: var(--pi-break-mid)) {
+  .pi-nav-pad {
+    /* padding to drop below the fixed nav bar */
+    padding-top: 6em;
+  }
+}
+@media screen and (max-width: var(--pi-break-wide)) {
+  .pi-nav-pad {
+    /* padding to drop below the fixed nav bar */
+    padding-top: 3.5em;
+  }
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  margin: 0em 2em;
+  padding: 0;
+}

@@ -1,0 +1,15 @@
+{{ `<!-- pihuw/partials/tmpl/head-css -->` | safeHTML }}
+{{- $pihuw := resources.Get "css/pihuw-tweak.css" }}
+{{- with resources.Get "css/picnic.min.css" }}
+ {{- if eq hugo.Environment "development" }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}">
+  <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
+ {{- else }}
+  {{- with . | minify | fingerprint }}
+   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+  {{- end }}
+  <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
+ {{- end }}
+{{- end }}
+{{- if fileExists "static/site.css" }}<link rel="stylesheet" href="/site.css">{{end -}}
+<link rel="stylesheet" href="/site.css">

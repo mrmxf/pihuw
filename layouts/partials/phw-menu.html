@@ -1,0 +1,56 @@
+{{- /*
+Renders a menu for the given menu ID.
+
+@context {page} page The current page.
+@context {string} menuID The menu ID.
+
+@example: {{ partial "phw-menu.html" (dict "menuID" "main" "page" .) }}
+*/}}
+
+{{- $page := .page }}
+{{- $menuID := .menuID }}
+
+{{- with index site.Menus $menuID }}
+  <nav style="text-align:center;">
+      {{- partial "thisfile/menu/walk.html" (dict "page" $page "menuEntries" .) }}
+  </nav>
+{{- end }}
+
+{{- define "partials/thisfile/menu/walk.html" }}
+  {{- $page := .page }}
+    <!-- responsive collapse-->
+    <input id="bmenub" type="checkbox" class="show">
+    <label for="bmenub" class="burger pseudo button">&#8801;</label>
+  
+  {{- range .menuEntries }}
+    {{- $class := "button" -}}
+    {{- $attrs := dict "href" .URL }}
+    {{- if $page.IsMenuCurrent .Menu . }}
+      {{- $class = printf "%s %s" $class "active" -}}
+      {{- $attrs = merge $attrs (dict "class" $class "aria-current" "page") }}
+    {{- else if $page.HasMenuCurrent .Menu .}}
+      {{- $class = printf "%s %s" $class "ancestor" -}}
+      {{- $attrs = merge $attrs (dict "class" $class "aria-current" "true") }}
+    {{- else }}
+      {{- $attrs = merge $attrs (dict "class" $class) -}}
+    {{- end }}
+    {{- $name := .Name }}
+    {{- with .Identifier }}
+      {{- with T . }}
+        {{- $name = . }}
+      {{- end }}
+    {{- end }}
+      <a
+        {{- range $k, $v := $attrs }}
+          {{- with $v }}
+            {{- printf " %s=%q" $k $v | safeHTMLAttr }}
+          {{- end }}
+        {{- end -}}
+      >{{ $name }}</a>
+      {{- with .Children }}
+        <ul>
+          {{- partial "thisfile/menu/walk.html" (dict "page" $page "menuEntries" .) }}
+        </ul>
+      {{- end }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,57 @@
+# pihuw theme
+# module configuration
+
+
+imports:
+  - path: github.com/mrmxf/pihuw
+    disable: false
+# uncomment line below for temporary local development of module
+# replacements: "github.com/mrmxf/pihuw->../../../pub-mrmxf/pihuw"
+
+hugoVersion:
+  extended: true
+  min: 0.145.0
+
+  mounts:
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: content
+    target: content
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: data
+    target: data
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: layouts
+    target: layouts
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: i18n
+    target: i18n
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: archetypes
+    target: archetypes
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: assets
+    target: assets
+  - disableWatch: false
+    excludeFiles: null
+    includeFiles: null
+    lang: ""
+    source: static
+    target: static
