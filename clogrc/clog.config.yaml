@@ -1,0 +1,78 @@
+---
+# yamllint disable rule:colons
+#   ___   _   _  _         __      __
+#  | _ \ (_) | || |  _  _  \ \    / /
+#  |  _/ | | | __ | | || |  \ \/\/ /
+#  |_|   |_| |_||_|  \_,_|   \_/\_/
+# =============================================================================
+#               _                       _
+#   ___  _ _   (_)  _ __   _ __   ___  | |_   ___
+#  (_-< | ' \  | | | '_ \ | '_ \ / -_) |  _| (_-<
+#  /__/ |_||_| |_| | .__/ | .__/ \___|  \__| /__/
+#                  |_|    |_|
+# -----------------------------------------------------------------------------
+snippets:
+  build: |
+    [ -d content ] && rm content
+    eval "$(clog project config)"
+    clog Check pre-build
+    clog Check build
+    eval "$(clog Inc)"                     # include clog helpers (sh, zsh & bash)
+    helper="core/sh/help-golang.sh"        # build helpers
+    eval "$(clog Cat $helper)"
+    clog Log -I  "Building Project$cS $PROJECT $cT using clog's $cF$helper"
+    step=0
+    clog Log -I "$(((step+=1))). setting up content folder"
+    [ ! -d content ] && ln -s documentation/content content
+    clog Log -I "$(((step+=1))). cleaning public folder"
+    rm -rf public/*
+    clog Log -I "$(((step+=1))). building hugo to public folder"
+    hugo build --gc --minify --forceSyncStatic --ignoreCache --logLevel info
+    dockerfile="clogrc/dockerfile"
+    platform="linux/amd64"
+    clog Log -I "$(((step+=1))). building docker image with$cT $dockerfile "
+
+  is-prod-release: |
+    [ "prod" == "$(yq -r '.[0].build'  assets/data/releases.yaml)" ]
+  git:
+    tag:
+      # pihuw, like Hugo & golang requires a "v"
+      ref: echo "v$(yq -r '.[0].version'  assets/data/releases.yaml)"
+    message:
+      ref:  yq -r '.[0].note'  assets/data/releases.yaml
+  project:
+    config: |
+      PROJECT=pihuw
+      DOCKER_NS=mrmxf
+    has:
+      fomantic: cat layouts/partials/tmpl/head-cdn|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'|tail -1
+      hugo: hugo version|grep -oE '[0-9]\.[0-9]+\.[0-9]+'
+      git-lfs: git-lfs version|grep -oE '[0-9]\.[0-9]+\.[0-9]+'|head -1
+    needs:
+      hugo: |
+        j="$(curl -sL https://api.github.com/repos/gohugoio/hugo/releases/latest)"
+        echo "$(   echo $j | jq -r '.name   | ltrimstr("v")')"
+      git-lfs: echo "3.6.0"
+  watch: |
+    [ ! -d content ] && ln -s documentation/content content
+    hugo server --port=1313 --logLevel debug --buildDrafts --buildFuture --buildExpired --cleanDestinationDir
+    rm content
+# =============================================================================
+#    ___   _                 _
+#   / __| | |_    ___   __  | |__
+#  | (__  | ' \  / -_) / _| | / /
+#   \___| |_||_| \___| \__| |_\_\
+# -----------------------------------------------------------------------------
+check:
+  build:
+    blocks:
+      - name: hugo version
+        try: |
+          [[ "$(clog project needs hugo)" == "$(clog project has hugo)" ]]
+        ok: clog Log -I "hugo $(clog project has hugo) is up to date"
+        catch: |
+          clog Log -W "hugo: bad version. Need $(clog project needs hugo), got $(clog project has hugo)"
+      - name: content folder
+        try: "[ ! -d content ]"
+        ok: clog Log -I "content folder not linked"
+        catch: eval "$(clog Inc)";clog Log -E "content folder exists -$cC ln$cW -d$cF content"

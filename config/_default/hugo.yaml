@@ -1,0 +1,108 @@
+# pihuw theme
+# core configuration to build the pihuw documentation
+# change this to values you like for your site.
+
+# cSpell:ignore docsy fortawesome fontawesome webfonts
+title: FoHuW Docs
+
+# ----------------------------------------------------------------------------------------------------------------------
+#   __  __          _
+#  |  \/  |  __ _  (_)  _ _      _ __    ___   _ _    _  _
+#  | |\/| | / _` | | | | ' \    | '  \  / -_) | ' \  | || |
+#  |_|  |_| \__,_| |_| |_||_|   |_|_|_| \___| |_||_|  \_,_|
+#
+# Most menus are in the frontmatter of the relevant pages
+# Render the example site to see how menus work
+
+menus:
+  main:
+  - name: 'Home'
+    pageRef: '/'
+    weight: 10
+  - name: 'Posts'
+    pageRef: '/posts'
+    weight: 20
+  - name: 'Tags'
+    pageRef: '/tags'
+    weight: 30
+
+
+  footer:
+    - name: Copyright
+      URL: https://mrmxf.com
+
+#   _ __    __ _   _ _  | |__  _  _   _ __
+#  | '  \  / _` | | '_| | / / | || | | '_ \
+#  |_|_|_| \__,_| |_|   |_\_\  \_,_| | .__/
+#                                    |_|
+markup:
+  goldmark:
+    renderer:
+      # unsafe needed for mermaid
+      unsafe: true
+
+  highlight:
+    anchorLineNos: false
+    codeFences: true
+    # Uncomment if you want your chosen highlight style used for code blocks without a specified language
+    # THIS MUST BE FALSE for mermaid to work!!!
+    guessSyntax: false
+    # hl_Lines: 
+    # See a complete list of available styles at https://gohugo.io/quick-reference/syntax-highlighting-styles/
+    # I like light: pastie   dark: monokailight     neutral: hrdark
+    style: monokailight
+    lineAnchors: ""
+    # hl_Lines:     # To emphasize lines 2, 3, 4, and 7, set this value to 2-4 7
+    lineNoStart: 1
+    lineNos: true
+    lineNumbersInTable: true
+    noClasses: true
+    tabWidth: 2
+    #wrapperClass: ""   #The class or classes to use for the outermost element of the highlighted code. Default is highlight
+#                _                   _        __                              _
+#   ___   _  _  | |_   _ __   _  _  | |_     / _|  ___   _ _   _ __    __ _  | |_   ___
+#  / _ \ | || | |  _| | '_ \ | || | |  _|   |  _| / _ \ | '_| | '  \  / _` | |  _| (_-<
+#  \___/  \_,_|  \__| | .__/  \_,_|  \__|   |_|   \___/ |_|   |_|_|_| \__,_|  \__| /__/
+#                     |_|
+# outputFormats:
+#   PRINT:
+#     baseName: index
+#     isHTML: true
+#     mediaType: text/html
+#     path: _print
+#     permalinkable: false
+#   _
+#  | |     __ _   _ _    __ _   _  _   __ _   __ _   ___   ___
+#  | |__  / _` | | ' \  / _` | | || | / _` | / _` | / -_) (_-<
+#  |____| \__,_| |_||_| \__, |  \_,_| \__,_| \__, | \___| /__/
+#                       |___/                |___/
+# Only uncomment this section if you are going to support multiple languages
+# Multiple languages change the URLs of pages and Github searching.
+# if you add languages and the default language is NOT in a subdir, then the
+# following folder structure is expected:
+
+defaultContentLanguage: en
+defaultContentLanguageInSubdir: false
+# languages:
+#   en:
+#     languageCode: en-GB
+#     languageDirection: ltr
+#     languageName: English
+#     title: Project Documentation
+#     weight: 1
+#   fr:
+#     languageCode: fr-FR
+#     languageDirection: ltr
+#     languageName: Français
+#     title: FoHuW Documentation
+#     weight: 2
+
+#   _                                             _
+#  | |_   __ _  __ __  ___   _ _    ___   _ __   (_)  ___   ___
+#  |  _| / _` | \ \ / / _ \ | ' \  / _ \ | '  \  | | / -_) (_-<
+#   \__| \__,_| /_\_\ \___/ |_||_| \___/ |_|_|_| |_| \___| /__/
+# all taxonomies are defined in here. Their display control happens in params.yaml.
+# https://gohugo.io/content-management/taxonomies/#what-is-a-taxonomy
+taxonomies:
+  category: categories
+  tag: tags

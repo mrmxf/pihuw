@@ -1,0 +1,27 @@
+{{ `<!-- pihuw/partials/tmpl/breadcrumb.html -->` | safeHTML }}
+{{ $isSingle := true -}}
+{{ with .Parent -}}
+  {{ $isSingle = .IsHome -}}
+{{ end -}}
+<nav aria-label="breadcrumb" class="ui breadcrumb">
+  <i class="home icon"></i>
+  <i class="right arrow icon divider"></i>
+    {{- template "breadcrumbnav" (dict "p1" . "p2" .) }}
+</nav>
+
+{{- define "breadcrumbnav" -}}
+  {{ if .p1.Parent -}}
+    {{ if not .p1.Parent.IsHome -}}
+      {{ template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 )  -}}
+    {{ end -}}
+  {{ else if not .p1.IsHome -}}
+    {{ template "breadcrumbnav" (dict "p1" .p1.Site.Home "p2" .p2 )  -}}
+  {{ end -}}
+  {{ $isActive :=  eq .p1 .p2 }}
+  <a class="{{ if $isActive }}active {{ end }}section"
+      {{- if $isActive }} aria-current="page"{{ end }}
+      href="{{ .p1.Permalink }}">
+      {{- .p1.LinkTitle -}}
+    </a>
+    {{- if not $isActive }}<i class="right arrow icon divider"></i>{{ end }}
+{{- end -}}

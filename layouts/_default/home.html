@@ -1,0 +1,9 @@
+{{ define "main" }}
+{{ .Content }}
+<hr><small>
+  <h3>Other pages</h3>
+  {{ range site.RegularPages }}
+  <span class="stack icon-file"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></span>
+  {{ end }}
+</small>
+{{ end }}

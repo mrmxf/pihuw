@@ -1,0 +1,22 @@
+{{ "<!-- partial/taxonomy_terms_clouds.html -->" | safeHTML }}
+{{ $context := . }}
+{{ if isset site.Params "taxonomy" }}
+	{{ if isset site.Params.Taxonomy "taxonomycloud" }}
+		{{ range $index, $taxo := site.Params.Taxonomy.taxonomyCloud }}
+			{{ if isset $.Site.Params.Taxonomy "taxonomycloudtitle" }}
+				{{ $.Scratch.Set "title" (index $.Site.Params.Taxonomy.taxonomyCloudTitle $index) }}
+			{{ else }}
+				{{ $.Scratch.Set "title" (humanize $taxo) }}
+			{{ end }}
+			{{ partial "tmpl/taxonomy_terms_cloud.html" (dict "context" $context "taxo" $taxo "title" ($.Scratch.Get "title")) }}
+		{{ end }}
+	{{ else }}
+		{{ range $taxo, $taxo_map := site.Taxonomies }}
+			{{ partial "tmpl/taxonomy_terms_cloud.html" (dict "context" $context "taxo" $taxo "title" (humanize $taxo)) }}
+		{{ end }}
+	{{ end }}
+{{ else }}
+	{{ range $taxo, $taxo_map := site.Taxonomies }}
+		{{ partial "tmpl/taxonomy_terms_cloud.html" (dict "context" $context "taxo" $taxo "title" (humanize $taxo)) }}
+	{{ end }}
+{{ end }}

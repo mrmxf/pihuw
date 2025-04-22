@@ -1,0 +1,58 @@
+{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
+{{- $s := "."}}{{$p := ""}}{{$x := ""}}
+{{/* Override with Site settings if available */}}
+{{- if isset site.Params.heading "separator"}}{{$s = site.Params.heading.separator}}{{end}}
+{{- if isset site.Params.heading "prefix"}}{{$p = site.Params.heading.prefix}}{{end}}
+{{- if isset site.Params.heading "suffix"}}{{$x = site.Params.heading.suffix}}{{end}}
+{{/* Override with Page settings if available */}}
+{{- if isset .ctx.Page.Params.heading "separator"}}{{$s = .ctx.Page.Params.heading.separator}}{{end}}
+{{- if isset .ctx.Page.Params.heading "prefix"}}{{$p = .ctx.Page.Params.heading.prefix}}{{end}}
+{{- if isset .ctx.Page.Params.heading "suffix"}}{{$x = .ctx.Page.Params.heading.suffix}}{{end}}
+
+{{/* sanitize errors */}}
+{{- $level := int (.level | default 0) -}}
+{{- if or (lt $level 1) (gt $level 6) -}}
+{{ $msg := printf "must be an int between 1 & 6. got (%d), using (1)" $level }}
+{{ partial "tool/dbg-err.html" (dict "p" "tool/numbered-header" "a" "heading level" "m" $msg) }}
+{{ warnf "partial: %s: %s  %s" "tool/numbered-header" "heading level" $msg -}}
+{{ $level = 1 }}
+{{end -}}
+
+{{/* read the levels */}}
+{{- $1 := (.ctx.Page.Scratch.Get "H1") | int -}}
+{{- $2 := (.ctx.Page.Scratch.Get "H2") | int -}}
+{{- $3 := (.ctx.Page.Scratch.Get "H3") | int -}}
+{{- $4 := (.ctx.Page.Scratch.Get "H4") | int -}}
+{{- $5 := (.ctx.Page.Scratch.Get "H5") | int -}}
+{{- $6 := (.ctx.Page.Scratch.Get "H6") | int -}}
+
+{{/* start by resetting all the minor numerals to zero (for the next heading) */}}
+{{ if le $level 5 }}{{ $6 = 0 -}}{{end}}
+{{ if le $level 4 }}{{ $5 = 0 -}}{{end}}
+{{ if le $level 3 }}{{ $4 = 0 -}}{{end}}
+{{ if le $level 2 }}{{ $3 = 0 -}}{{end}}
+{{ if le $level 1 }}{{ $2 = 0 -}}{{end}}
+
+{{/* increment the current heading level */}}
+{{ if eq $level 6 }}{{- $6 = math.Add $6 1 -}}{{end}}
+{{ if eq $level 5 }}{{- $5 = math.Add $5 1 -}}{{end}}
+{{ if eq $level 4 }}{{- $4 = math.Add $4 1 -}}{{end}}
+{{ if eq $level 3 }}{{- $3 = math.Add $3 1 -}}{{end}}
+{{ if eq $level 2 }}{{- $2 = math.Add $2 1 -}}{{end}}
+{{ if eq $level 1 }}{{- $1 = math.Add $1 1 -}}{{end}}
+
+{{/* print the heading number */}}
+{{ if eq $level 6 }}{{- printf "%s%d%s%d%s%d%s%d%s%d%s%d%s" $p $1 $s $2 $s $3 $s $4 $s $5 $s $6 $x -}}{{end}}
+{{ if eq $level 5 }}{{- printf "%s%d%s%d%s%d%s%d%s%d%s" $p $1 $s $2 $s $3 $s $4 $s $5 $x -}}{{end}}
+{{ if eq $level 4 }}{{- printf "%s%d%s%d%s%d%s%d%s" $p $1 $s $2 $s $3 $s $4 $x -}}{{end}}
+{{ if eq $level 3 }}{{- printf "%s%d%s%d%s%d%s" $p $1 $s $2 $s $3 $x -}}{{end}}
+{{ if eq $level 2 }}{{- printf "%s%d%s%d%s" $p $1 $s $2 $x -}}{{end}}
+{{ if eq $level 1 }}{{- printf "%s%d%s" $p $1 $x -}}{{end}}
+
+{{/* store the new levels */}}
+{{- .ctx.Page.Scratch.Set "H1" $1 -}}
+{{- .ctx.Page.Scratch.Set "H2" $2 -}}
+{{- .ctx.Page.Scratch.Set "H3" $3 -}}
+{{- .ctx.Page.Scratch.Set "H4" $4 -}}
+{{- .ctx.Page.Scratch.Set "H5" $5 -}}
+{{- .ctx.Page.Scratch.Set "H6" $6 -}}

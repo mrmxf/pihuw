@@ -1,0 +1,108 @@
+{{ `<!-- pihuw/partials/fo.html -->` | safeHTML }}{{/* pihuw shortcode
+
+I was struggling to explain & remember all the shortcodes & partials in the pihuw theme.
+I was also having name clashes with other themes, so I had a simple idea to crete a consistent
+set of parameters and names
+
+Props(see pi-help partial or insert `pi t="help"` in your code):
+             t  = "partial pihuw-$t ."
+           help = "any string and the help for that partial will be rendered"
+            alt = alt text for image/ video/resource
+     blockClass = class for the containing div - the outermost block (default = container)
+          class = class for the main element (e.g. Message or Card or Accordion Group)
+          count = number of things to show e.g. blogs
+    description = hover text or similar
+           from = path to source file (instead of a Page) when t=include
+         header = is the markdown h1 text or "Figure 1" in a caption
+    headerClass = class overrides for the block's header
+    headerLink  = href around header element
+             id = "some id to create an anchor"
+           link = default href around any element
+           meta = text adding extra information to the header/text
+           mode = "mode defining string" e.g. "log" or "dump" for pihuw-debug
+     ???   page = "name of page to get with .Site.GetPage $page"
+           skip = number of things to skip before output e.g. blogs
+            src = "relative path or URL image/video/resource"
+       srcClass = "class string surrounding the src"
+          srcId = "an anchor id for the image/video/resource"
+          srcOn = left | right | none - to control formatting of blog summaries etc
+      srcPoster = image displayed if src is a video or non-image resource
+       srcWidth = float from 0.0 ↔ 1.0 for the proportion of the column that is image/video/resource
+       srcLink  = href around src. defaults to `link`
+           text = short markdown to be rendered e.g. as caption
+
+          Inner   contains markdown and is after the rendered description
+*/}}
+{{- $workerPartial := "pi" -}}
+
+{{- $args:=""}}{{if .IsNamedParams}}{{$args =.Get "args"}}{{else}}{{$args =.Get 0}}{{end -}}
+{{- $id := .Get "id" | default (printf "block-%d" .Ordinal) -}}
+{{- $t := .Get "t" -}}
+{{- $alt := .Get "alt" -}}
+{{- $blockClass := .Get "blockClass" -}}
+{{- $class := .Get "class" -}}
+{{- $count := .Get "count" | default 1 -}}
+{{- $description := .Get "description" -}}
+{{- $from := .Get "from" -}}
+{{- $header := .Get "header" -}}
+{{- $headerClass := .Get "headerClass" -}}
+{{- $headerLink := .Get "headerLink" -}}
+{{- $help := .Get "help" -}}
+{{- $meta := .Get "meta" -}}
+{{- $skip := .Get "skip" | default 0 -}}
+{{- $src := .Get "src" -}}
+{{- $srcClass := .Get "srcClass" -}}
+{{- $srcId := .Get "srcId" -}}
+{{- $srcLink := .Get "srcLink" | default $headerLink -}}
+{{- $srcOn := .Get "srcOn" | default "left" -}}
+{{- $srcPoster := .Get "srcPoster" -}}
+{{- $srcWidth := .Get "srcWidth" | default 0.25 -}}
+{{- $text := .Get "text" -}}
+{{/* --- src logic ------------------------------------------------------*/}}
+{{- if not $src -}}{{ $srcWidth = 0.0 }}{{- end -}}
+{{- $srcIsVideo := false -}}
+{{- $srcIsImage := false -}}
+{{- with $src -}}
+{{ $ext := strings.ToLower (path.Ext $src) }}
+{{ $imgExt := slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".svg"}}
+{{ $vidExt := slice ".mp4" ".mkv" }}
+{{ $srcIsVideo = in $vidExt $ext }}
+{{ $srcIsImage = in $imgExt $ext }}
+{{- end -}}
+{{/* --- src width for grid ----------------------------------------------*/}}
+{{- $slice := slice "zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" -}}
+{{- $type := printf "%T" $srcWidth }}
+{{- if ne $type "float64" }}{{ $srcWidth = 0.3}}{{ end -}}
+{{- $r := math.Round ( mul 16.0 $srcWidth ) -}}
+{{- $r = math.Min 16 ( math.Max 0 $r ) | int -}}
+{{- $srcGrid := printf "%s wide" (index $slice $r) }}
+{{- $txtGrid := printf "%s wide" (index $slice ( sub 16 $r )) }}
+{{/* --- select the correct partial ---------------------------------------*/}}
+{{- $d := dict "id" $id "page" .Page "from" $from -}}
+{{/* --- populate the dict for the partial --------------------------------*/}}
+{{- $d = merge $d (dict "t" $t) -}}
+{{- $d = merge $d (dict "alt" $alt) -}}
+{{- $d = merge $d (dict "args" $args) -}}
+{{- $d = merge $d (dict "blockClass" $blockClass) -}}
+{{- $d = merge $d (dict "class" $class) -}}
+{{- $d = merge $d (dict "count" $count) -}}
+{{- $d = merge $d (dict "description" $description) -}}
+{{- $d = merge $d (dict "inner" .Inner) -}}
+{{- $d = merge $d (dict "help" $help) -}}
+{{- $d = merge $d (dict "header" $header) -}}
+{{- $d = merge $d (dict "headerClass" $headerClass) -}}
+{{- $d = merge $d (dict "headerLink" $headerLink) -}}
+{{- $d = merge $d (dict "meta" $meta) -}}
+{{- $d = merge $d (dict "skip" $skip) -}}
+{{- $d = merge $d (dict "src" $src) -}}
+{{- $d = merge $d (dict "srcClass" $srcClass) -}}
+{{- $d = merge $d (dict "srcGrid" $srcGrid) -}}
+{{- $d = merge $d (dict "srcId" $srcId) -}}
+{{- $d = merge $d (dict "srcIsVideo" $srcIsVideo) -}}
+{{- $d = merge $d (dict "srcIsImage" $srcIsImage) -}}
+{{- $d = merge $d (dict "srcLink" $srcLink) -}}
+{{- $d = merge $d (dict "srcOn" $srcOn) -}}
+{{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
+{{- $d = merge $d (dict "text" $text) -}}
+{{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
+{{- partial $workerPartial $d -}}

@@ -1,0 +1,12 @@
+{{ `<!-- pihuw/partials/page-description.html -->` | safeHTML }}
+{{ with .Description | plainify -}}
+  {{ . -}}
+{{ else -}}
+  {{ if .IsPage -}}
+    {{ .Summary | plainify | chomp -}}
+  {{ else -}}
+    {{ with .Site.Params.description | plainify -}}
+      {{ . -}}
+    {{ end -}}
+  {{ end -}}
+{{ end -}}

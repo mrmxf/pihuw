@@ -1,0 +1,43 @@
+{{ `<!-- pihuw/partials/page-meta-links.html -->` | safeHTML }}
+{{ if .File }}{{/*
+Create the github url of the source page:
+... $gUrl/$gRepo/tree/$gBranch/[$gParent/]content/[$lang]
+*/}}
+{{- $gUrl := (site.Params.github.url) -}}
+{{- $gRepo := (site.Params.github.repo) -}}
+{{- if $gRepo -}}
+  {{- $gBranch := (site.Params.github.branch) | default "main" -}}
+  {{- $gParent := (site.Params.github.contentParent) -}}
+  {{- $uri := $gBranch -}}
+  {{/* append a parent folder if it exists */}}
+  {{- if $gParent}}
+    {{- $uri = printf "%s/%s/content" $uri $gParent -}}
+  {{else}}
+    {{- $uri = printf "%s/content" $uri -}}
+  {{end}}
+
+  {{/* append a language folder if file is in a language sub folder */}}
+  {{- if and site.Language.Lang (ne site.Language.Lang site.Params.github.languageInContentFolder) -}}
+  {{ $uri = printf "%s/%s" $uri (site.Language.Lang) -}}
+  {{ end -}}
+
+  {{/* append the path to the file */}}
+  {{ $uri = printf "%s/%s" $uri (replace .File.Path "\\" "/" | path.Clean) -}}
+
+  {{ $viewURL := printf "%s/%s/tree/%s" $gUrl $gRepo $uri -}}
+  {{ $editURL := printf "%s/%s/edit/%s" $gUrl $gRepo $uri -}}
+  {{ $issuesURL := printf "%s/%s/issues/new?title=page[%s] " $gUrl $gRepo (safeURL $.Title ) -}}
+  GitHub source:
+  {{template "footer-github-label" (dict "url" $viewURL "text" (T "view") ) }}
+  {{template "footer-github-label" (dict "url" $editURL "text" (T "edit") ) }}
+  {{template "footer-github-label" (dict "url" $issuesURL "text" (T "issue") ) }}
+  {{ end -}}
+{{ end -}}
+
+{{ define "footer-github-label" -}}
+<div class="label">
+  <span>
+    <a href="{{ .url }}" target="_blank" rel="noopener">{{ .text }}</a>
+  </span>
+</div>
+{{end}}

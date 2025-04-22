@@ -1,0 +1,6 @@
+# https://hub.docker.com/_/caddy
+FROM caddy:latest-alpine
+
+# copy the public folder to the caddy server root
+# the ./ is import for it to work in GitHub CI/CD
+COPY   ./public   /usr/share/caddy
