@@ -1,11 +1,11 @@
 name = "pihuw"
 license = "BSD 3-clause"
 licenselink = "https://github.com/mrmxf/pihuw/blob/main/LICENSE"
-description = "A Hugo wrapper for PicnicCss"
+description = "A Hugo v0.146+ wrapper for PicnicCss"
 homepage = "https://mrmxf.com"
 tags = ["documentation", "multilingual", "customizable", "responsive", "docs"]
 features = []
-min_version = "0.145.0"
+min_version = "0.147.0"
 
 [author]
   name = "Mr MXF"

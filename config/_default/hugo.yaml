@@ -3,8 +3,10 @@
 # change this to values you like for your site.
 
 # cSpell:ignore docsy fortawesome fontawesome webfonts
-title: FoHuW Docs
+title: PiHuW
 
+# override publishing to public so that ko can build a lightweight container
+publishDir: kodata
 # ----------------------------------------------------------------------------------------------------------------------
 #   __  __          _
 #  |  \/  |  __ _  (_)  _ _      _ __    ___   _ _    _  _
@@ -16,17 +18,10 @@ title: FoHuW Docs
 
 menus:
   main:
-  - name: 'Home'
-    pageRef: '/'
-    weight: 10
-  - name: 'Posts'
-    pageRef: '/posts'
-    weight: 20
-  - name: 'Tags'
+  - name: '🏷️'
     pageRef: '/tags'
-    weight: 30
 
-
+# footer menu
   footer:
     - name: Copyright
       URL: https://mrmxf.com

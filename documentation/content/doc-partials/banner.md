@@ -1,5 +1,5 @@
 ---
-title: pi t = "banner"
+title: t = "banner"
 date:  2025-02-25
 
 ---

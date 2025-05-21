@@ -1,8 +1,8 @@
 # <span color="red">P</span>i<span color="green">H</span>u<span color="blue">W</span>
 
-[PicnicCss] wrapped with Hugo and some interesting blocks from FoHuw. It's intended
-to be super lightweight yet functional for use in minified environments like ESP32
-or Pi PICO microcontrollers using tinygo servers.
+[PicnicCss] wrapped with Hugo (with new templates & mounts) and some interesting blocks from FoHuw. It's intended to be
+super lightweight yet functional for use in minified environments like ESP32 or Pi PICO microcontrollers using tinygo
+servers.
 
 Clone the repo, make a link to the hugo.toml and then muck around with the example site:
 

@@ -1,0 +1,11 @@
+{{ `<!-- pihuw/_partials/tmpl/reading-time.html -->` | safeHTML }}
+{{- if site.Params.ui.readingtime.enable -}}
+<p class="fo-reading-time">
+  <i class="hourglass outline icon"></i>
+  {{ if gt .ReadingTime 1 }}
+    {{ .ReadingTime }} {{ T "post_reading_time" }}
+  {{ else }}
+    {{ T "post_less_than_a_minute_read" }}
+  {{ end }}
+</p>
+{{- end -}}

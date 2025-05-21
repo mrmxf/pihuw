@@ -1,0 +1,4 @@
+{{ `<!-- pihuw/_partials/tmpl/sidebar.html -->` | safeHTML }}
+{{/* The "active" toggle here may delay rendering, so we only cache this side
+bar menu for bigger sites. ------------------------------------------------ */}}
+{{ partialCached "tmpl/sidebar-tree.html" . }}

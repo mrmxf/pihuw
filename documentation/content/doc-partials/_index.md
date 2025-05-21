@@ -11,7 +11,7 @@ params:
 
 ---
 
-## `layouts/partials/fo.html`
+## `layouts/_partials/pi.html`
 
 This is the main dispatcher for pihuw. When a shortcode like this is found:
 
@@ -23,8 +23,8 @@ This is some markdown with an image below.
 ```
 
 the `pi` shortcode handler will [parse the params]( {{% relref "/doc-shortcodes" %}} ) into a standard set of keys and values before
-running `layouts/partials/fo.html`.
+running `layouts/_partials/pi.html`.
 
 Finally the dispatcher partial uses shortcode's `t = "thingy"` param to run a partial called `pihuw-thingy.html`. If you
-want to extend the pihuw ecosystem, simply put a partial with the right name in your `layouts/partials` folder. All the
+want to extend the pihuw ecosystem, simply put a partial with the right name in your `layouts/_partials` folder. All the
 parsing, error checking, help and other functions will be done for you.

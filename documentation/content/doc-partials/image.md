@@ -1,5 +1,5 @@
 ---
-title: pi t="image"
+title: t = "image"
 date:  2025-02-25
 
 usage: |

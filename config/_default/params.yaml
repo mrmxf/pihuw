@@ -68,16 +68,14 @@ ui:
   footer:
     showSiteTitle: true
     showSiteVersion: true
+    menuName: footer
     links:
-      - label: Built with
+      - label: 'Theme:'
         title: pihuw
         url: https://github.com/mrmxf/pihuw
-      - label: by
+      - label: ©
         title: Mr MXF
         url: https://mrmxf.com
-      - label: copyright ©
-        title: Mr MXF
-        link: https://mrmxf.com
       - title: Privacy Policy
         link: https://termly.io/resources/templates/privacy-policy-template/
       - title: Contact
@@ -90,7 +88,7 @@ ui:
 #   __   __| |  _ _      _  _   _ _  | |  ___
 #  / _| / _` | | ' \    | || | | '_| | | (_-<
 #  \__| \__,_| |_||_|    \_,_| |_|   |_| /__/
-# certain resources will be pulled from cdn in partials/tmpl/head-cdn.html
+# certain resources will be pulled from cdn in _partials/tmpl/head-cdn.html
 # each url is {{prefix}}{{version}}{{suffix}} with no extra processing
 # .integrity is optional
 cdn:
