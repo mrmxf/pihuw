@@ -37,3 +37,5 @@ taxo
 taxonomycloud
 taxonomypageheade
 tmpl
+Unmarshal
+warnf
