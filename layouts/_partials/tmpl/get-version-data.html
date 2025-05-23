@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/tmpl/get-version.html -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 {{/* returns a dict of the first entry in assets/data/releases.yaml */}}
 {{ $file := site.Params.releaseTracking | default "data/releases.yaml" }}
 {{$v := ""}}{{$data := ""}}

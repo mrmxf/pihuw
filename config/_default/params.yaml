@@ -68,6 +68,8 @@ ui:
   footer:
     showSiteTitle: true
     showSiteVersion: true
+    showLastMod: true
+    showBuildDate: true
     menuName: footer
     links:
       - label: 'Theme:'

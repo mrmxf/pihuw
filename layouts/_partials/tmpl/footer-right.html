@@ -1,19 +1,20 @@
-{{ `<!-- pihuw/_partials/page-meta-links.html -->` | safeHTML }}
-{{ if .File }}{{/*
+{{partial "tmpl/dbg-template-comment" .}}
+{{- $gUrl := (site.Params.github.url) -}}
+{{- $gRepo := (site.Params.github.repo) -}}
+{{if and .File $gUrl $gRepo}}{{/*
 Create the github url of the source page:
 ... $gUrl/$gRepo/tree/$gBranch/[$gParent/]content/[$lang]
 */}}
-{{- $gUrl := (site.Params.github.url) -}}
-{{- $gRepo := (site.Params.github.repo) -}}
-{{- if $gRepo -}}
+<div class="right">
+  {{- if $gRepo -}}
   {{- $gBranch := (site.Params.github.branch) | default "main" -}}
   {{- $gParent := (site.Params.github.contentParent) -}}
   {{- $uri := $gBranch -}}
   {{/* append a parent folder if it exists */}}
   {{- if $gParent}}
-    {{- $uri = printf "%s/%s/content" $uri $gParent -}}
+  {{- $uri = printf "%s/%s/content" $uri $gParent -}}
   {{else}}
-    {{- $uri = printf "%s/content" $uri -}}
+  {{- $uri = printf "%s/content" $uri -}}
   {{end}}
 
   {{/* append a language folder if file is in a language sub folder */}}
@@ -32,12 +33,14 @@ Create the github url of the source page:
   {{template "footer-github-label" (dict "url" $editURL "text" (T "edit") ) }}
   {{template "footer-github-label" (dict "url" $issuesURL "text" (T "issue") ) }}
   {{ end -}}
-{{ end -}}
+  {{ end -}}
 
-{{ define "footer-github-label" -}}
-<div class="label">
-  <span>
-    <a href="{{ .url }}" target="_blank" rel="noopener">{{ .text }}</a>
-  </span>
+  {{ define "footer-github-label" -}}
+  {{if .text}}
+  <div class="label">
+    <span>
+      <a href="{{ .url }}" target="_blank" rel="noopener">{{ .text }}</a>
+    </span>
+  </div>
 </div>
-{{end}}
+{{end}}{{end}}
