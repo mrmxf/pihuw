@@ -1,4 +1,4 @@
-{{ "<!-- pihuw/_partials/tmpl/navbar-lang-selector.html -->" | safeHTML }}Hello world
+{{partial "tmpl/dbg-template-comment" .}}
 {{/* Link directly to documentation etc., if possible. */}}
 {{ $langPage := cond (gt (len .Translations) 0) . .Site.Home }}
 <a class="item" href="#" id="navbarDropdown" aria-haspopup="true" aria-expanded="false">

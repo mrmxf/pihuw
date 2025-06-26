@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{{ `<!-- pihuw/layouts/_default/baseof.html -->` | safeHTML }}
 <html itemscope itemtype="http://schema.org/WebPage" lang="{{site.Language.Lang}}"
   dir="{{ or site.Language.LanguageDirection `ltr` }}">
 
@@ -10,35 +9,35 @@
 {{- if isset .Page.Params.ui "bodyClass" }}{{ $bodyClass = printf "class=\"%s\"" .Page.Params.ui.bodyClass }}{{ end }}
 
 <body >
+  {{partial "tmpl/dbg-template-comment" .}}
   <header>
     {{ partial "tmpl/navbar" . }}
   </header>
-
   <!-- outer div is for gutter control-->
-  <div class="flex one six-800 six-1100 pi-nav-pad">
-    <div class="none sixth-1100"></div>
+  <div class="flex one six-{{site.Params.resp.m}} six-{{site.Params.resp.w}} pi-nav-pad">
+    <div class="none sixth-{{site.Params.resp.w}}"></div>
 
     <!-- inner div turns component on and off -->
-    <div class="none third-800 sixth-1100 " style="align-content: stretch;">
+    <div class="none third-{{site.Params.resp.m}} sixth-{{site.Params.resp.w}} " style="align-content: stretch;">
       <sidebar class="four-fifth">
         {{ partial "tmpl/sidebar.html" . }}
       </sidebar>
     </div>
 
-    <div class="full two-third-800 half-1100"  style="align-content: stretch;">
+    <div class="full two-third-{{site.Params.resp.m}} half-{{site.Params.resp.w}}"  style="align-content: stretch;">
       <main>
         {{ block "main" . }}{{ end }}
       </main>
     </div>
 
     <!-- final outer div gutter -->
-    <div class="none sixth-1100"></div>
+    <div class="none sixth-{{site.Params.resp.w}}"></div>
   </div>
 
   <!-- footer is 3 columns + gutters -->
   <footer class="flex six">
-    <div class="none sixth-1100"></div>
-    <div class="full two-third-1100 footer">
+    <div class="none sixth-{{site.Params.resp.w}}"></div>
+    <div class="full two-third-{{site.Params.resp.w}} footer">
       {{ partial "tmpl/footer" . }}
     </div>
   </footer>

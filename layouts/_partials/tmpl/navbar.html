@@ -1,14 +1,29 @@
-{{ `<!-- pihuw/_partials/tmpl/navbar.html -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 <nav class="pi-nav">
+  {{/*
+  Always render the logo and name
+  */}}
   {{- partial "tmpl/navbar-brand" . -}}
   {{/*
-  --- main navbar -------------------------------------------------
+  render 3 navbars - optimised for wide, medium & mobile
+  the breakpoint occurs at a screen width defined in site.Parm.ui
+  you can hide them from the site config
   */}}
-  {{ partial "tmpl/navbar-main" .}}
-  {{/*
-  --- menu2 if a partial name is specified e.g. my/menu2 --------
-  */}}
-  {{- if isset site.Params.ui "navbar2partial" -}}
-  {{ partial site.Params.ui.navbar2partial .}}
-  {{- end -}}
+  <div class="view-s">
+    {{partial "tmpl/navbar-s-smallscreen" .}}
+  </div>
+  <div class="view-m">
+    {{partial "tmpl/navbar-s-smallscreen" .}}
+  </div>
+  <div class="view-w">
+    {{/*
+    --- main navbar -------------------------------------------------
+    */}}
+    {{partial "tmpl/navbar-w-widescreen" .}}
+    {{/*
+    --- menu2 if a partial name is specified e.g. my/menu2 --------
+    */}}
+    {{- if isset site.Params.ui "navbar2partial" -}}
+    {{ partial site.Params.ui.navbar2partial .}}
+    {{- end -}} </div>
 </nav>

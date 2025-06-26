@@ -1,0 +1,15 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Favicons as generated from /assets/brand/logo.png
+If logo.svg exists, then this will be used everywheere else
+*/}}
+{{- $logoAsset := printf "%s.png" site.Params.ui.logo}}
+{{- $logo := resources.Get $logoAsset}}
+{{- with $logo}}
+{{- $logo32 := .Fit "32x32"}}
+{{- $logo180 := .Fit "180x180"}}
+<link type="image/png" href={{$logo32.RelPermalink}} sizes="32x32" rel="icon">
+<link type="image/png" href={{$logo32.RelPermalink}} sizes="32x32" rel="shortcut icon">
+<link type="image/png" href={{$logo180.RelPermalink}} sizes="180x180" rel="apple-touch-icon">
+{{else}}
+{{/* do nothing if there was no logo.png */}}
+{{end}}

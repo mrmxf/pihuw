@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/pi-acc-tab.html -->` | safeHTML -}}
+{{partial "tmpl/dbg-template-comment" .}}
 {{- $n := (site.Store.Get "tab-index") | int -}}
 {{- site.Store.Add "tab-index" 1 -}}
 {{- $id := printf "tab-%d" $n -}}

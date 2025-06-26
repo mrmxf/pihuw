@@ -1,0 +1,10 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+markdownify a page parameter and insert into the <body class="from=<param name>">
+  
+</body>
+*/}}{{if .from}}
+{{printf "%s" (.page.Param .from)|markdownify}}
+{{else}}
+{{- $p := templates.Current.Parent.Name}}
+{{- partial "tool/dbg-err" (dict "p" $p "a" ".alt" "m" "from=\"name-of-param\" not set" ) -}}
+{{end}}

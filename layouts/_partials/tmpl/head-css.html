@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/tmpl/head-css -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 {{- $pihuw := resources.Get "css/pihuw-tweak.css" }}
 {{- with resources.Get "css/picnic.min.css" }}
  {{- if eq hugo.Environment "development" }}
@@ -11,5 +11,8 @@
   <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
  {{- end }}
 {{- end }}
+{{- with resources.Get "css/fa6.min.css" }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{- end }}
 {{- if fileExists "static/site.css" }}<link rel="stylesheet" href="/site.css">{{end -}}
-<link rel="stylesheet" href="/site.css">

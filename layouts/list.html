@@ -1,8 +1,9 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
-  {{ range .Pages }}
-    <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-    {{ .Summary }}
-  {{ end }}
+{{partial "tmpl/dbg-template-comment" .}}
+{{partial "tmpl/page-title.html" .}}
+{{ .Content }}
+{{ range .Pages }}
+<h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
+{{ .Summary }}
+{{ end }}
 {{ end }}

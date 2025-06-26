@@ -1,0 +1,15 @@
+{{partial "tmpl/dbg-template-comment" .}}
+{{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+{{ $dateHuman := .Date | time.Format "2006-01-02" }}
+<div class="flex two grow page-title">
+  <h1 class="three-fourth">{{ .Title }}</h1>
+  <div class="fourth">
+    <small>
+      <p>
+        <i class="fa-regular fa-calendar-days"></i>
+        <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+      </p>
+      {{partial "tmpl/reading-time" .}}
+    </small>
+  </div>
+</div>

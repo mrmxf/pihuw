@@ -1,4 +1,4 @@
-{{ "<!-- partial/taxonomy_terms_clouds.html -->" | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 {{ $context := . }}
 {{ if isset site.Params "taxonomy" }}
 	{{ if isset site.Params.Taxonomy "taxonomycloud" }}

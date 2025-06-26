@@ -22,10 +22,11 @@
   --mrx-sky: lighten(var(--mrx-amber), 40%);
   --mrx-ground: lighten(var(--mrx-purple), 25%);
 
-  /* screen break points */
-  --pi-break-medium: 800;
-  --pi-break-wide: 1100;
-  
+  /* default screen break points */
+  --pi-break-s: 500px;
+  --pi-break-m: 800px;
+  --pi-break-w: 1100px;
+
   /* named elements - pihuw controls */
   --pihuw-dark-bg: var(--mm-purple);
   --pihuw-blue: var(--mm-blue);
@@ -37,16 +38,22 @@
 
   /* pihuw named colors & highlights */
   --pi-text: var(--mm-dark);
-  --pi-hi-1: var(--mrx-green);
-  --pi-hi-2: var(--mrx-purple);
-  --pi-hi-3: var(--mrx-amber);
+  /* annotation text, reading time */
+  --pi-hi1: var(--mrx-green);
+  /* sidebar, th */
+  --pi-hi2: var(--mrx-purple);
+  /* buttons */
+  --pi-hi3: var(--mrx-amber);
+  --pi-bg1: hsl(from var(--pi-hi1) h s 95%);
+  --pi-bg2: hsl(from var(--pi-hi2) h s 95%);
+  --pi-bg3: hsl(from var(--pi-hi3) h s 95%);
 }
 
 body {
-	font-family: 'Arial', sans-serif;
-	font-size: 16px;
-	line-height: 1.25;
-	color: #333;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--mm-dark);
   background-color: #fff;
   margin: 0em 2em;
   padding: 0;
@@ -54,39 +61,126 @@ body {
 
 /* general highlights for widgets */
 .card.hi-1 {
-  color: hsl(from var(--pi-hi-1) h s );
-  background-color: hsl(from var(--pi-hi-1) h s 95%);
+  color: var(--pi-hi1);
+  background-color: var(--pi-bg1);
 }
 
 /* specialty text styles & colors */
 code {
   color: var(--pihuw-blue);
 }
+
 /*                      */
 /*  _ _    __ _  __ __  */
 /* | ' \  / _` | \ V /  */
 /* |_||_| \__,_|  \_/   */
 .pi-nav-pad {
   /* padding to drop below the fixed nav bar */
-  padding-top: 9em;
+  padding-top: 4em;
 }
+
 .pi-nav {
+  /* the full nav bar */
   color: var(--mm-green);
   margin: 0 15%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-nav .brand {
-  display: inline;
-  height: 70%;
+
+nav .pi-nav-brand {
+  /* just the left hand brand section*/
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+
+nav .pi-nav-brand .logo {
+  flex-shrink: 2;
+  margin: 0 0.5em 0 0;
+}
+
+nav .pi-nav-brand .title {
+  flex-shrink: 8;
+  margin: 0;
+}
+
+nav .pi-nav-brand .logo img {
+  /* force the image (especially svg) to fit in the bounding box*/
+  flex: 'flex-shrink';
+  height: 100%;
   object-fit: contain;
+}
+
+nav .pi-nav-brand .title {
+  display: block;
+  object-fit: contain;
+}
+nav div.view-w div.menu {
+  color:#FF4088;
 }
 section img {
   display: inline;
   height: 70%;
   object-fit: contain;
 }
+
 .pi-reading-time {
   size: 80%;
-  color: var(--pi-hi-1)
+  color: var(--pi-hi1)
+}
+/*                                _                     */
+/*   _ _    __ _  __ __  ___   __| |  _ _   ___   _ __  */
+/*  | ' \  / _` | \ V / |___| / _` | | '_| / _ \ | '_ \ */
+/*  |_||_| \__,_|  \_/        \__,_| |_|   \___/ | .__/ */
+/*                                               |_|    */
+.dropbtn {
+  background-color: var(--pi-hi3);
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--pi-bg3);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right:0
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: var(--pi-hi3)}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color:  var(--pi-bg3);
 }
 /*       _      _         _                  */
 /*  ___ (_)  __| |  ___  | |__   __ _   _ _  */
@@ -94,13 +188,14 @@ section img {
 /* /__/ |_| \__,_| \___| |_.__/ \__,_| |_|   */
 sidebar {
   display: inline-flex;
-  color: var(--pi-hi-2);
-  background-color: hsl(from var(--pi-hi-2) h s 95%);
-  border: 1px solid var(--pi-hi-2);
+  color: var(--pi-hi2);
+  background-color: var(--pi-bg2);
+  border: 1px solid var(--pi-hi2);
   border-radius: 0.5em;
   padding: 0.6em;
   height: 100%;
 }
+
 /* #          _   _                        _                      */
 /* #   _ __  (_) | |_    _  _  __ __ __   | |  ___   __ _   ___   */
 /* #  | '_ \ | | | ' \  | || | \ V  V /   | | / _ \ / _` | / _ \  */
@@ -109,9 +204,11 @@ sidebar {
 .logo-pi {
   color: var(--fomantic-theme-color);
 }
+
 .logo-hu {
   color: var(--hugo-theme-color);
 }
+
 .logo-w {
   color: var(--pi-logo-w);
 }
@@ -119,10 +216,11 @@ sidebar {
 /* custom styling for the site title text in the menu*/
 #siteTitleMenu {
   font-weight: bold;
-  color: var(--pi-hi-1);
+  color: var(--pi-hi1);
   margin-top: auto;
   vertical-align: middle;
 }
+
 /*   _                                                      */
 /*  | |_   __ _  __ __  ___   _ _    ___   _ __    _  _     */
 /*  |  _| / _` | \ \ / / _ \ | ' \  / _ \ | '  \  | || |    */
@@ -148,26 +246,60 @@ sidebar {
 
 /* pihuw taxonomy label classes */
 .ui.pi-tax-1.label {
-  background: hsl(from var(--pi-hi-1) h s 95%);
+  background: hsl(from var(--pi-hi1) h s 95%);
   backdrop-filter: 200%;
-  border-color: var(--pi-hi-1);
-  color: var(--pi-hi-1);
+  border-color: var(--pi-hi1);
+  color: var(--pi-hi1);
 }
+
 .ui.pi-tax-2.label {
-  background: hsl(from var(--pi-hi-2) h s 95%);
-  border-color: var(--pi-hi-2);
-  color: var(--pi-hi-2);
+  background: hsl(from var(--pi-hi2) h s 95%);
+  border-color: var(--pi-hi2);
+  color: var(--pi-hi2);
 }
+
 .ui.pi-tax-3.label {
-  background: hsl(from var(--pi-hi-3) h s 95%);
-  border-color: var(--pi-hi-3);
-  color: var(--pi-hi-3);
+  background: hsl(from var(--pi-hi3) h s 95%);
+  border-color: var(--pi-hi3);
+  color: var(--pi-hi3);
 }
+
 .ui.pi-tax-4.label {
   background: hsl(from var(--pi-hi-4) h s 95%);
   border-color: var(--pi-hi-4);
   color: var(--pi-hi-4);
 }
+
+/*   _             _     _                 */
+/*  | |__   _  _  | |_  | |_   ___   _ _   */
+/*  | '_ \ | || | |  _| |  _| / _ \ | ' \  */
+/*  |_.__/  \_,_|  \__|  \__| \___/ |_||_| */
+.button {
+  background-color: var(--pi-hi3);
+}
+
+/*                                    _     _   _     _        */
+/*   _ __   __ _   __ _   ___   ___  | |_  (_) | |_  | |  ___  */
+/*  | '_ \ / _` | / _` | / -_) |___| |  _| | | |  _| | | / -_) */
+/*  | .__/ \__,_| \__, | \___|        \__| |_|  \__| |_| \___| */
+/*  |_|           |___/                                        */
+main div.page-title {
+  background-color: var(--pi-bg2);
+  border-radius: 0.5em;
+  border: solid 1px var(--pi-hi2);
+  align-items: center;
+  padding: .2em;
+}
+
+/*   _            _      _        */
+/*  | |_   __ _  | |__  | |  ___  */
+/*  |  _| / _` | | '_ \ | | / -_) */
+/*   \__| \__,_| |_.__/ |_| \___| */
+th {
+  background-color: var(--pi-hi2);
+  color: var(--pi-bg2);
+}
+
 /*   __               _                   */
 /*  / _|  ___   ___  | |_   ___   _ _     */
 /* |  _| / _ \ / _ \ |  _| / -_) | '_|    */
@@ -188,20 +320,25 @@ sidebar {
   text-align: center;
   flex-grow: 1;
 }
+
 .footer .middle {
   text-align: center;
   flex-grow: 4;
 }
+
 .footer .right {
   text-align: center;
   flex-grow: 2;
 }
+
 /* all labels in the row */
-.footer .left .label, .footer .middle .label, .footer .right .label {
+.footer .left .label,
+.footer .middle .label,
+.footer .right .label {
   color: var(--mrx-green);
   background-color: hsl(from var(--mrx-green) h 20% 60%);
   margin: 1px;
-  padding:1;
+  padding: 1;
   font-size: 1em;
   /* border: 2px solid var(--mrx-white); */
 }
@@ -242,9 +379,58 @@ sidebar {
     padding-top: 6em;
   }
 }
-@media screen and (max-width: var(--pi-break-wide)) {
+
+
+@media screen and (max-width: var(--pi-break-w)) {
   .pi-nav-pad {
     /* padding to drop below the fixed nav bar */
     padding-top: 3.5em;
   }
 }
+
+/*                                             _                       _                      */
+/*   _ _   ___   ___  _ __   ___   _ _    ___ (_) __ __  ___    __ __ (_)  ___  __ __ __  ___ */
+/*  | '_| / -_) (_-< | '_ \ / _ \ | ' \  (_-< | | \ V / / -_)   \ V / | | / -_) \ V  V / (_-< */
+/*  |_|   \___| /__/ | .__/ \___/ |_||_| /__/ |_|  \_/  \___|    \_/  |_| \___|  \_/\_/  /__/ */
+/*                   |_|                                                                      */
+/* the single letter classes are switched depending on width */
+.view-s {
+  display: none;
+}
+
+.view-m {
+  display: none;
+}
+
+.view-w {
+  display: flex;
+}
+
+@media screen and (max-width: 800px) {
+  .view-s {
+    display: none;
+  }
+
+  .view-m {
+    display: flex;
+  }
+
+  .view-w {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .view-s {
+    display: flex;
+  }
+
+  .view-m {
+    display: none;
+  }
+
+  .view-w {
+    display: none;
+  }
+}
+

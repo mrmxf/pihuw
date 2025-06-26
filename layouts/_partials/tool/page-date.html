@@ -1,0 +1,9 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+print the page date in the format & color defined in site.params.ui
+*/}}
+{{if .page}}
+{{$format := site.Params.ui.pageDate.format | default "2006-01-02"}}
+{{$color := site.Params.ui.pageDate.color | default "#00ff00"}}
+{{$attr := printf "style=\"color:%s;\"" $color }}
+<span {{ $attr|safeHTMLAttr}}>{{.page.Date | time.Format $format}}</span>
+{{end}}

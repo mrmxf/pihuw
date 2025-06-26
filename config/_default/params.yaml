@@ -18,10 +18,10 @@ releaseTracking: data/releases.yaml
 # medium - not-quite-wide mode. normal menu, no gutters, one sidebar
 # wide - desktop mode: full menu, gutters, one/two sidebars
 
-responsive:
-  thin: 500
-  medium: 800
-  wide: 1100
+resp:
+  s: 500
+  m: 800
+  w: 1100
 #                 _                                       _
 #   __ _   _  _  | |_   ___   ___   _ _    _  _   _ __   | |__   ___   _ _
 #  / _` | | || | |  _| / _ \ |___| | ' \  | || | | '  \  | '_ \ / -_) | '_|
@@ -65,6 +65,11 @@ ui:
     navbar:
       logo: false
       title: false
+  # printing the date of the page
+  pageDate:
+    color: var(--pi-hi2) # highlight color 2 == purple
+    format: 2 January 2006
+  # elements in the footer
   footer:
     showSiteTitle: true
     showSiteVersion: true

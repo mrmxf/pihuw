@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/pager.html -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 <div class="ui fluid grey message">
   <h5 class="ui left pointing purple basic label">
     <a {{if .PrevInSection}}href="{{.PrevInSection.RelPermalink}}" aria-label="{{ T "ui_pager_prev" }} - {{.PrevInSection.Title}}" {{end}}class="btn btn-primary{{if not .PrevInSection}} disabled{{end}}">

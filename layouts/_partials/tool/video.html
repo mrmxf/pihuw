@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/tool/video.html -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 {{ $color := "purple"}}
 {{- $p := "f/image" -}}
 {{- if not .src -}}{{- partial "tool/dbg-err" (dict "p" $p "a" ".src" "m" "is nil" ) -}}{{- end -}}

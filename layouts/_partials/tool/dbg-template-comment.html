@@ -1,0 +1,4 @@
+{{if hugo.IsServer}}
+{{- $name := templates.Current.Parent.Name}}
+{{ $dbg := printf "<!--  ⇒⇒ theme: fohuw →→ template: %s ←←  -->" $name }}{{$dbg|safeHTML}}
+{{end}}

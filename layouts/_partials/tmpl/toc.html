@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/toc.html -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 {{ if not .Params.notoc -}}
   {{ with .TableOfContents -}}
     {{ if ne . `<nav id="TableOfContents"></nav>` -}}

@@ -1,3 +1,16 @@
+# flow:"stage",   build:"dev"  = auto-add to staging server
+# flow:"release", build:"prod" = to flag as a production release
+- {version: "0.3.0", date: 2025-06-26, build: "prod", flow: "main", note: responsive menus}
+#  new build infrastructure rules:
+#  every commit triggers a development build unless    build: "prod"
+#  backend workflow can do several things:
+#    flow: "stage"     - upload to the staging server & ping slack
+#    flow: "release"   - single build - no errors allowed       (prod only)
+#    flow: "main"      - main website rebuilds - no errors allowed (prod only - daily rebuilds)
+#    flow: "test"      - full test suite - no errors allowed    (prod only - final checks)
+#    flow: <anything-else>  - no actions
+# if in doubt set to "stage" and check the staging server when slack goes ping
+# -------------------------------------------------------------------------------------------------------
 # code names here: https://en.wikipedia.org/wiki/Lists_of_colors
 - { version: 0.2.1, date: 2025-05-21, codename: banana,    note: build info footer }
 - { version: 0.2.0, date: 2025-05-21, codename: banana,    note: refactor for hugo 0.147.3 }

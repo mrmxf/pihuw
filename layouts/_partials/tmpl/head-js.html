@@ -1,3 +1,4 @@
+{{partial "tmpl/dbg-template-comment" .}}
 {{- with resources.Get "js/pihuw.js" }}
   {{- if eq hugo.Environment "development" }}
     {{- with . | js.Build }}

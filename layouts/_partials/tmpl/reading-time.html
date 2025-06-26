@@ -1,11 +1,14 @@
-{{ `<!-- pihuw/_partials/tmpl/reading-time.html -->` | safeHTML }}
-{{- if site.Params.ui.readingtime.enable -}}
-<p class="fo-reading-time">
-  <i class="hourglass outline icon"></i>
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+markdownify a page parameter and insert into the <body class="from=<param name>">
+  
+</body>
+*/}}{{- if site.Params.ui.readingtime.enable -}}
+<p class="pi-reading-time">
+  <i class="fa-regular fa-hourglass"></i>
   {{ if gt .ReadingTime 1 }}
-    {{ .ReadingTime }} {{ T "post_reading_time" }}
+    ~{{ .ReadingTime }} m
   {{ else }}
-    {{ T "post_less_than_a_minute_read" }}
+    less than a minute
   {{ end }}
 </p>
 {{- end -}}

@@ -1,4 +1,4 @@
-{{ `<!-- pihuw/_partials/tmpl/head.html -->` | safeHTML }}
+{{partial "tmpl/dbg-template-comment" .}}
 {{/* allow easy user overrides in the my/ folder  */}}
 {{- if templates.Exists "partials/my/head-begin.html"}}{{ partial "my/head-begin.html" }}{{end -}}
 <meta charset="utf-8">

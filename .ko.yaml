@@ -1,0 +1,60 @@
+defaultPlatforms:
+  - linux/arm64
+  - linux/amd64
+builds:
+  - id: amd64          # ID of the build.
+    dir: .                 # default is .
+    main: ./podserver.go   # path to main package or main.go
+    binary: podserver      # binary output name - default is project name
+    env:                   # Map of environment variables used for the build
+      - "GOOS=linux"     
+      - "GOARCH=amd64"
+  # - >-
+  # {{- if eq .Os "darwin" }}
+  #   {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
+  #   {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+  # {{- end }}
+  # {{- if eq .Os "windows" }}
+  #   {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
+  # {{- end }}
+  # ldflags:             # Custom ldflags (templates allowed).
+  # - -s -w
+  # - -extldflags "-static"
+  # - -X main.version={{.Env.VERSION}}
+  - id: arm64
+    dir: .
+    main: ./podserver.go
+    binary: podserver      # binary output name - default is project name
+    env:
+      - "GOOS=linux"
+      - "GOARCH=arm64"
+    # flags:
+    # - -tags
+    # - netgo
+
+# supported template parameters:
+#      	          Env  Map of environment variables used for the build
+#               GoEnv  Map of go env environment variables used for the build
+#      	         Date  The UTC build date in RFC 3339 format
+#            Timestamp  The UTC build date as Unix epoc seconds
+#           Git.Branch  The current git branch
+#              Git.Tag  The current git tag
+#      Git.ShortCommit  The git commit short hash
+#       Git.FullCommit  The git commit full hash
+#       Git.CommitDate  The UTC commit date in RFC 3339 format
+#  Git.CommitTimestamp  The UTC commit date in Unix format
+#        	 Git.IsDirty  Whether or not current git state is dirty
+#        	 Git.IsClean  Whether or not current git state is clean.
+#        Git.TreeState  Either clean or dirty
+
+# ENV variables
+# KO_DOCKER_REPO  (no default)  Container repository where to push images
+#                               built with ko (required)
+#     KO_GO_PATH 	(go) 	        go binary to use for builds, relative or
+#                               absolute path, otherwise looked up via $PATH
+# KO_CONFIG_PATH 	(./.ko.yaml)  Path to ko configuration file (optional)
+#        KOCACHE 	(not set) 	  tells ko to store a local mapping between the
+#                               go build inputs to the image layer that they
+#                               produce, so go build can be skipped entirely
+#                               if the layer is already present in the image
+#                               registry (optional).
