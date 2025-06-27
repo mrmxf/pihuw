@@ -62,7 +62,8 @@ needs URL and make it a relref for re-prefix inside docker
 {{- if .menu.Params }}
 {{/* ------ programmatic menu item ------
 ----------- menus.main[n].params.partial is the name of a partial to run */}}
-{{if .menu.Params.Partial}}{{partial .menu.Params.partial .}}{{end}}
+{{if .menu.Params.partial}}
+{{partial .menu.Params.partial_s .}}
 {{else}}
 {{/* ------ normal menu item ------ */}}
 {{$pre := ""}}{{ if .menu.Pre}}{{$pre = .menu.Pre}}{{end}}

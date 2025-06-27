@@ -1,6 +1,6 @@
 {{partial "tmpl/dbg-template-comment" .}}
 {{/* allow easy user overrides in the my/ folder  */}}
-{{- if templates.Exists "partials/my/head-begin.html"}}{{ partial "my/head-begin.html" }}{{end -}}
+{{- if templates.Exists "_partials/my/head-begin.html"}}{{ partial "my/head-begin.html" }}{{end -}}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 {{ hugo.Generator }}
@@ -21,4 +21,4 @@
 {{ partialCached "tmpl/head-css" . -}}
 {{ partialCached "tmpl/head-js"  . -}}
 
-{{- if templates.Exists "partials/my/head-end.html"}}{{ partial "my-head-end.html" }}{{end -}}
+{{- if templates.Exists "_partials/my/head-end.html"}}{{ partial "my/head-end.html" }}{{end -}}
