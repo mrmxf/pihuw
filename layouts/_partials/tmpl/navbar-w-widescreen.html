@@ -1,32 +1,18 @@
 {{partial "tmpl/dbg-template-comment" .}}
 {{- $menu2 := .Site.Params.ui.navbar2 -}}
-{{ $mclassTop := "" }}
-{{ $mclassBot := "" }}
-{{- if $menu2 -}}
-{{ $mclassTop = "top attached" }}
-{{ $mclassBot = "bottom attached" }}
-{{- end -}}
+{{- $customParam := "partial_w" -}}
+{{- $page := . -}}
+{{- $baseMenu := site.Menus.main.ByWeight -}}
 
-{{ $thisPage := . -}}
 {{/* ---- iterative over menu items --------------------------------- */}}
 <div class="">
-  {{ range .Site.Menus.main.ByWeight -}}
-
-  {{- if .HasChildren -}}
-  {{- template "navChild" (dict "page" $thisPage "menu" .) }}
-  {{- else}}
-  {{- template "navBasic" (dict "page" $thisPage "menu" .) }}
+  {{ range $baseMenu -}}
+    {{- if .HasChildren -}}
+      {{- partial "tmpl/navbar-btn-parent" (dict "page" $page "menu" . "customParam" $customParam) }}
+    {{- else}}
+      {{- partial "tmpl/navbar-btn-basic" (dict "page" $page "menu" . "customParam" $customParam) }}
+    {{ end -}}
   {{ end -}}
-
-  {{ end -}}
-  {{/* ---- end of menu loop ---------------------------------------- */}}
-  {{/* --------------------------------------------------------------
-  ------------------------------------------------------------------- */}}
-  {{/* ---- languages ----------------------------------------------- */}}
-  {{- if (gt (len .Site.Home.Translations) 0) -}}
-  <a class="item">{{ partial "tmpl/navbar-lang-selector.html" . -}}</a>
-  {{ end -}}
-  {{/* <a class="item">{{ partial "tmpl/search-input.html" . }}</a> */}}
 </div>
 
 {{/* navChild takes
@@ -49,42 +35,4 @@
   </div>
 </div>
 
-{{- end -}}
-
-
-{{/* navBasic takes
-page: .Page
-menu: .Site.Menus.main.ByWeight
-and outputs a top level menu - no children
-needs URL and make it a relref for re-prefix inside docker
-*/}}
-{{- define "navBasic" -}}
-{{- if .menu.Params }}
-{{/* ------ programmatic menu item ------
------------ menus.main[n].params.partial is the name of a partial to run */}}
-{{if .menu.Params.partial.w}}{{partial .menu.Params.partial_w .}}{{end}}
-{{else}}
-{{/* ------ normal menu item ------ */}}
-{{$pre := ""}}{{ if .menu.Pre}}{{$pre = .menu.Pre}}{{end}}
-{{$post := ""}}{{ if .menu.Post}}{{$post = .menu.Post}}{{end}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $isActive := or (.page.IsMenuCurrent "main" .menu) (.page.HasMenuCurrent "main" .menu) -}}
-{{ if .page }}{{ $isActive = or $isActive ( .page.IsDescendant .menu) }}{{ end }}
-{{ $active := cond ($isActive) "active" "" -}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $url := urls.Parse .menu.URL -}}
-{{ $baseurl := urls.Parse .page.Site.Params.Baseurl -}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $href := .menu.URL }}
-{{ with .menu.Page }}{{ $href = .RelPermalink }}
-{{else}}{{ $href = .menu.URL | relLangURL }}
-{{ end }}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $target :=""}}
-{{- if ne $url.Host $baseurl.Host }}{{ $target = "target=\"_blank\"" }}{{- end -}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-<a class="{{ $active }} button" href="{{ $href }}" {{ $target | safeHTMLAttr}}>
-  {{ $pre | safeHTML }}{{- .menu.Name | safeHTML -}}{{ $post | safeHTML }}
-</a>
-{{end}}
 {{- end -}}

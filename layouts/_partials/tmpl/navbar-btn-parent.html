@@ -1,0 +1,32 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+----- parent menu item - has children -------
+.page: .Page
+.menu: site.Menus.main.ByWeight
+outputs a basic menu item - no children
+*/}}
+{{$customParam := .customParam}}
+{{$custom := (index .menu.Params .customParam)}}
+{{$page := .page}}
+{{$pre := ""}}{{with .menu.Pre}}{{$pre = .}}{{end}}
+{{$post := ""}}{{with .menu.Post}}{{$post = .}}{{end}}
+<div class="dropdown">
+  <div class="dropbtn">
+    {{if $custom}}
+      {{partial $custom .}}
+    {{else}}
+      {{ $pre | safeHTML }}{{- .menu.Name | safeHTML -}}{{ $post | safeHTML }}
+      <i class="fa-solid fa-caret-down"></i>
+    {{end}}
+  </div>
+  <div class="dropdown-content">
+    {{range .menu.Children}}
+
+      {{- if .HasChildren -}}
+        {{- partial "tmpl/navbar-btn-parent" (dict "page" $page "menu" . "customParam" $customParam) }}
+      {{- else}}
+        {{- partial "tmpl/navbar-btn-basic" (dict "page" $page "menu" . "customParam" $customParam) }}
+      {{ end -}}
+
+    {{end}}
+  </div>
+</div>

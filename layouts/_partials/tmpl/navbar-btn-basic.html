@@ -1,0 +1,35 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+----- basic menu item - no children ---------
+.page: .Page
+.menu: site.Menus.main.ByWeight
+outputs a basic menu item - no children
+*/}}
+{{$custom := (index .menu.Params .customParam)}}
+{{if $custom}}
+  {{partial $custom .}}
+{{else}}
+  {{$pre := ""}}{{with .menu.Pre}}{{$pre = .}}{{end}}
+  {{$post := ""}}{{with .menu.Post}}{{$post = .}}{{end}}
+  {{/* ----- ----- ----- ----- ----- ----- */}}
+  {{ $isActive := or (.page.IsMenuCurrent "main" .menu) (.page.HasMenuCurrent "main" .menu) -}}
+  {{ if .page }}{{ $isActive = or $isActive ( .page.IsDescendant .menu) }}{{ end }}
+  {{ $active := cond ($isActive) "active" "" -}}
+  {{/* ----- ----- ----- ----- ----- ----- */}}
+  {{ $url := urls.Parse .menu.URL -}}
+  {{ $baseurl := urls.Parse .page.Site.Params.Baseurl -}}
+  {{/* ----- ----- ----- ----- ----- ----- */}}
+  {{$href := .menu.URL }}
+  {{with .menu.Page }}
+    {{$href = .RelPermalink }}
+  {{else}}
+    {{$href = .menu.URL | relLangURL }}
+  {{end}}
+  {{/* ----- ----- ----- ----- ----- ----- */}}
+  {{ $target := ""}}
+  {{- if ne $url.Host $baseurl.Host }}{{ $target = "target=\"_blank\"" }}{{- end -}}
+  {{/* ----- ----- ----- ----- ----- ----- */}}
+
+  <a class="{{ $active }} button" href="{{ $href }}" {{ $target | safeHTMLAttr}}>
+    {{ $pre | safeHTML }}{{- .menu.Name | safeHTML -}}{{ $post | safeHTML }}
+  </a>
+{{end}}

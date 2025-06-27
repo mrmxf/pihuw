@@ -30,9 +30,9 @@
 </div>
 
 {{/* navChild takes
-... page: .Page
-... menu: .Site.Menus.main.ByWeight
-... ..... and outputs a dropdown with children
+.page: .Page
+.menu: site.Menus.main.ByWeight
+outputs a dropdown with children
 */}}
 {{- define "navChild" -}}
 {{ $page := .page}}
@@ -53,41 +53,14 @@
 
 
 {{/* navBasic takes
-page: .Page
-menu: .Site.Menus.main.ByWeight
-and outputs a top level menu - no children
-needs URL and make it a relref for re-prefix inside docker
+.page: .Page
+.menu: site.Menus.main.ByWeight
+outputs a basic menu item - no children
 */}}
 {{- define "navBasic" -}}
-{{- if .menu.Params }}
-{{/* ------ programmatic menu item ------
------------ menus.main[n].params.partial is the name of a partial to run */}}
-{{if .menu.Params.partial}}
-{{partial .menu.Params.partial_s .}}
-{{else}}
-{{/* ------ normal menu item ------ */}}
-{{$pre := ""}}{{ if .menu.Pre}}{{$pre = .menu.Pre}}{{end}}
-{{$post := ""}}{{ if .menu.Post}}{{$post = .menu.Post}}{{end}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $isActive := or (.page.IsMenuCurrent "main" .menu) (.page.HasMenuCurrent "main" .menu) -}}
-{{ if .page }}{{ $isActive = or $isActive ( .page.IsDescendant .menu) }}{{ end }}
-{{ $active := cond ($isActive) "active" "" -}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $url := urls.Parse .menu.URL -}}
-{{ $baseurl := urls.Parse .page.Site.Params.Baseurl -}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $href := .menu.URL }}
-{{ with .menu.Page }}{{ $href = .RelPermalink }}
-{{else}}{{ $href = .menu.URL | relLangURL }}
-{{ end }}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-{{ $target :=""}}
-{{- if ne $url.Host $baseurl.Host }}{{ $target = "target=\"_blank\"" }}{{- end -}}
-{{/* ----- ----- ----- ----- ----- ----- */}}
-
-<a class="{{ $active }} button" href="{{ $href }}" {{ $target | safeHTMLAttr}}>
-  <option>{{ $pre | safeHTML }}{{- .menu.Name | safeHTML -}}{{ $post | safeHTML }}</option>
-</a>
-
-{{end}}
+  {{- if .menu.Params.partial_s}}
+    {{partial .menu.Params.partial_s .}}
+  {{else}}
+    {{partial "tmpl/navbar-btn-basic" .}}
+  {{end}}
 {{- end -}}
