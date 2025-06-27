@@ -65,6 +65,7 @@ ui:
     navbar:
       logo: false
       title: false
+    sidebar: false
   # printing the date of the page
   pageDate:
     color: var(--pi-hi2) # highlight color 2 == purple

@@ -1,5 +1,6 @@
 # flow:"stage",   build:"dev"  = auto-add to staging server
 # flow:"release", build:"prod" = to flag as a production release
+- {version: "0.3.1", date: 2025-06-27, build: "prod", flow: "main", note: numbered heading fix, T+C}
 - {version: "0.3.0", date: 2025-06-26, build: "prod", flow: "main", note: responsive menus}
 #  new build infrastructure rules:
 #  every commit triggers a development build unless    build: "prod"

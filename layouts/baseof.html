@@ -18,13 +18,22 @@
     <div class="none sixth-{{site.Params.resp.w}}"></div>
 
     <!-- inner div turns component on and off -->
+    {{- $showSidebar := true}}
+    {{- if .Page.Params.ui.hide.sidebar}}{{$showSidebar = false}}{{- end -}}
+    {{- if site.Params.ui.hide.sidebar}}{{$showSidebar = false}}{{- end -}}
+    {{- if $showSidebar }}
     <div class="none third-{{site.Params.resp.m}} sixth-{{site.Params.resp.w}} " style="align-content: stretch;">
       <sidebar class="four-fifth">
         {{ partial "tmpl/sidebar.html" . }}
       </sidebar>
     </div>
+    {{- end -}}{{/* --- end of if show sidebar ------------------------------------------------------------------------ */}}
 
-    <div class="full two-third-{{site.Params.resp.m}} half-{{site.Params.resp.w}}"  style="align-content: stretch;">
+    {{- if $showSidebar }}
+    <div class="fullhalf-{{site.Params.resp.w}}"  style="align-content: stretch;">
+      {{- else -}}
+    <div class="full two-third-{{site.Params.resp.w}} "  style="align-content: stretch;">
+      {{- end -}}
       <main>
         {{ block "main" . }}{{ end }}
       </main>

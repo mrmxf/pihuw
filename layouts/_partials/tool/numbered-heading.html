@@ -1,4 +1,4 @@
-{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
+{{partial "tmpl/dbg-template-comment" .}}{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
 {{- $s := "."}}{{$p := ""}}{{$x := ""}}
 {{/* Override with Site settings if available */}}
 {{- if isset site.Params.heading "separator"}}{{$s = site.Params.heading.separator}}{{end}}
@@ -13,8 +13,8 @@
 {{- $level := int (.level | default 0) -}}
 {{- if or (lt $level 1) (gt $level 6) -}}
 {{ $msg := printf "must be an int between 1 & 6. got (%d), using (1)" $level }}
-{{ partial "tool/dbg-err.html" (dict "p" "tool/numbered-header" "a" "heading level" "m" $msg) }}
-{{ warnf "partial: %s: %s  %s" "tool/numbered-header" "heading level" $msg -}}
+{{ partial "tool/dbg-err.html" (dict "p" "tool/numbered-heading" "a" "heading level" "m" $msg) }}
+{{ warnf "partial: %s: %s  %s" "tool/numbered-heading" "heading level" $msg -}}
 {{ $level = 1 }}
 {{end -}}
 

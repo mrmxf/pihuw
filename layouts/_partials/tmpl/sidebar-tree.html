@@ -1,14 +1,14 @@
-{{partial "tmpl/dbg-template-comment" .}}
-{{/* The cache for bigger sites has not yet been migrated fromm Docsy . */}}
-
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+  sidebar can be hidden with Params.ui.hide.sidebar
+*/}}
 {{ $sidebarCacheLimit := 2000 }}
 {{if .Site.Params.ui.sidebar_cache_limit}}{{ $sidebarCacheLimit = .Site.Params.ui.sidebar_cache_limit}}{{- end -}}
 {{ $shouldDelayActive := ge (len .Site.Pages) $sidebarCacheLimit -}}
 <div class="pi-sidebar" id="section-nav">
-  {{/* --- setup -------------------------------------------------------- */}}
+  {{/* --- setup -------------------------------------------------------------------------------------------------- */}}
   {{ $navRoot := cond (and (ne .Params.toc_root true) (eq .Site.Home.Type "docs")) .Site.Home .FirstSection -}}
   {{ $depth := 0 -}}
-  {{/* --- max depth=50 -------------------------------------------------------- */}}
+  {{/* --- max depth=50 ------------------------------------------------------------------------------------------- */}}
   {{ $sidebarMenuTruncate := 50}}
   {{if .Site.Params.ui.sidebar_menu_truncate}}{{ $sidebarMenuTruncate = .Site.Params.ui.sidebar_menu_truncate}}{{- end
   -}}
@@ -21,13 +21,16 @@
   }}
 </div>
 
+
+
+{{/* -------------------------------------------------------------------------------------------------------------- */}}
 {{ define "section-tree-nav-section" -}}
 {{- $leafIcon := "grey file icon" -}}
 {{- $nodeIcon := "blue folder icon" -}}
 {{- $accordionStarOuter := "ui compact accordion" -}}
 {{- $accordionStartInner := "accordion" -}}
 {{- $initialOpenLevel := 0 -}}{{/* zero based index of accordion level to be active */}}
-{{/* --------------------------------------------------------------------- */}}
+{{/* -------------------------------------------------------------------------------------------------------------- */}}
 {{ $s := .section -}}
 {{ if $s.LinkTitle }}
 {{ $p := .page -}}
