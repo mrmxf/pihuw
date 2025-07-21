@@ -1,22 +1,19 @@
 {{partial "tmpl/dbg-template-comment" .}}{{/*
-   print a full width banner
+print a full width banner
 header = "Figure 1" etc
 text = the caption content
 */}}
-{{if .text}}
+{{if or .text .header}}
 {{$imgClass := .srcClass | default ""}}
-{{$class := .class | default "card"}}
-<div class="card {{$class}}">
-  <div style="width:100%;height:100%">
+{{$class := .class | default ""}}
+<div class="banner {{$class}}">
   {{if .src}}
   {{with .srcLink}}<a href="{{.}}">{{end}}
     <div class="{{$imgClass}}"><img src="{{.src}}" {{with .alt }}alt="{{.}}" {{end}} /></div>
-    {{with .srcLink}}</a>{{end}}
+    {{with .srcLink}}
+  </a>{{end}}
   {{end}}
-  <footer>
-    {{with .header}}<span class="ui blue text"><strong><em>{{printf "%s" . | safeHTML}} - </em></strong></span>{{end}}
-    {{.text | safeHTML}}
-  </footer>
-</div>
+  {{with .header}}<div class="header">{{printf "%s" . | safeHTML}}</div>{{end}}
+  {{with .text}}<div class="text">{{. | safeHTML}}</div>{{end}}
 </div>
 {{end}}

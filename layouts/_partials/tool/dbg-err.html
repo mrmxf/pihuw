@@ -35,7 +35,7 @@ partial 'tool/dbg-err' (dict "a" $argname "m" $message "d" .)
   {{- with .a }}
   <span style="color:var(--pi-hi1);">arg</span> <span style="color:var(--pi-hi3);">{{ . | safeHTML}}</span>
   {{ end -}}
-  ➡️ <span "color: red;">{{ .m | safeHTML}}</span>
+  ➡️ <span style="color: red;">{{ .m | safeHTML}}</span>
 </div>
 {{- warnidf "pihuw" "arg(%s) @page(%s)⇒ %s [%s]" .a $url .m $tpl -}}
 {{end}}

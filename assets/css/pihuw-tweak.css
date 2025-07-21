@@ -270,6 +270,31 @@ sidebar {
   color: var(--pi-hi-4);
 }
 
+/*   _                                      */
+/*  | |__   __ _   _ _    _ _    ___   _ _  */
+/*  | '_ \ / _` | | ' \  | ' \  / -_) | '_| */
+/*  |_.__/ \__,_| |_||_| |_||_| \___| |_|   */
+/* pihuw footer row*/
+.banner {
+  display: block;
+  text-align: center;
+  color: var(--pi-hi1);
+  background-color: hsl(from var(--pi-hi1) h s 95%);
+  font-size: 1.3em;
+  padding: 0.5em;
+  width: 100%;
+}
+
+.banner .text {
+  color: var(--pi-hi2);
+  flex-grow: 1;
+}
+
+.banner .header {
+  font-weight: bolder;
+  flex-grow: 1;
+}
+
 /*   _             _     _                 */
 /*  | |__   _  _  | |_  | |_   ___   _ _   */
 /*  | '_ \ | || | |  _| |  _| / _ \ | ' \  */
