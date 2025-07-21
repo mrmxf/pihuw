@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "tmpl/dbg-template-comment" .}}{{/*
    partial to create a latest blog block. Wordcount assumes 220 w/min */}}
 {{ $header := "None" }}
 {{ $srcLink := "" }}
@@ -25,7 +25,7 @@
 {{ range first $blogCount ( where .page.Site.Pages "Type" "blog" )  | last $count }}
 {{ $srcLink = .RelPermalink }}
 {{ $header = .LinkTitle }}
-{{ $featured = (.Resources.ByType "image").GetMatch "*featured*" }}
+{{ $featured = (.Resources.ByType "image").GetMatch "*feature*" }}
 {{ $description = .Plain | safeHTML | truncate 300 }}
 {{ $minutes := add ( div ( countwords .Plain ) 220 ) 1 }}
 {{ $meta = printf "~%v min read" $minutes }}

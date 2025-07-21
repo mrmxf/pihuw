@@ -1,0 +1,6 @@
+{{partial "tmpl/dbg-template-comment" .}}
+
+<pre class="mermaid">
+  {{ .Inner | htmlEscape | safeHTML }}
+</pre>
+{{ .Page.Store.Set "hasMermaid" true }}

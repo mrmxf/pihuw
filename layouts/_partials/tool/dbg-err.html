@@ -1,13 +1,41 @@
-{{partial "tmpl/dbg-template-comment" .}}
-{{/* partial 'tool/dbg-err' (dict "p" $partial-name "a" $arg "m" $message) */}}
+{{ if not hugo.IsServer }}
+{{/* only do debug when running in the hugo server */}}
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+
+partial 'tool/dbg-err' (dict "a" $argname "m" $message "d" .)
+
+*/}}
+{{ $url := "unknown page" }}
+{{with .d.page}}{{$url = .Name }}{{end}}
+{{ $tpl := templates.Current.Parent.Name}}
+{{with templates.Current.Parent.Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{with .Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{with .Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{with .Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{with .Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{with .Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{with .Parent}}
+{{$tpl = printf "%s→%s" $tpl .Name }}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+
 <div class="ui fluid red message">
-<span class="ui black text">partial</span>
-<span class="ui blue text">{{ .p | safeHTML}}</span>
-{{- with .a }}
-<span class="ui black text">arg</span>
-<span class="ui purple text">{{ . | safeHTML}}</span>
-{{ end -}}
-<i class="arrow right icon"></i>
-<span class="ui red text">{{ .m | safeHTML}}</span>
+  <span style="color:var(--pi-hi1);">partials</span> <span style="color:var(--pi-hi2);">{{ $tpl | safeHTML}}</span>
+  {{- with .a }}
+  <span style="color:var(--pi-hi1);">arg</span> <span style="color:var(--pi-hi3);">{{ . | safeHTML}}</span>
+  {{ end -}}
+  ➡️ <span "color: red;">{{ .m | safeHTML}}</span>
 </div>
-{{- warnidf "pihuw" "partial (%s) arg (%s) ⇒ %s" .p .a .m -}}
+{{- warnidf "pihuw" "arg(%s) @page(%s)⇒ %s [%s]" .a $url .m $tpl -}}
+{{end}}

@@ -1,5 +1,5 @@
-{{partial "tmpl/dbg-template-comment" .}}
-print a full width banner
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+   print a full width banner
 header = "Figure 1" etc
 text = the caption content
 */}}
@@ -11,8 +11,7 @@ text = the caption content
   {{if .src}}
   {{with .srcLink}}<a href="{{.}}">{{end}}
     <div class="{{$imgClass}}"><img src="{{.src}}" {{with .alt }}alt="{{.}}" {{end}} /></div>
-    {{with .srcLink}}
-  </a>{{end}}
+    {{with .srcLink}}</a>{{end}}
   {{end}}
   <footer>
     {{with .header}}<span class="ui blue text"><strong><em>{{printf "%s" . | safeHTML}} - </em></strong></span>{{end}}

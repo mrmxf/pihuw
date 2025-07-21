@@ -28,15 +28,13 @@
 {{- $srcIsImage := in $imgExt $ext -}}
 {{- $srcGrid := .srcGrid | default "zero wide" }}
 {{- $txtGrid := .txtGrid | default "sixteen wide" }}
-{{/* ---make src dict----------------------------------------------------- */}}
-{{ $srcDict := dict "src" .src "srcLink" .srcLink "srcClass" .srcClass}}
 {{/* --------------------------------------------------------------------- */}}
 {{- if .id -}}<section id="{{ .id }}">{{- end -}}
   {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ {{$srcGrid}}{{end}}
   <div class="ui stackable two column middle aligned grid">
     <div class="row">
       {{- if and .src (eq .srcOn "left") -}}
-      <div class="{{$srcGrid}} column">{{ partial "tool/media" $srcDict }}</div>
+      <div class="{{$srcGrid}} column">{{ partial "tool/media" . }}</div>
       {{- end -}}
       <div class="ui {{$txtGrid}} column">
         <div class="ui horizontal fluid card">
@@ -57,7 +55,7 @@
         </div>
       </div>
       {{ if and .src (eq .srcOn "right") }}
-      <div class="{{$srcGrid}} column">{{ partial "tool/media" $srcDict }}</div>
+      <div class="{{$srcGrid}} column">{{ partial "tool/media" . }}</div>
       {{end}}
     </div>
   </div>

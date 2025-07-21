@@ -1,5 +1,5 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/* Increment and display a heading number
+{{/* Increment and display a heading number
      heading levels (int) can be 1 - 6 - default = level 1
 */}}
 {{ $DOT := dict "ctx" . "level" (.Get 0 | default 1 | int) }}
-{{ partial "tool/numbered-heading"  $DOT }}
+{{ partial "tmpl/numbered-header"  $DOT }}

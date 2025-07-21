@@ -1,9 +1,15 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+output the standard footer. If the environment variabls
+HUGO_PARAM_BUILDMSG exists then it will be appended
+to the website tag
+*/}}
 {{- $doTitle := site.Params.ui.footer.showSiteTitle }}
 {{- $doVersion := site.Params.ui.footer.showSiteVersion }}
 {{- $doLastMod := site.Params.ui.footer.showLastMod }}
 {{- $doBuild := site.Params.ui.footer.showBuildDate }}
-{{if or  $doTitle $doVersion $doLastMod $doBuild}}
+{{- $buildMsg := "" }}
+{{with index site.Params "buildmsg"}}{{$buildMsg = printf "-%s" . | markdownify}}{{ end -}}
+{{if or $doTitle $doVersion $doLastMod $doBuild}}
   {{$title := ""}}{{if $doTitle}}{{$title = site.Title}}{{end}}
   {{$version := ""}}{{if $doVersion}}{{$version = (partial "tmpl/get-version-data" .).version}}{{end}}
   {{$lastmod := ""}}{{if $doLastMod}}{{$lastmod = ( .Site.Lastmod | time.Format "2006-01-02" )}}{{end}}
@@ -12,7 +18,7 @@
   {{if site.Params.ui.footer.showSiteVersion}}
   {{end}}
   <div class="left">
-  {{$title}} <small>v{{$version}}<br>
+  {{$title}} <small>{{$version}}{{$buildMsg}}</small><br>
     <small>mod:</small>{{$lastmod}}
     <small>build:</small>{{$build}}</small>
 </div>

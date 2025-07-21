@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "tmpl/dbg-template-comment" .}}{{/*
    Include another page as a block File path is relative to project root */}}
 {{- $f := .from -}}
 {{- if $f -}}
@@ -8,7 +8,7 @@
 {{/* --- update the dict for the block -----------------------------------*/}}
 {{- $d := merge . (dict "from" $f) -}}
 
-{{ $featured := ($p.Resources.ByType "image").GetMatch "*featured*" }}
+{{ $featured := ($p.Resources.ByType "image").GetMatch "*feature*" }}
 {{if $featured}}
 {{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
 {{end}}
