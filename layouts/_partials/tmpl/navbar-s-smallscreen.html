@@ -9,7 +9,7 @@
   <i class="fa-solid fa-bars"></i>
   </div>
   <div class="dropdown-content">
-  {{ range .Site.Menus.main.ByWeight -}}
+  {{ range site.Menus.main.ByWeight -}}
 
   {{- if .HasChildren -}}
   {{- template "navChild" (dict "page" $thisPage "menu" .) }}
@@ -22,7 +22,7 @@
   {{/* --------------------------------------------------------------
   ------------------------------------------------------------------- */}}
   {{/* ---- languages ----------------------------------------------- */}}
-  {{- if (gt (len .Site.Home.Translations) 0) -}}
+  {{- if (gt (len site.Home.Translations) 0) -}}
   <a class="item">{{ partial "tmpl/navbar-lang-selector.html" . -}}</a>
   {{ end -}}
   </div>

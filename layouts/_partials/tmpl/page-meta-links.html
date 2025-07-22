@@ -9,9 +9,9 @@
 <div class="ui small gray basic labels" style="display:inline;">
   {{ if $gh_repo -}}
   {{ $gh_repo_path := printf "%s/content/%s" $gh_branch $pathFormatted -}}
-  {{ if and ($gh_subdir) (.Site.Language.Lang) -}}
-  {{ $gh_repo_path = printf "%s/%s/content/%s/%s" $gh_branch $gh_subdir ($.Site.Language.Lang) $pathFormatted -}}
-  {{ else if .Site.Language.Lang -}}
+  {{ if and ($gh_subdir) (site.Language.Lang) -}}
+  {{ $gh_repo_path = printf "%s/%s/content/%s/%s" $gh_branch $gh_subdir (site.Language.Lang) $pathFormatted -}}
+  {{ else if site.Language.Lang -}}
   {{ $gh_repo_path = printf "%s/content/%s/%s" $gh_branch ($.Site.Language.Lang) $pathFormatted -}}
   {{ else if $gh_subdir -}}
   {{ $gh_repo_path = printf "%s/%s/content/%s" $gh_branch $gh_subdir $pathFormatted -}}

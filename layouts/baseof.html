@@ -11,7 +11,8 @@
 <body >
   {{partial "tmpl/dbg-template-comment" .}}
   <header>
-    {{ partial "tmpl/navbar" . }}
+    {{partial "tmpl/navbar" .}}
+    {{if not site.Params.ui.hide.breadcrumbs}}{{partial "tmpl/breadcrumb" .}}{{end}}
   </header>
   <!-- outer div is for gutter control-->
   <div class="flex one six-{{site.Params.resp.m}} six-{{site.Params.resp.w}} pi-nav-pad">

@@ -1,6 +1,6 @@
 {{partial "tmpl/dbg-template-comment" .}}
 {{/* Link directly to documentation etc., if possible. */}}
-{{ $langPage := cond (gt (len .Translations) 0) . .Site.Home }}
+{{ $langPage := cond (gt (len .Translations) 0) . site.Home }}
 <a class="item" href="#" id="navbarDropdown" aria-haspopup="true" aria-expanded="false">
 	{{ $langPage.Language.LanguageName }}
 	<i class="dropdown icon"></i>

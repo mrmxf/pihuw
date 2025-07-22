@@ -1,27 +1,27 @@
 {{partial "tmpl/dbg-template-comment" .}}
+{{ $homeUrl := .RelRef (dict "path" "/")}}
+{{ $home := printf "<a href='%s'><i class='%s'></i></a>" $homeUrl "fa-solid fa-house"}}
+{{ $arrow := " <i class='fa-solid fa-arrow-right'></i> "}}
 {{ $isSingle := true -}}
-{{ with .Parent -}}
-  {{ $isSingle = .IsHome -}}
-{{ end -}}
-<nav aria-label="breadcrumb" class="ui breadcrumb">
-  <i class="home icon"></i>
-  <i class="right arrow icon divider"></i>
-    {{- template "breadcrumbnav" (dict "p1" . "p2" .) }}
-</nav>
+{{ with .Parent -}}{{ $isSingle = .IsHome -}}{{ end -}}
+<div aria-label="breadcrumb" class="breadcrumb">
+  {{$home|safeHTML}}
+  {{- template "breadcrumbnav" (dict "p1" . "p2" . "arrow" $arrow) }}
+</div>
 
 {{- define "breadcrumbnav" -}}
-  {{ if .p1.Parent -}}
-    {{ if not .p1.Parent.IsHome -}}
-      {{ template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 )  -}}
-    {{ end -}}
-  {{ else if not .p1.IsHome -}}
-    {{ template "breadcrumbnav" (dict "p1" .p1.Site.Home "p2" .p2 )  -}}
-  {{ end -}}
-  {{ $isActive :=  eq .p1 .p2 }}
-  <a class="{{ if $isActive }}active {{ end }}section"
-      {{- if $isActive }} aria-current="page"{{ end }}
-      href="{{ .p1.Permalink }}">
-      {{- .p1.LinkTitle -}}
-    </a>
-    {{- if not $isActive }}<i class="right arrow icon divider"></i>{{ end }}
+{{ if .p1.Parent -}}
+   {{if not .p1.Parent.IsHome -}}
+   {{template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 ) -}}
+   {{end}}
+{{ else if not .p1.IsHome -}}
+  {{ template "breadcrumbnav" (dict "p1" .p1.Site.Home "p2" .p2 ) -}}
+{{ end -}}
+{{ $isActive := eq .p1 .p2 }}
+{{.arrow|safeHTML}}
+<a class="{{ if $isActive }}active {{ end }}section" {{- if $isActive }} aria-current="page" {{ end }}
+  href="{{ .p1.Permalink }}">
+  {{- .p1.LinkTitle -}}
+</a>
+{{- if not $isActive }}{{.arrow|safeHTML}}{{ end }}
 {{- end -}}

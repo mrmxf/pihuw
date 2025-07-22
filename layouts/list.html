@@ -2,8 +2,13 @@
 {{partial "tmpl/dbg-template-comment" .}}
 {{partial "tmpl/page-title.html" .}}
 {{ .Content }}
+{{ if not .Params.hide.bottomMenu}}
+<div style="text-align:center;">
+  <small><em>this section:</em></small>
 {{ range .Pages }}
-<h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-{{ .Summary }}
+| <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
+{{end}}
+|
+</div>
 {{ end }}
 {{ end }}

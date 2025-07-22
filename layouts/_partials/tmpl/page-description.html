@@ -5,7 +5,7 @@
   {{ if .IsPage -}}
     {{ .Summary | plainify | chomp -}}
   {{ else -}}
-    {{ with .Site.Params.description | plainify -}}
+    {{ with site.Params.description | plainify -}}
       {{ . -}}
     {{ end -}}
   {{ end -}}

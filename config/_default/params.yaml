@@ -1,10 +1,22 @@
-# pihuw theme
+# --- Hugo pihuw site.Params are all in this yaml -----------------------------------
+copyright:        Mr MXF Ltd
+privacy_policy:   /privacy
+contact:          /contact
+time_format_blog: Monday, 02 Jan 2006
+
+# --- libraries loaded in partial scripts.html -----------------------------------
+mermaid:
+  enable: true
+markmap:
+  enable: false
+katex:
+  enable: false
+
 # This file contains all the sites.Params.xxx properties
 # These values here are used to build the documentation site.
 # Change them to your favourite values for your website
-baseURL: /
-time_format_blog: Monday, 02 Jan 2006
-time_format_default: "2006-01-02"
+# environment variable HUGO_PARAM_BUILDMSG becomes site.Params.builsmsg in the footer
+
 # the releases file is in assets/data/releases.yaml
 releaseTracking: data/releases.yaml
 
@@ -14,9 +26,9 @@ releaseTracking: data/releases.yaml
 #  |_|   \___| /__/ | .__/ \___/ |_||_| /__/ |_|  \_/  \___|
 #                   |_|
 # pihuw defines 3 responsive break widths in pixels. These adapt the layout.
-# thin - the portrait mobile mode. hamburger menu, no gutters, no sidebars
-# medium - not-quite-wide mode. normal menu, no gutters, one sidebar
-# wide - desktop mode: full menu, gutters, one/two sidebars
+# s - small  - the portrait mobile mode. hamburger menu, no gutters, no sidebars
+# m - medium - not-quite-wide mode. normal menu, no gutters, one sidebar
+# w - wide   - desktop mode: full menu, gutters, one/two sidebars
 
 resp:
   s: 500
@@ -62,13 +74,17 @@ ui:
   logo: /brand/logo
   # some elements of the ui can be hidden
   hide:
+    breadcrumbs: false
     navbar:
       logo: false
       title: false
     sidebar: false
+  sidebar:
+    maxItems: 20
+    maxDepth: 2
   # printing the date of the page
   pageDate:
-    color: var(--pi-hi2) # highlight color 2 == purple
+    color: var(--pi-hi2)                   # highlight color 2 == purple
     format: 2 January 2006
   # elements in the footer
   footer:
@@ -80,16 +96,16 @@ ui:
     links:
       - label: 'Theme:'
         title: pihuw
-        url: https://github.com/mrmxf/pihuw
-      - label: ©
+        link:  https://github.com/mrmxf/pihuw
+      - label: copyright ©
         title: Mr MXF
-        url: https://mrmxf.com
+        link:  https://mrmxf.com
       - title: Privacy Policy
-        link: https://termly.io/resources/templates/privacy-policy-template/
+        link:  /privacy/
       - title: Contact
-        link: /contact
+        link:  /contact
       - title: About
-        link: /about
+        link:  /about
   readingTime:
     enable: true
 #           _                         _

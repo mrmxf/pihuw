@@ -20,6 +20,14 @@ menus:
   main:
   - name: '🏷️'
     pageRef: '/tags'
+  - name: 'Contact'
+    URL: '/contact'
+    weight: 20
+    pre: 📨
+  - name: 'Metarex'
+    URL: 'https://metarex.media'
+    weight: 30
+    pre: 🦖
 
 # footer menu
   footer:

@@ -1,5 +1,5 @@
 {{partial "tmpl/dbg-template-comment" .}}
-{{- $menu2 := .Site.Params.ui.navbar2 -}}
+{{- $menu2 := site.Params.ui.navbar2 -}}
 {{- $customParam := "partial_w" -}}
 {{- $page := . -}}
 {{- $baseMenu := site.Menus.main.ByWeight -}}
@@ -17,7 +17,7 @@
 
 {{/* navChild takes
 ... page: .Page
-... menu: .Site.Menus.main.ByWeight
+... menu: site.Menus.main.ByWeight
 ... ..... and outputs a dropdown with children
 */}}
 {{- define "navChild" -}}

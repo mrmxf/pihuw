@@ -69,16 +69,21 @@ body {
 code {
   color: var(--pihuw-blue);
 }
-
+/*   _                            _                             _     */
+/*  | |__   _ _   ___   __ _   __| |  __   _ _   _  _   _ __   | |__  */
+/*  | '_ \ | '_| / -_) / _` | / _` | / _| | '_| | || | | '  \  | '_ \ */
+/*  |_.__/ |_|   \___| \__,_| \__,_| \__| |_|    \_,_| |_|_|_| |_.__/ */
+.breadcrumb {
+  margin-top: 3.5em;
+  height: 1em;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+}
 /*                      */
 /*  _ _    __ _  __ __  */
 /* | ' \  / _` | \ V /  */
 /* |_||_| \__,_|  \_/   */
-.pi-nav-pad {
-  /* padding to drop below the fixed nav bar */
-  padding-top: 4em;
-}
-
 .pi-nav {
   /* the full nav bar */
   color: var(--mm-green);
@@ -86,7 +91,15 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* set bottom to push everything else down the page*/
+  bottom: 3.5em;
 }
+
+.pi-nav-pad {
+  /* padding to drop below the fixed nav bar */
+  padding-top: 0.3em;
+}
+
 
 nav .pi-nav-brand {
   /* just the left hand brand section*/
@@ -412,6 +425,98 @@ th {
     padding-top: 3.5em;
   }
 }
+
+
+/*                                   _   _               */
+/*   __ _   __   __   ___   _ _   __| | (_)  ___   _ _   */
+/*  / _` | / _| / _| / _ \ | '_| / _` | | | / _ \ | ' \  */
+/*  \__,_| \__| \__| \___/ |_|   \__,_| |_| \___/ |_||_| */
+
+  /* Core styles/functionality */
+  .tab {
+    position: relative;
+  }
+
+  .tab input {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+  }
+
+  .tab__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s;
+  }
+
+  .tab input:checked~.tab__content {
+    max-height: 100%;
+  }
+
+  /* --- Visual styles ---   */
+  .accordion {
+    border-left: 1px solid lightgray;
+    border-radius:none;
+    overflow: hidden;
+  }
+
+  .tab__label,
+  .tab__close {
+    display: flex;
+    background: var(--theme);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .tab__label {
+    justify-content: space-between;
+    padding: 0.2rem 1rem ;
+  }
+
+  .tab__label::after {
+    content: "\276F";
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    transform: rotate(90deg);
+    transition: all 0.35s;
+  }
+
+  .tab input:checked+.tab__label::after {
+    transform: rotate(270deg);
+  }
+
+  .tab__content p {
+    margin: 0;
+    padding: 0.2rem 1rem ;
+  }
+
+  .tab__close {
+    justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .accordion--radio {
+    --theme: var(--secondary);
+  }
+
+  /* Arrow animation */
+  .tab input:not(:checked)+.tab__label:hover::after {
+    animation: bounce .5s infinite;
+  }
+
+  @keyframes bounce {
+    25% {
+      transform: rotate(90deg) translate(.25rem);
+    }
+
+    75% {
+      transform: rotate(90deg) translate(-.25rem);
+    }
+  }
+
+
 
 /*                                             _                       _                      */
 /*   _ _   ___   ___  _ __   ___   _ _    ___ (_) __ __  ___    __ __ (_)  ___  __ __ __  ___ */

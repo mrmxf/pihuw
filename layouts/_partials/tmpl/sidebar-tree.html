@@ -1,58 +1,49 @@
 {{partial "tmpl/dbg-template-comment" .}}{{/*
-  sidebar can be hidden with Params.ui.hide.sidebar
+sidebar can be hidden with Params.ui.hide.sidebar
 */}}
-{{ $sidebarCacheLimit := 2000 }}
-{{if .Site.Params.ui.sidebar_cache_limit}}{{ $sidebarCacheLimit = .Site.Params.ui.sidebar_cache_limit}}{{- end -}}
-{{ $shouldDelayActive := ge (len .Site.Pages) $sidebarCacheLimit -}}
 <div class="pi-sidebar" id="section-nav">
   {{/* --- setup -------------------------------------------------------------------------------------------------- */}}
-  {{ $navRoot := cond (and (ne .Params.toc_root true) (eq .Site.Home.Type "docs")) .Site.Home .FirstSection -}}
+  {{ $navRootOriginal := cond (and (ne .Params.toc_root true) (eq site.Home.Type "docs")) site.Home .FirstSection -}}
+  {{ $navRoot := . -}}
   {{ $depth := 0 -}}
   {{/* --- max depth=50 ------------------------------------------------------------------------------------------- */}}
-  {{ $sidebarMenuTruncate := 50}}
-  {{if .Site.Params.ui.sidebar_menu_truncate}}{{ $sidebarMenuTruncate = .Site.Params.ui.sidebar_menu_truncate}}{{- end
-  -}}
-  {{ template "section-tree-nav-section"
+  {{ $maxItems := 50}}
+  {{if site.Params.ui.maxItems}}{{ $maxItems = site.Params.ui.maxItems}}{{end}}
+  {{- template "sidebar-section"
   (dict "page" .
   "section" $navRoot
-  "shouldDelayActive" $shouldDelayActive
-  "sidebarMenuTruncate" $sidebarMenuTruncate
+  "maxItems" $maxItems
   "depthNum" $depth)
-  }}
+  -}}
 </div>
 
 
 
 {{/* -------------------------------------------------------------------------------------------------------------- */}}
-{{ define "section-tree-nav-section" -}}
-{{- $leafIcon := "grey file icon" -}}
-{{- $nodeIcon := "blue folder icon" -}}
-{{- $accordionStarOuter := "ui compact accordion" -}}
-{{- $accordionStartInner := "accordion" -}}
+{{ define "sidebar-section" -}}
+{{- $leafIcon := "<small><i class='fa-regular fa-file' style='color:var(--pi-hi2);'></i></small> " -}}
+{{- $nodeIcon := "<small><i class='fa-regular fa-folder' style='color:var(--pi-hi1);'></i></small> " -}}
+{{- $nodeOpenIcon := "<small><i class='fa-regular fa-folder-open' style='color:var(--pi-hi3);'></i></small> " -}}
+{{- $accordionStart := "<section class='accordion'>" -}}
+  {{- $accordionEnd := "</section>" -}}
 {{- $initialOpenLevel := 0 -}}{{/* zero based index of accordion level to be active */}}
 {{/* -------------------------------------------------------------------------------------------------------------- */}}
 {{ $s := .section -}}
 {{ if $s.LinkTitle }}
 {{ $p := .page -}}
-{{ $shouldDelayActive := .shouldDelayActive -}}
-{{ $sidebarMenuTruncate := .sidebarMenuTruncate -}}
+{{$id := 0}}
+{{ $maxItems := .maxItems -}}
 {{ $treeRoot := cond (eq .depthNum 0) true false -}}
 {{ $depth := .depthNum -}}
-{{ $active := and (not $shouldDelayActive) (eq $s $p) -}}
-{{ $activePath := and (not $shouldDelayActive) (or (eq $p $s) ($p.IsDescendant $s)) -}}
+{{ $active := eq $s $p -}}
+{{ $activePath := or (eq $p $s) ($p.IsDescendant $s) -}}
 {{ $mid := printf "m-%s" ($s.RelPermalink | anchorize) -}}
 {{ $pages_tmp := where (union $s.Pages $s.Sections).ByWeight ".Params.toc_hide" "!=" true -}}
-{{ $pages := $pages_tmp | first $sidebarMenuTruncate -}}
+{{ $pages := $pages_tmp | first $maxItems -}}
 {{ $withChild := gt (len $pages) 0 -}}
 {{/* --------------------------------------------------------------------- */}}
-{{- $accordionStart := cond ($withChild) $accordionStartInner "" -}}
-{{- if and $withChild (eq $depth 0) -}}{{- $accordionStart = $accordionStarOuter -}}{{- end -}}
-{{/* --------------------------------------------------------------------- */}}
-{{- $iconHtml := fmt.Printf "<i class=\"%s\"></i>" $leafIcon -}}{{/* leaf */}}
-{{- if $withChild -}}{{- $iconHtml = fmt.Printf "<i class=\"%s\"></i>" $nodeIcon -}}{{- end -}}{{/* node */}}
-{{- with $s.Params.Icon -}}{{- $iconHtml = fmt.Printf "<i class=\"%s\"></i>" . -}}{{- end -}}{{/* custom */}}
-{{- if $withChild -}}{{- $iconHtml = fmt.Printf "<i class=\"%s\"></i>%s" "dropdown icon" $iconHtml -}}{{- end -}}
-
+{{- $iconHtml := $leafIcon -}}
+{{- if $withChild -}}{{$iconHtml = $nodeIcon}}{{end}}
 {{/* --------------------------------------------------------------------- */}}
 {{- $link := $s.RelPermalink -}}
 {{- if $s.Param "manuallink" -}}{{- $link = $s.Params.manualLink -}}{{- end -}}
@@ -67,32 +58,33 @@
 {{- $target := "" -}}
 {{- if $s.Param "manualLinkTarget" -}}{{- $target = fmt.Print "target=\"%s\"" $s.Params.manuallinktitle -}}{{- end -}}
 
-<div id="{{$mid}}-choice" class="{{$accordionStart}}">
-  <div class="{{$isActive}} title">
-    {{ $iconHtml | safeHTML}}
+{{$accordionStart | safeHTML}}
+<div class="{{$isActive}} tab">
+  <input id="{{$depth}}-{{$id}}" type="checkbox" name="{{$depth}}-{{$id}}">
+  <label for="{{$depth}}-{{$id}}" class="tab__label">
+    {{$iconHtml | safeHTML}}
     <a href="{{ $link }}" title="{{ $title }}" {{$target}}="{{ . }}" id="{{ $mid }}">
       {{ $s.LinkTitle }}
     </a>
-  </div>
-  <div class="{{$isActive}} content">
+  </label>
+  <div class="tab__content">
     {{- if $withChild }}
-    {{- $depth := add $depth 1 }}
-    <div class="list" style="padding: 0;">
+    <div class="list" style="padding-left: 0.2em;">
+      {{- $depth := add $depth 1 }}
       {{ range $pages -}}
       {{ if (not (and (eq $s $p.Site.Home) (eq .Params.toc_root true))) -}}
-      {{ template "section-tree-nav-section"
+      {{ template "sidebar-section"
       (dict "page" $p
       "section" .
-      "shouldDelayActive" $shouldDelayActive
-      "sidebarMenuTruncate" $sidebarMenuTruncate
+      "maxItems" $maxItems
       "depthNum" $depth) }}
       {{- end }}{{/* if */}}
       {{- end }}{{/* end range $pages */}}
     </div>
     {{- end -}}{{/* end $withChild */}}
   </div>
-</div>{{/* accordionEnd */}}
-
+</div>
+{{$accordionEnd | safeHTML}}
 
 {{- end -}}{{/* end with linktitle */}}
 {{- end -}}{{/* end definition */}}
