@@ -1,5 +1,6 @@
 # flow:"stage",   build:"dev"  = auto-add to staging server
 # flow:"release", build:"prod" = to flag as a production release
+- {version: "0.3.5", date: 2025-07-22, build: "prod", flow: "main", note: sidebar & breadcrumbs}
 - {version: "0.3.4", date: 2025-07-21, build: "prod", flow: "main", note: banner}
 - {version: "0.3.3", date: 2025-06-27, build: "prod", flow: "main", note: custom menu buttons}
 - {version: "0.3.2", date: 2025-06-27, build: "prod", flow: "main", note: woff2 files}
@@ -16,8 +17,7 @@
 # if in doubt set to "stage" and check the staging server when slack goes ping
 # -------------------------------------------------------------------------------------------------------
 # code names here: https://en.wikipedia.org/wiki/Lists_of_colors
-- { version: 0.2.1, date: 2025-07-22, codename: banana,    note: sidebar & breadcrumbs }
-- { version: 0.2.1, date: 2025-07-21, codename: banana,    note: build info footer }
+- { version: 0.2.1, date: 2025-05-21, codename: banana,    note: build info footer }
 - { version: 0.2.0, date: 2025-05-21, codename: banana,    note: refactor for hugo 0.147.3 }
 - { version: 0.1.1, date: 2025-04-22, codename: apricot,   note: fixes basic functionality }
 - { version: 0.1.0, date: 2025-03-31, codename: apricot,   note: first alpha }
