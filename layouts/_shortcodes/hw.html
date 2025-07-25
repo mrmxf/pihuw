@@ -4,8 +4,8 @@ I was struggling to explain & remember all the shortcodes & partials in the pihu
 I was also having name clashes with other themes, so I had a simple idea to crete a consistent
 set of parameters and names
 
-Props(see pi-help partial or insert `pi t="help"` in your code):
-             t  = "partial pihuw-$t ."
+Props(see hw-help partial or insert `hw t="help"` in your code):
+             t  = "partial tool/$t ."
            help = "any string and the help for that partial will be rendered"
             alt = alt text for image/ video/resource
      blockClass = class for the containing div - the outermost block (default = container)
@@ -19,7 +19,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
              id = "some id to create an anchor"
            link = default href around any element
            meta = text adding extra information to the header/text
-           mode = "mode defining string" e.g. "log" or "dump" for pihuw-debug
+           mode = "mode defining string" e.g. "log" or "dump" for t=dbg
      ???   page = "name of page to get with site.GetPage $page"
            skip = number of things to skip before output e.g. blogs
             src = "relative path or URL image/video/resource"
@@ -33,7 +33,6 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 
           Inner   contains markdown and is after the rendered description
 */}}
-{{- $workerPartial := "pi" -}}
 
 {{- $args:=""}}{{if .IsNamedParams}}{{$args =.Get "args"}}{{else}}{{$args =.Get 0}}{{end -}}
 {{- $id := .Get "id" | default (printf "block-%d" .Ordinal) -}}
@@ -56,7 +55,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $srcLink := .Get "srcLink" | default $headerLink -}}
 {{- $srcOn := .Get "srcOn" | default "left" -}}
 {{- $srcPoster := .Get "srcPoster" -}}
-{{- $srcWidth := .Get "srcWidth" | default 0.25 -}}
+{{- $srcWidth := .Get "srcWidth" -}}
 {{- $text := .Get "text" -}}
 {{/* --- src logic ------------------------------------------------------*/}}
 {{- if not $src -}}{{ $srcWidth = 0.0 }}{{- end -}}
@@ -70,13 +69,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{ $srcIsImage = in $imgExt $ext }}
 {{- end -}}
 {{/* --- src width for grid ----------------------------------------------*/}}
-{{- $slice := slice "zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" -}}
-{{- $type := printf "%T" $srcWidth }}
-{{- if ne $type "float64" }}{{ $srcWidth = 0.3}}{{ end -}}
-{{- $r := math.Round ( mul 16.0 $srcWidth ) -}}
-{{- $r = math.Min 16 ( math.Max 0 $r ) | int -}}
-{{- $srcGrid := printf "%s wide" (index $slice $r) }}
-{{- $txtGrid := printf "%s wide" (index $slice ( sub 16 $r )) }}
+{{/* --- @todo update for picnic ----------------------------------------------*/}}
 {{/* --- select the correct partial ---------------------------------------*/}}
 {{- $d := dict "id" $id "page" .Page "from" $from -}}
 {{/* --- populate the dict for the partial --------------------------------*/}}
@@ -96,7 +89,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "skip" $skip) -}}
 {{- $d = merge $d (dict "src" $src) -}}
 {{- $d = merge $d (dict "srcClass" $srcClass) -}}
-{{- $d = merge $d (dict "srcGrid" $srcGrid) -}}
+{{- $d = merge $d (dict "srcGrid" "") -}}
 {{- $d = merge $d (dict "srcId" $srcId) -}}
 {{- $d = merge $d (dict "srcIsVideo" $srcIsVideo) -}}
 {{- $d = merge $d (dict "srcIsImage" $srcIsImage) -}}
@@ -104,5 +97,5 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "srcOn" $srcOn) -}}
 {{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
 {{- $d = merge $d (dict "text" $text) -}}
-{{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
+{{- $d = merge $d (dict "txtGrid" "") -}}
 {{- partial "hw" $d -}}

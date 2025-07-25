@@ -141,6 +141,27 @@ section img {
   object-fit: contain;
 }
 
+section>div.block{
+  align-items: stretch;
+}
+section img.block {
+  display: flex;
+  width:100%;
+  object-fit: contain;
+}
+section .txt.block .card{
+  height:100%;
+  padding: 0.3em;
+}
+section  footer {
+  text-align: center;
+  font-size: smaller;
+  font-style: italic;
+  color: var(--pi-hi2);
+}
+
+#block-1 > div > div.fifth > footer
+
 .pi-reading-time {
   size: 80%;
   color: var(--pi-hi1)
