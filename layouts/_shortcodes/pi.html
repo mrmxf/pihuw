@@ -56,7 +56,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $srcLink := .Get "srcLink" | default $headerLink -}}
 {{- $srcOn := .Get "srcOn" | default "left" -}}
 {{- $srcPoster := .Get "srcPoster" -}}
-{{- $srcWidth := .Get "srcWidth" | default 0.25 -}}
+{{- $srcWidth := .Get "srcWidth" -}}
 {{- $text := .Get "text" -}}
 {{/* --- src logic ------------------------------------------------------*/}}
 {{- if not $src -}}{{ $srcWidth = 0.0 }}{{- end -}}
@@ -70,13 +70,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{ $srcIsImage = in $imgExt $ext }}
 {{- end -}}
 {{/* --- src width for grid ----------------------------------------------*/}}
-{{- $slice := slice "zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" -}}
-{{- $type := printf "%T" $srcWidth }}
-{{- if ne $type "float64" }}{{ $srcWidth = 0.3}}{{ end -}}
-{{- $r := math.Round ( mul 16.0 $srcWidth ) -}}
-{{- $r = math.Min 16 ( math.Max 0 $r ) | int -}}
-{{- $srcGrid := printf "%s wide" (index $slice $r) }}
-{{- $txtGrid := printf "%s wide" (index $slice ( sub 16 $r )) }}
+{{/* --- @todo update for picnic ----------------------------------------------*/}}
 {{/* --- select the correct partial ---------------------------------------*/}}
 {{- $d := dict "id" $id "page" .Page "from" $from -}}
 {{/* --- populate the dict for the partial --------------------------------*/}}
@@ -96,7 +90,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "skip" $skip) -}}
 {{- $d = merge $d (dict "src" $src) -}}
 {{- $d = merge $d (dict "srcClass" $srcClass) -}}
-{{- $d = merge $d (dict "srcGrid" $srcGrid) -}}
+{{- $d = merge $d (dict "srcGrid" "") -}}
 {{- $d = merge $d (dict "srcId" $srcId) -}}
 {{- $d = merge $d (dict "srcIsVideo" $srcIsVideo) -}}
 {{- $d = merge $d (dict "srcIsImage" $srcIsImage) -}}
@@ -104,5 +98,5 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "srcOn" $srcOn) -}}
 {{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
 {{- $d = merge $d (dict "text" $text) -}}
-{{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
+{{- $d = merge $d (dict "txtGrid" "") -}}
 {{- partial "hw" $d -}}

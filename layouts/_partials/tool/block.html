@@ -27,40 +27,33 @@
 {{- $srcClass := printf "src block %s" .srcClass -}}
 {{- $srcIsVideo := in $vidExt $ext -}}
 {{- $srcIsImage := in $imgExt $ext -}}
-{{- $maxGrid := "five" }}
 {{- $srcGrid := .srcGrid | default "fifth" }}
 {{- $txtGrid := .txtGrid | default "four-fifth" }}
 {{- $mediaDot := merge . (dict "srcClass" $srcClass) }}
 {{/* --------------------------------------------------------------------- */}}
-{{- if .id -}}<section id="{{ .id }}">{{- end -}}
-  {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ {{$srcGrid}}/{{$maxGrid}}{{end}}
-  <div class="flex {{$maxGrid}} block">
-    {{- if and .src (eq .srcOn "left") -}}
-    <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
+{{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}}){{end}}
+{{- if and .src (eq .srcOn "left") -}}
+<div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
+{{- end -}}
+<div class="{{$txtGrid}} txt block">
+  <div class="card">
+    {{- if .header -}}
+    <header>
+      {{if .headerLink}}<a href="{{.headerLink}}">{{.header}}</a>
+      {{else}}{{ .header }}{{end}}
+    </header>{{- end -}}
+    {{- with .meta -}}
+    <div class="meta"><span class="category">{{ . }}</span></div>
     {{- end -}}
-    <div class="{{$txtGrid}} txt block">
-      <div class="card">
-          {{- if .header -}}
-          <header>
-            {{if .headerLink}}<a href="{{.headerLink}}">{{.header}}</a>
-            {{else}}{{ .header }}{{end}}
-          </header>{{- end -}}
-          {{- with .meta -}}
-          <div class="meta"><span class="category">{{ . }}</span></div>
-          {{- end -}}
-          <div class="description">
-            {{- .description | markdownify -}}
-            {{- .inner | markdownify -}}
-          </div>
-        </div>
-      </div>
+    <div class="description">
+      {{- .description | markdownify -}}
+      {{- .inner | markdownify -}}
     </div>
-    {{ if and .src (eq .srcOn "right") }}
-    <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
-    {{end}}
   </div>
-  {{- if .id -}}
-</section>{{- end -}}
+</div>
+{{ if and .src (eq .srcOn "right") }}
+<div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
+{{end}}
 {{with $DBG}}<p>END pihuw-block
   <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(255,90,180);">
 </p>{{end}}

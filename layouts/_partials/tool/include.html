@@ -2,8 +2,8 @@
    Include another page as a block File path is relative to content/ */}}
 {{- $f := .from -}}
 {{ if $f}}
+{{- if fileExists $f -}}FLOOP({{.from}})
 
-{{- if fileExists $f -}}
 {{/* --- trim front matter and spew out the rest of the included file --- */}}
 {{ $content := "" }}
 {{/* check the page for a Params.IncludeSummary substitution */}}

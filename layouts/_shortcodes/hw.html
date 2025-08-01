@@ -41,6 +41,7 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $blockClass := .Get "blockClass" -}}
 {{- $class := .Get "class" -}}
 {{- $count := .Get "count" | default 1 -}}
+{{- $debug := .Get "debug" -}}
 {{- $description := .Get "description" -}}
 {{- $from := .Get "from" -}}
 {{- $header := .Get "header" -}}
@@ -51,12 +52,14 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $skip := .Get "skip" | default 0 -}}
 {{- $src := .Get "src" -}}
 {{- $srcClass := .Get "srcClass" -}}
+{{- $srcGrid := .Get "srcGrid" -}}
 {{- $srcId := .Get "srcId" -}}
 {{- $srcLink := .Get "srcLink" | default $headerLink -}}
 {{- $srcOn := .Get "srcOn" | default "left" -}}
 {{- $srcPoster := .Get "srcPoster" -}}
 {{- $srcWidth := .Get "srcWidth" -}}
 {{- $text := .Get "text" -}}
+{{- $txtGrid := .Get "txtGrid" -}}
 {{/* --- src logic ------------------------------------------------------*/}}
 {{- if not $src -}}{{ $srcWidth = 0.0 }}{{- end -}}
 {{- $srcIsVideo := false -}}
@@ -68,7 +71,12 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{ $srcIsVideo = in $vidExt $ext }}
 {{ $srcIsImage = in $imgExt $ext }}
 {{- end -}}
-{{/* --- src width for grid ----------------------------------------------*/}}
+{{/* ---  grid logic            ----------------------------------------------*/}}
+{{if and (eq $t "block") (eq $blockClass "")}}
+{{$blockClass = "flex six block"}}
+{{ if not $srcGrid}}{{$srcGrid = "third"}}{{end}}
+{{ if not $txtGrid}}{{$txtGrid = "two-third"}}{{end}}
+{{end}}
 {{/* --- @todo update for picnic ----------------------------------------------*/}}
 {{/* --- select the correct partial ---------------------------------------*/}}
 {{- $d := dict "id" $id "page" .Page "from" $from -}}
@@ -79,6 +87,7 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $d = merge $d (dict "blockClass" $blockClass) -}}
 {{- $d = merge $d (dict "class" $class) -}}
 {{- $d = merge $d (dict "count" $count) -}}
+{{- $d = merge $d (dict "debug" $debug) -}}
 {{- $d = merge $d (dict "description" $description) -}}
 {{- $d = merge $d (dict "inner" .Inner) -}}
 {{- $d = merge $d (dict "help" $help) -}}
@@ -89,7 +98,7 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $d = merge $d (dict "skip" $skip) -}}
 {{- $d = merge $d (dict "src" $src) -}}
 {{- $d = merge $d (dict "srcClass" $srcClass) -}}
-{{- $d = merge $d (dict "srcGrid" "") -}}
+{{- $d = merge $d (dict "srcGrid" $srcGrid) -}}
 {{- $d = merge $d (dict "srcId" $srcId) -}}
 {{- $d = merge $d (dict "srcIsVideo" $srcIsVideo) -}}
 {{- $d = merge $d (dict "srcIsImage" $srcIsImage) -}}
@@ -97,5 +106,5 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $d = merge $d (dict "srcOn" $srcOn) -}}
 {{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
 {{- $d = merge $d (dict "text" $text) -}}
-{{- $d = merge $d (dict "txtGrid" "") -}}
+{{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
 {{- partial "hw" $d -}}

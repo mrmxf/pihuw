@@ -144,12 +144,11 @@ section img {
 section>div.block{
   align-items: stretch;
 }
-section img.block {
+div img.src.block {
   display: flex;
   width:100%;
-  object-fit: contain;
 }
-section .txt.block .card{
+ .txt.block .card{
   height:100%;
   padding: 0.3em;
 }
