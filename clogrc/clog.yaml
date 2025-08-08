@@ -6,8 +6,11 @@
 #  |_|   |_| |_||_|  \_,_|   \_/\_/
 # =============================================================================
 # -----------------------------------------------------------------------------
-clog:
+kfg:
   # path to the yaml file defining release history - see semver package
+  releases-path: "assets/data/releases.yaml"
+clog:
+  # legacy - can be deleted
   releases-path: "assets/data/releases.yaml"
 #               _                       _
 #   ||_  _ _   (_)  _ __   _ __   ___  | |_   ___
