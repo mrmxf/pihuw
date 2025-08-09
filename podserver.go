@@ -18,8 +18,8 @@ import (
 
 // the default port to serve data is 8080
 var Port = "8080"
-var urlPrefix="/"
-var mountPath="public"
+var urlPrefix = "/"
+var mountPath = "public"
 
 func main() {
 	r, _ := gommi.Bare()
