@@ -78,7 +78,8 @@ ui:
     navbar:
       logo: false
       title: false
-    sidebar: false
+    sidebar: false            # appears in list pages at the side
+    childBarHorizontal: false # appears in list pages at the top or bottom
   sidebar:
     maxItems: 20
     maxDepth: 2

@@ -1,0 +1,16 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+
+child-bar can be hidden with
+*/}}
+{{ if not .Params.hide.childBarHorizontal}}
+{{$title := "this section:"}}
+{{$bar := "<span class=\"divider\">|</span>" | safeHTML}}
+{{with .Params.childBarTitle}}{{$title = .}}{{end}}
+<div class="child-bar-horizontal">
+  <small><em>{{$title}}</em></small>
+{{ range .Pages }}
+{{$bar}} <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
+{{end}}
+{{$bar}}
+</div>
+{{end}}

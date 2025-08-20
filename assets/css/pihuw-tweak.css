@@ -229,6 +229,15 @@ sidebar {
   height: 100%;
 }
 
+.child-bar-horizontal {
+  padding:0.3em 1em;
+  text-align:center;
+  width: 100%;
+}
+.child-bar-horizontal .divider {
+  color:var(--pi-hi3);
+  font-weight:bold;
+}
 /* #          _   _                        _                      */
 /* #   _ __  (_) | |_    _  _  __ __ __   | |  ___   __ _   ___   */
 /* #  | '_ \ | | | ' \  | || | \ V  V /   | | / _ \ / _` | / _ \  */

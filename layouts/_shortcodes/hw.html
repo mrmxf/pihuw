@@ -71,12 +71,12 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{ $srcIsVideo = in $vidExt $ext }}
 {{ $srcIsImage = in $imgExt $ext }}
 {{- end -}}
-{{/* ---  grid logic            ----------------------------------------------*/}}
-{{if and (eq $t "block") (eq $blockClass "")}}
-{{$blockClass = "flex six block"}}
-{{ if not $srcGrid}}{{$srcGrid = "third"}}{{end}}
-{{ if not $txtGrid}}{{$txtGrid = "two-third"}}{{end}}
-{{end}}
+{{/* ---  grid logic            ----------------------------------------------
+  blockClass surrounds a picnic flex grid
+  class is the outer of the grid e.g. "flex one three-800 grow"
+  srcClass contains the image    e.g. "full third-800"
+  txtClass contains the text     e.g. "full two-third-800"
+*/}}
 {{/* --- @todo update for picnic ----------------------------------------------*/}}
 {{/* --- select the correct partial ---------------------------------------*/}}
 {{- $d := dict "id" $id "page" .Page "from" $from -}}

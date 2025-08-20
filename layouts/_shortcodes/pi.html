@@ -4,8 +4,8 @@ I was struggling to explain & remember all the shortcodes & partials in the pihu
 I was also having name clashes with other themes, so I had a simple idea to crete a consistent
 set of parameters and names
 
-Props(see pi-help partial or insert `pi t="help"` in your code):
-             t  = "partial pihuw-$t ."
+Props(see hw-help partial or insert `hw t="help"` in your code):
+             t  = "partial tool/$t ."
            help = "any string and the help for that partial will be rendered"
             alt = alt text for image/ video/resource
      blockClass = class for the containing div - the outermost block (default = container)
@@ -19,7 +19,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
              id = "some id to create an anchor"
            link = default href around any element
            meta = text adding extra information to the header/text
-           mode = "mode defining string" e.g. "log" or "dump" for pihuw-debug
+           mode = "mode defining string" e.g. "log" or "dump" for t=dbg
      ???   page = "name of page to get with site.GetPage $page"
            skip = number of things to skip before output e.g. blogs
             src = "relative path or URL image/video/resource"
@@ -33,7 +33,6 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 
           Inner   contains markdown and is after the rendered description
 */}}
-{{- $workerPartial := "pi" -}}
 
 {{- $args:=""}}{{if .IsNamedParams}}{{$args =.Get "args"}}{{else}}{{$args =.Get 0}}{{end -}}
 {{- $id := .Get "id" | default (printf "block-%d" .Ordinal) -}}
@@ -42,6 +41,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $blockClass := .Get "blockClass" -}}
 {{- $class := .Get "class" -}}
 {{- $count := .Get "count" | default 1 -}}
+{{- $debug := .Get "debug" -}}
 {{- $description := .Get "description" -}}
 {{- $from := .Get "from" -}}
 {{- $header := .Get "header" -}}
@@ -52,12 +52,14 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $skip := .Get "skip" | default 0 -}}
 {{- $src := .Get "src" -}}
 {{- $srcClass := .Get "srcClass" -}}
+{{- $srcGrid := .Get "srcGrid" -}}
 {{- $srcId := .Get "srcId" -}}
 {{- $srcLink := .Get "srcLink" | default $headerLink -}}
 {{- $srcOn := .Get "srcOn" | default "left" -}}
 {{- $srcPoster := .Get "srcPoster" -}}
 {{- $srcWidth := .Get "srcWidth" -}}
 {{- $text := .Get "text" -}}
+{{- $txtGrid := .Get "txtGrid" -}}
 {{/* --- src logic ------------------------------------------------------*/}}
 {{- if not $src -}}{{ $srcWidth = 0.0 }}{{- end -}}
 {{- $srcIsVideo := false -}}
@@ -69,7 +71,12 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{ $srcIsVideo = in $vidExt $ext }}
 {{ $srcIsImage = in $imgExt $ext }}
 {{- end -}}
-{{/* --- src width for grid ----------------------------------------------*/}}
+{{/* ---  grid logic            ----------------------------------------------
+  blockClass surrounds a picnic flex grid
+  class is the outer of the grid e.g. "flex one three-800 grow"
+  srcClass contains the image    e.g. "full third-800"
+  txtClass contains the text     e.g. "full two-third-800"
+*/}}
 {{/* --- @todo update for picnic ----------------------------------------------*/}}
 {{/* --- select the correct partial ---------------------------------------*/}}
 {{- $d := dict "id" $id "page" .Page "from" $from -}}
@@ -80,6 +87,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "blockClass" $blockClass) -}}
 {{- $d = merge $d (dict "class" $class) -}}
 {{- $d = merge $d (dict "count" $count) -}}
+{{- $d = merge $d (dict "debug" $debug) -}}
 {{- $d = merge $d (dict "description" $description) -}}
 {{- $d = merge $d (dict "inner" .Inner) -}}
 {{- $d = merge $d (dict "help" $help) -}}
@@ -90,7 +98,7 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "skip" $skip) -}}
 {{- $d = merge $d (dict "src" $src) -}}
 {{- $d = merge $d (dict "srcClass" $srcClass) -}}
-{{- $d = merge $d (dict "srcGrid" "") -}}
+{{- $d = merge $d (dict "srcGrid" $srcGrid) -}}
 {{- $d = merge $d (dict "srcId" $srcId) -}}
 {{- $d = merge $d (dict "srcIsVideo" $srcIsVideo) -}}
 {{- $d = merge $d (dict "srcIsImage" $srcIsImage) -}}
@@ -98,5 +106,5 @@ Props(see pi-help partial or insert `pi t="help"` in your code):
 {{- $d = merge $d (dict "srcOn" $srcOn) -}}
 {{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
 {{- $d = merge $d (dict "text" $text) -}}
-{{- $d = merge $d (dict "txtGrid" "") -}}
+{{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
 {{- partial "hw" $d -}}

@@ -1,5 +1,7 @@
 {{partial "tmpl/dbg-template-comment" .}}
 {{/*
+
+default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 .srcWidth is ignored
 .src
 .srcOn "left"
@@ -20,17 +22,23 @@
 {{with $DBG}}<p>
   <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(60,255,180);">start tool/block
 </p>{{end}}
-{{/* ---handle src type--------------------------------------------------- */}}
+{{/* ---handle src grid  ------------------------------------------------------------------------------------------ */}}
+{{- $divClass := printf "flex one three-%d grow" site.Params.resp.m -}}
+{{- $srcGrid := printf "full third-%d"          site.Params.resp.m -}}
+{{- $txtGrid := printf "full two-third-%d"      site.Params.resp.m -}}
+{{- with .class}}{{$divClass = .}}{{end}}
+{{- with .srcGrid}}{{$srcGrid = .}}{{end}}
+{{- with .txtGrid}}{{$txtGrid = .}}{{end}}
+{{/* ---handle src type ------------------------------------------------------------------------------------------- */}}
 {{- $ext := strings.ToLower (path.Ext .src) -}}
 {{- $imgExt := slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".svg" -}}
 {{- $vidExt := slice ".mp4" ".mkv" -}}
 {{- $srcClass := printf "src block %s" .srcClass -}}
 {{- $srcIsVideo := in $vidExt $ext -}}
 {{- $srcIsImage := in $imgExt $ext -}}
-{{- $srcGrid := .srcGrid | default "fifth" }}
-{{- $txtGrid := .txtGrid | default "four-fifth" }}
 {{- $mediaDot := merge . (dict "srcClass" $srcClass) }}
 {{/* --------------------------------------------------------------------- */}}
+<div class = "{{$divClass}}">
 {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}}){{end}}
 {{- if and .src (eq .srcOn "left") -}}
 <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
@@ -57,3 +65,4 @@
 {{with $DBG}}<p>END pihuw-block
   <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(255,90,180);">
 </p>{{end}}
+</div>

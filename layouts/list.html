@@ -1,14 +1,7 @@
 {{ define "main" }}
 {{partial "tmpl/dbg-template-comment" .}}
 {{partial "tmpl/page-title.html" .}}
+{{partial "tmpl/child-bar-horizontal.html" .}}
 {{ .Content }}
-{{ if not .Params.hide.bottomMenu}}
-<div style="text-align:center;">
-  <small><em>this section:</em></small>
-{{ range .Pages }}
-| <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
-{{end}}
-|
-</div>
-{{ end }}
+{{partial "tmpl/child-bar-horizontal.html" .}}
 {{ end }}
