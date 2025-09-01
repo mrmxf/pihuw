@@ -1,19 +1,22 @@
 {{partial "tmpl/dbg-template-comment" .}}
+{{- if not .Site.Params.ui.breadcrumb_disable }}
 {{ $homeUrl := .RelRef (dict "path" "/")}}
-{{ $home := printf "<a href='%s'><i class='%s'></i></a>" $homeUrl "fa-solid fa-house"}}
-{{ $arrow := " <i class='fa-solid fa-arrow-right'></i> "}}
+{{ $home :=  printf "<a href='%s'><i class='%s'></i></a>" $homeUrl "fa-solid fa-house"}}
+{{ $arrow := printf " <i class='%s'></i> "                         "fa-solid fa-arrow-right"}}
+{{ $crumb := "breadcrumb" }}
 {{ $isSingle := true -}}
 {{ with .Parent -}}{{ $isSingle = .IsHome -}}{{ end -}}
-<div aria-label="breadcrumb" class="breadcrumb">
+<div aria-label="breadcrumb" class="{{$crumb}}">
   {{$home|safeHTML}}
   {{- template "breadcrumbnav" (dict "p1" . "p2" . "arrow" $arrow) }}
 </div>
+{{end}}
 
 {{- define "breadcrumbnav" -}}
 {{ if .p1.Parent -}}
-   {{if not .p1.Parent.IsHome -}}
-   {{template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 "arrow" .arrow) -}}
-   {{end}}
+  {{if not .p1.Parent.IsHome -}}
+    {{template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 "arrow" .arrow) -}}
+  {{end}}
 {{ else if not .p1.IsHome -}}
   {{ template "breadcrumbnav" (dict "p1" .p1.Site.Home "p2" .p2 "arrow" .arrow) -}}
 {{ end -}}
