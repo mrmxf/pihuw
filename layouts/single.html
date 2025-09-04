@@ -1,6 +1,9 @@
 {{ define "main" }}
 {{partial "tmpl/dbg-template-comment" .}}
 {{partial "tmpl/page-title.html" .}}
+{{/* childbar on any single with params.ui.childbar.opts: "parent" */}}
+{{partial "tmpl/childbar-horizontal.html" .}}
 {{ .Content }}
+{{partial "tmpl/childbar-horizontal.html" .}}
 {{ partial "tmpl/taxonomy-tags-logic" . }}
 {{ end }}

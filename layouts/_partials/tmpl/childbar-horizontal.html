@@ -1,0 +1,44 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+
+childbar can be hidden with .Params.hide.childbar
+*/}}
+{{ if not .Params.hide.childbar}}
+  {{$title := "this section:"}}
+  {{with .Params.ui.childbar.title}}
+    {{$title = .}}
+  {{end}}
+  {{$separator := "|"}}
+  {{with .Params.ui.childbar.separator}}
+    {{$separator = .}}
+  {{end}}
+  {{/* configure options for displaying the childbar */}}
+  {{$opts := .Params.ui.childbar.opts}}
+  {{$sortAscending := false}}
+  {{$sortDescending := false}}
+  {{$useParent := true}}
+  {{with $opts}}
+    {{$sortAscending = strings.Contains $opts "ascending"}}
+    {{$sortDescending = strings.Contains $opts "descending"}}
+    {{$useParent = strings.Contains $opts "parent"}}
+  {{end}}
+  {{/* apply the options for displaying the childbar */}}
+  {{$sep := printf "<span class=\"divider\">%s</span>" $separator|safeHTML}}
+  {{$childbarPages := .Pages}}
+  {{- if $useParent}}{{$childbarPages = .Parent.Pages}}{{end -}}
+
+  {{- if $sortAscending}}{{$childbarPages = $childbarPages.ByLinkTitle }}{{end -}}
+  {{- if $sortDescending}}{{$childbarPages = $childbarPages.ByLinkTitle.Reverse }}{{end -}}
+
+  {{if gt ($childbarPages | len) 0}}
+    <div class="childbar-horizontal">
+      <small><em>{{$title}}</em></small>
+      {{- if $useParent -}}
+        {{$sep}} <strong><a href="{{ .Parent.RelPermalink }}">⬆️</a></strong>
+      {{- end -}}
+      {{ range  $childbarPages}}
+        {{$sep}} <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
+      {{end}}
+      {{$sep}}
+    </div>
+  {{end}}
+{{end}}

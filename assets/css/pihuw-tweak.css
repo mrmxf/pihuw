@@ -229,12 +229,12 @@ sidebar {
   height: 100%;
 }
 
-.child-bar-horizontal {
+.childbar-horizontal {
   padding:0.3em 1em;
   text-align:center;
   width: 100%;
 }
-.child-bar-horizontal .divider {
+.childbar-horizontal .divider {
   color:var(--pi-hi3);
   font-weight:bold;
 }

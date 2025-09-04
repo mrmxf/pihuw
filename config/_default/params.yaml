@@ -76,10 +76,14 @@ ui:
   hide:
     breadcrumbs: false
     navbar:
-      logo: false
-      title: false
-    sidebar: false            # appears in list pages at the side
-    childBarHorizontal: false # appears in list pages at the top or bottom
+      logo:   false
+      title:  false
+    sidebar:  false           # appears in list pages at the side
+    childbar: false           # appears in list pages at the top or bottom
+  childbar:
+    title:     this section   # can be overridden on a page
+    separator: "|"            # any unicode character to separate the links
+    opts:      false          # any of ascending|descending|parent for sorting or show the parent childbar
   sidebar:
     maxItems: 20
     maxDepth: 2

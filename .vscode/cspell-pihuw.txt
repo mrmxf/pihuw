@@ -2,6 +2,7 @@ accordian
 baseof
 breadcrumbnav
 buildcondition
+childbar
 clogrc
 Disqus
 docsearch
