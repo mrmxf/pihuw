@@ -1,32 +1,36 @@
-{{partial "tmpl/dbg-template-comment" .}}
-
-<a
-	{{ if or (strings.HasPrefix .Destination `http`) (strings.HasPrefix .Destination `#`) (strings.HasPrefix .Destination `/`) }}
-	
-		href = "{{ .Destination | safeURL }}"
-
-		{{ else if strings.HasPrefix .Destination `mailto` }}
-
-			href = "mailto:{{ .Text }}"
-
-	{{ end }}
-
-	{{ with .Title}}
-		title = "{{ . }}"
-	{{ end }}
-
-	{{ if strings.HasPrefix .Destination "http" }}
-
-		target = "_blank"
-		rel = "nofollow noopener noreferrer"
-
-		{{ else if strings.HasPrefix .Destination "mailto" }}
-
-			onClick = "javascript:window.open('mailto:{{ .Text }}', 'mail'); event.preventDefault()"
-
-	{{ end }}>
-	
-	<span>
-		{{ .Text }}
-	</span>
-</a>
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+based on hugo's 0.148 link render partial
+*/}}
+{{- $u := urls.Parse .Destination -}}
+{{- $href := $u.String -}}
+{{- $target := "" -}}{{/* no target field unless isAbs */}}
+{{- if strings.HasPrefix $u.String "#" -}}
+  {{- $href = printf "%s#%s" .PageInner.RelPermalink $u.Fragment -}}
+{{- else if and $href (not $u.IsAbs) -}}
+  {{/* render a link that does not start with a scheme like https
+	     path is everything after the host:port in  "https://host.com:123/foo?a=6&b=7#bar */}}
+  {{- $path := strings.TrimPrefix "./" $u.Path -}}
+	{{/* use the first of these to resolve */}}
+  {{- with or
+    ($.PageInner.GetPage $path)
+    ($.PageInner.Resources.Get $path)
+    (resources.Get $path)
+  -}}
+    {{- $href = .RelPermalink -}}
+    {{- with $u.RawQuery -}}
+      {{- $href = printf "%s?%s" $href . -}}
+    {{- end -}}
+    {{- with $u.Fragment -}}
+      {{- $href = printf "%s#%s" $href . -}}
+    {{- end -}}
+  {{- end -}}{{/* end of with or() */}}
+{{- end -}}{{/* if anchor or relref */}}
+<a href="{{ $href }}"
+ {{- with .Title }} title="{{ . }}" {{- end }}
+ {{if $u.IsAbs}}
+		{{if  strings.HasPrefix $u.Scheme "http"}}target="_blank" rel="nofollow noopener noreferrer"{{end}}
+ {{end}}
+>{{ .Text }}</a>
+{{/*  {{if strings.HasPrefix .Destination "mailto" }}
+onClick = "javascript:window.open('mailto:{{ .Text }}', 'mail'); event.preventDefault()"
+{{ end }}>  */}}
