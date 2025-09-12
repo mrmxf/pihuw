@@ -1,0 +1,19 @@
+{{/* Instagram embed shortcode - embeds a specific Instagram post
+     Usage: {{< instagram "post_id" >}}
+     Where post_id is the alphanumeric ID from instagram.com/p/POST_ID/
+*/}}
+{{ $postId := .Get 0 }}
+{{ if $postId }}
+<div class="instagram-embed">
+  <iframe src="https://www.instagram.com/p/{{ $postId }}/embed/captioned/" 
+          width="540" 
+          height="740" 
+          frameborder="0" 
+          scrolling="no" 
+          allowtransparency="true"
+          style="max-width: 100%; border: 1px solid #dbdbdb; border-radius: 8px;">
+  </iframe>
+</div>
+{{ else }}
+  <p style="color: red;">Error: Instagram shortcode requires a post ID parameter</p>
+{{ end }}

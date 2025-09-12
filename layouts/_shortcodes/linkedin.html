@@ -1,0 +1,22 @@
+{{/* LinkedIn embed shortcode - embeds a LinkedIn post
+     Usage: {{< linkedin "post_id" >}}
+     Where post_id is the numeric ID from the LinkedIn post URL
+     Example: {{< linkedin "7368571725216751637" >}}
+*/}}
+{{ $postId := .Get 0 }}
+{{ if $postId }}
+  {{ $embedUrl := printf "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:%s?collapsed=1" $postId }}
+  
+  <div class="linkedin-embed" style="margin: 1rem 0;">
+    <iframe src="{{ $embedUrl }}" 
+            height="399" 
+            width="100%" 
+            frameborder="0" 
+            allowfullscreen="" 
+            title="Embedded LinkedIn post"
+            style="max-width: 504px; border: 1px solid rgba(0,0,0,0.15); border-radius: 8px;">
+    </iframe>
+  </div>
+{{ else }}
+  <p style="color: red;">Error: LinkedIn shortcode requires a post ID parameter</p>
+{{ end }}

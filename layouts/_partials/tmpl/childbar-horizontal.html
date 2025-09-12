@@ -2,7 +2,7 @@
 
 childbar can be hidden with .Params.hide.childbar
 */}}
-{{ if not .Params.hide.childbar}}
+{{ if not .Params.ui.hide.childbar}}
   {{$title := "this section:"}}
   {{with .Params.ui.childbar.title}}
     {{$title = .}}

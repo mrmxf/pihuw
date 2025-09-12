@@ -135,10 +135,19 @@ nav .pi-nav-brand .title {
 nav div.view-w div.menu {
   color:#FF4088;
 }
+
 section img {
   display: inline;
   height: 70%;
   object-fit: contain;
+}
+
+main footer.caption {
+  font-style: italic;
+  font-weight: bold;
+  color: var(--pi-hi3);
+  background-color: var(--pi-bg3);
+  text-align: center;
 }
 
 section>div.block{
@@ -545,7 +554,25 @@ th {
     }
   }
 
+/** HR rainbow */
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    hsl(0, 100%, 50%), 
+    hsl(180, 100%, 50%)
+  );
+  animation: hue-rotate 10s linear infinite;
+}
 
+@keyframes hue-rotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
 
 /*                                             _                       _                      */
 /*   _ _   ___   ___  _ __   ___   _ _    ___ (_) __ __  ___    __ __ (_)  ___  __ __ __  ___ */
