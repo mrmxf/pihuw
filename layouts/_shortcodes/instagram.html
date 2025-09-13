@@ -4,13 +4,13 @@
 */}}
 {{ $postId := .Get 0 }}
 {{ if $postId }}
-<div class="instagram-embed">
+<div class="instagram-embed" style="margin: 0;">
   <iframe src="https://www.instagram.com/p/{{ $postId }}/embed/captioned/" 
-          width="540" 
-          height="740" 
+          width="100%" 
+          height="800" 
           frameborder="0" 
-          scrolling="no" 
           allowtransparency="true"
+            allowfullscreen="" 
           style="max-width: 100%; border: 1px solid #dbdbdb; border-radius: 8px;">
   </iframe>
 </div>

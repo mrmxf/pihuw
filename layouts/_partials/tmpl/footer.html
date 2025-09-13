@@ -18,7 +18,7 @@
 <div class="label">
   {{ with .label -}}{{.}}{{end}}
   {{ if .title -}}
-  {{with $link}}<a href="{{relURL .}}" {{$target|safeHTMLAttr}}>{{end}}
+  {{with $link}}<a href="{{.}}" {{$target|safeHTMLAttr}}>{{end}}
     {{.title}}
     {{with $link}}</a>{{end}}
   {{end}}

@@ -7,14 +7,15 @@
 {{ if $postId }}
   {{ $embedUrl := printf "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:%s?collapsed=1" $postId }}
   
-  <div class="linkedin-embed" style="margin: 1rem 0;">
+  <div class="linkedin-embed" style="margin: 0;">
     <iframe src="{{ $embedUrl }}" 
-            height="399" 
             width="100%" 
+            height="800" 
             frameborder="0" 
+            allowtransparency="true"
             allowfullscreen="" 
             title="Embedded LinkedIn post"
-            style="max-width: 504px; border: 1px solid rgba(0,0,0,0.15); border-radius: 8px;">
+            style="max-width: 100%; border: 1px solid #dbdbdb; border-radius: 8px;">
     </iframe>
   </div>
 {{ else }}

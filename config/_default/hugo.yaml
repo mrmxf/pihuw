@@ -21,18 +21,18 @@ menus:
   - name: '🏷️'
     pageRef: '/tags'
   - name: 'Contact'
-    URL: '/contact'
+    pageRef: '/contact'
     weight: 20
     pre: 📨
   - name: 'Metarex'
-    URL: 'https://metarex.media'
+    pageRef: 'https://metarex.media'
     weight: 30
     pre: 🦖
 
 # footer menu
   footer:
     - name: Copyright
-      URL: https://mrmxf.com
+      pageRef: https://mrmxf.com
 
 #   _ __    __ _   _ _  | |__  _  _   _ __
 #  | '  \  / _` | | '_| | / / | || | | '_ \

@@ -24,7 +24,7 @@ Renders a menu for the given menu ID.
   
   {{- range .menuEntries }}
     {{- $class := "button" -}}
-    {{- $attrs := dict "href" .URL }}
+    {{- $attrs := dict "href" .pageRef }}
     {{- if $page.IsMenuCurrent .Menu . }}
       {{- $class = printf "%s %s" $class "active" -}}
       {{- $attrs = merge $attrs (dict "class" $class "aria-current" "page") }}
