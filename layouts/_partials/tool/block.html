@@ -36,7 +36,7 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 {{- $srcClass := printf "src block %s" .srcClass -}}
 {{- $srcIsVideo := in $vidExt $ext -}}
 {{- $srcIsImage := in $imgExt $ext -}}
-{{- $mediaDot := merge . (dict "srcClass" $srcClass) }}
+{{- $mediaDot := merge . (dict "srcClass" $srcClass "text" nil) }}
 {{/* --------------------------------------------------------------------- */}}
 <div class = "{{$divClass}}">
 {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}}){{end}}

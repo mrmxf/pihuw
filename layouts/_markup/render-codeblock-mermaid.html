@@ -1,6 +1,20 @@
 {{partial "tmpl/dbg-template-comment" .}}
 
-<pre class="mermaid">
-  {{ .Inner | htmlEscape | safeHTML }}
-</pre>
+<style>
+  .mermaid-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.mermaid-container svg {
+  width: 100% !important;
+  height: auto;
+  max-width: 100%;
+}
+
+</style>
+<div class="mermaid-container">
+<pre class="mermaid">{{ .Inner | htmlEscape | safeHTML }}</pre>
+</div>
 {{ .Page.Store.Set "hasMermaid" true }}

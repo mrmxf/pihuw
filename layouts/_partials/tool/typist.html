@@ -1,0 +1,184 @@
+{{/*
+  Hugo partial for typewriter animation
+  Parameters:
+  - .page: Hugo page object
+  - .text: Text string with newlines as "\n"
+  - .rate: Milliseconds between characters
+  - .header: Optional header text to display above typing area
+  - .class: Optional CSS class to append to typist-container
+*/}}
+
+{{ $text := .text | default "" }}
+{{ $rate := .rate | default 50 }}
+{{ if eq $rate 0 }}{{ $rate = 50 }}{{ end }}
+{{ $header := .header | default "" }}
+{{ $class := .class | default "" }}
+{{ $chars := split (replace $text "\\n" "\n") "" }}
+{{ $totalChars := len $chars }}
+{{ $totalDuration := mul $totalChars $rate }}
+{{ $delayStart := 500 }}
+{{ $uniqueId := printf "typist-%d" now.UnixNano }}
+
+<div class="typist-wrapper">
+  {{ with $header }}<h2 class="typist-header">{{ . }}</h2>{{ end }}
+  <div class="typist-container {{ $class }}">
+  <div class="typist-text" id="{{ $uniqueId }}"
+       data-text="{{ replace $text "\\n" "\n" }}"
+       data-rate="{{ $rate }}"
+       data-delay="{{ $delayStart }}">
+    <span class="typist-cursor">|</span>
+  </div>
+  <button class="typist-reset-button" onclick="resetTypist()" title="Reset animation" aria-label="Reset typewriter animation">
+    <i class="fas fa-redo-alt"></i>
+  </button>
+  </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+.typist-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.typist-header {
+  text-align: center;
+  margin: 0;
+  padding-bottom: 0;
+  font-size: 1.2em;
+}
+
+.typist-container {
+  position: relative;
+  display: block;
+  background-color: white;
+  padding: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid #aaaaaa;
+  font-family: 'Special Elite', monospace;
+  font-size: 1rem;
+  min-height: 1.5rem;
+  width: 100%;
+}
+
+.typist-text {
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.typist-cursor {
+  opacity: 0;
+  animation: cursor-blink 1s infinite step-end;
+}
+
+.typist-reset-button {
+  position: absolute;
+  top: -0.7rem;
+  right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background-color: #dee2e6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: white;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.typist-reset-button:hover {
+  background-color: #28a74671;
+  border-color: #999;
+  color: #333;
+}
+
+.typist-reset-button:active {
+  background-color: #28a745;
+  transform: scale(0.95);
+}
+
+
+@keyframes cursor-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const element = document.getElementById('{{ $uniqueId }}');
+  if (!element) return;
+
+  const text = element.dataset.text;
+  const rate = parseInt(element.dataset.rate);
+  const delay = parseInt(element.dataset.delay);
+  const cursor = element.querySelector('.typist-cursor');
+
+  let currentIndex = 0;
+  element.textContent = '';
+  element.appendChild(cursor);
+
+  function typeCharacter() {
+    if (currentIndex < text.length) {
+      const char = text[currentIndex];
+      const textNode = document.createTextNode(char);
+      element.insertBefore(textNode, cursor);
+      if (char == " "){
+        // add a non breaking space for legibility
+        element.insertBefore(document.createTextNode(' '), cursor);
+      }
+      currentIndex++;
+      setTimeout(typeCharacter, rate);
+    } else {
+      // Show cursor when typing is complete
+      cursor.style.opacity = '1';
+    }
+  }
+
+  // Start typing after delay
+  setTimeout(typeCharacter, delay);
+})();
+
+function resetTypist() {
+  const container = event.target.closest('.typist-container');
+  const textElement = container.querySelector('.typist-text');
+  const text = textElement.dataset.text;
+  const rate = parseInt(textElement.dataset.rate);
+  const delay = parseInt(textElement.dataset.delay);
+  const cursor = textElement.querySelector('.typist-cursor');
+
+  // Clear existing content
+  textElement.textContent = '';
+  textElement.appendChild(cursor);
+  cursor.style.opacity = '0';
+
+  let currentIndex = 0;
+
+  function typeCharacter() {
+    if (currentIndex < text.length) {
+      const char = text[currentIndex];
+      const textNode = document.createTextNode(char);
+      textElement.insertBefore(textNode, cursor);
+      currentIndex++;
+      setTimeout(typeCharacter, rate);
+    } else {
+      cursor.style.opacity = '1';
+    }
+  }
+
+  setTimeout(typeCharacter, delay);
+}
+</script>

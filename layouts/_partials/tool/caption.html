@@ -3,7 +3,7 @@
 header = "Figure 1" etc
 text = the caption content
 */}}
-{{if .text}}
+{{if or .header .text}}
 <footer class="caption">
   {{with .header}}<span class="ui blue text"><strong><em>{{.}} - </em></strong></span>{{end}}
   {{.text}}
