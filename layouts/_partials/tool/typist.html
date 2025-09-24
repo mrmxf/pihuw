@@ -18,7 +18,8 @@
 {{ $totalDuration := mul $totalChars $rate }}
 {{ $delayStart := 500 }}
 {{ $uniqueId := printf "typist-%d" now.UnixNano }}
-
+{{ $font := "https://fonts.googleapis.com/css2?family=Special+Elite&display=swap"}}
+{{ $font = "https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap"}}
 <div class="typist-wrapper">
   {{ with $header }}<h2 class="typist-header">{{ . }}</h2>{{ end }}
   <div class="typist-container {{ $class }}">
@@ -35,7 +36,7 @@
 </div>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+@import url('{{$font}}');
 
 .typist-wrapper {
   display: flex;

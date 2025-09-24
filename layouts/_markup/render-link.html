@@ -25,7 +25,7 @@ based on hugo's 0.148 link render partial
     {{- end -}}
   {{- end -}}{{/* end of with or() */}}
 {{- end -}}{{/* if anchor or relref */}}
-<a href="{{ $href }}"
+<a href="{{ $href |safeHTMLAttr}}"
  {{- with .Title }} title="{{ . }}" {{- end }}
  {{if $u.IsAbs}}
 		{{if  strings.HasPrefix $u.Scheme "http"}}target="_blank" rel="nofollow noopener noreferrer"{{end}}

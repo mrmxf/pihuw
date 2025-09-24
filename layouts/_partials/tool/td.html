@@ -1,2 +1,15 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/* Hugo partial that wraps content in HTML td element */}}
-<td>{{.text | markdownify}}{{.inner | markdownify}}</td>
+{{partial "tmpl/dbg-template-comment" .}}{{/* Hugo partial that wraps content in HTML td element
+
+class - sets the class of the td
+txtGrid - defines the colspan
+
+*/}}
+{{$opt := ""}}
+{{with .class}}
+{{$opt = (printf "class=\"%s\"" .)}}
+{{end}}
+{{with .txtGrid}}
+{{$opt = (printf "%s colspan=\"%d\"" .)}}
+{{end}}
+
+<td {{$opt|safeHTMLAttr}}>{{.text | markdownify}}{{.inner | markdownify}}</td>

@@ -1,0 +1,53 @@
+{{/*
+Tooltip partial that displays text with a hover tooltip
+Parameters:
+- .text: The main text to display (will be markdownified)
+- .alt: The tooltip text to show on hover
+*/}}
+{{ $id := printf "tooltip-%d" (now.UnixNano) }}
+{{ $css := printf `
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+#%s .tooltip-text {
+  visibility: hidden !important;
+  position: absolute !important;
+  bottom: 100%% !important;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  color: var(--tooltip, #CEB76B) !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  white-space: nowrap !important;
+  z-index: 1000 !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s !important;
+  pointer-events: none !important;
+  margin-bottom: 5px !important;
+  display: none !important;
+}
+#%s .tooltip-text::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 100%% !important;
+  left: 50%% !important;
+  margin-left: -5px !important;
+  border-width: 5px !important;
+  border-style: solid !important;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent !important;
+}
+#%s:hover .tooltip-text {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+` $id $id $id }}
+
+<style>{{ $css | safeCSS }}</style>
+
+<span class="tooltip-container" id="{{ $id }}" title="{{ .alt }}">
+  {{ .text | markdownify }}
+  <span class="tooltip-text">{{ .alt }}</span>
+</span>
