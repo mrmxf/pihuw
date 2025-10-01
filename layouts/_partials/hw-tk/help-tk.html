@@ -1,0 +1,402 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Help system styles and JavaScript - consolidated CSS and modal functionality for theme designers
+*/}}
+{{- /* Help system styles - consolidated for easy theming */ -}}
+<style>
+
+/* Help Modal Styles - derived from hugo wrapper colors */
+.hwh-modal {
+  font-family: var(--help-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  --hwh-header: var(--hw-hi1);
+  --hwh-header-bg: var(--hw-bg1);
+  --hwh-usage: var(--hw-hi3);
+  --hwh-usage-bg: var(--hw-bg3);
+  --hwh-code: var(--hw-text);
+  --hwh-code-bg: white;
+  --hwh-bg: white;
+  --hwh-required: red;
+  --hwh-param:  var(--hw-hi2);
+  --hwh-param-bg:  var(--hw-bg2);
+  --hwh-icon: #888888;
+  --hwh-defaults-bg: #888888;
+  --hwh-name: var(--hw-hi1);
+  --hwh-type: var(--hw-hi3);
+  --hwh-eg: #333333;
+  --hwh-eg-bg: #dddddd;
+  --hwh-eg-code: #444444;
+  --hwh-eg-code-bg: #f4f4f4f4;
+  --hwh-eg-note:  var(--hw-hi2);
+  --hwh-eg-note-bg: var(--hw-bg2);
+  --hwh-info: var(--hwh-eg);
+  --hwh-info-bg:  var(--hwh-bg);
+  --hwh-warn: darkorange;
+  --hwh-warn-bg:  var(--hwh-bg);
+}
+
+.ui.modal.hwh-modal .header {
+  background-color: var(--hwh-header-bg);
+  border-bottom: 2px solid var(--help-header-border, #dee2e6);
+  padding: 1em 1.5em;
+}
+
+.hwh-modal .header code {
+  background: var(--hwh-code-bg);
+  border: 1px solid var(--hwh-code);
+  border-radius: 4px;
+  padding: 0.3em 0.6em;
+  font-family: var(--help-code-font, 'Monaco', 'Menlo', 'Ubuntu Mono', monospace);
+  font-size: 0.9em;
+  color: var(--hwh-code);
+}
+
+.hwh-modal .content {
+  padding: 1em;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Help Content Sections */
+.hwh-section {
+  margin-bottom: 1em;
+}
+
+.hwh-section:last-child {
+  margin-bottom: 0;
+}
+
+.hwh-section .header {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--hwh-header);
+  display: flex;
+  align-items: center;
+}
+
+.hwh-section .header i.icon {
+  margin-right: 0.5em;
+  color: var(--hwh-icon);
+}
+
+/* Parameter Styling */
+.hwh-param {
+  background: var(--hwh-param-bg);
+  border-left: 3px solid var(--hwh-icon);
+  padding: 0.8em 1em;
+  margin: 0.5em 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.hwh-param .param-name {
+  font-family: var(--hwh-code-font, 'Monaco', 'Menlo', 'Ubuntu Mono', monospace);
+  font-weight: 600;
+  color: var(--hwh-name);
+}
+
+.hwh-param .param-type {
+  font-family: var(--hwh-code-font, 'Monaco', 'Menlo', 'Ubuntu Mono', monospace);
+  font-style: italic;
+  color: var(--hwh-type);
+}
+
+.hwh-param .param-required {
+  border-left: 3px solid var(--hwh-required);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.75em;
+  margin-left: 0.5em;
+}
+
+.hwh-param .param-default {
+  background: var(--hwh-defaults-bg);
+  color: var(--hwh-bg);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.75em;
+  margin-left: 0.5em;
+}
+
+/* Example Styling */
+.hwh-example {
+  background: var(--hwh-bg);
+  border: 1px solid var(--hwh-icon);
+  border-radius: 6px;
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+.hwh-example .example-description {
+  background: var(--hwh-eg-bg);
+  padding: 0.8em 1em;
+  border-bottom: 1px solid var(--hwh-icon);
+  font-weight: 500;
+  color: var(--hwh-eg);
+}
+
+.hwh-example pre {
+  margin: 0;
+  padding: 1em;
+  background: var(--hwh-eg-code-bg, #f8f9fa);
+  border: none;
+  border-radius: 0;
+  overflow-x: auto;
+}
+
+.hwh-example code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--help-code-font, 'Monaco', 'Menlo', 'Ubuntu Mono', monospace);
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--hwh-eg-code);
+}
+
+.hwh-example .example-note {
+  background: var(--hwh-eg-note-bg);
+  border-top: 1px solid var(--hwh-eg-note);
+  padding: 0.6em 1em;
+  font-size: 0.9em;
+  color: var(--hwh-eg-note);
+  font-style: italic;
+}
+
+/* Message Styling */
+.hwh-message {
+  padding: 0.2em 1em;
+  margin: 0.2em 0;
+  border-radius: 4px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.hwh-message i.icon {
+  margin-right: 0.8em;
+  margin-top: 0.1em;
+  flex-shrink: 0;
+}
+
+.hwh-message.info {
+  background: var(--hwh-info-bg);
+  color: var(--hwh-info);
+}
+
+.hwh-message.warning {
+  padding: 0.4em;
+  background: var(--hwh-warn-bg);
+  border: 1px solid var(--hwh-warn);
+  color: var(--hwh-warn);
+}
+
+.hwh-message.positive {
+  background: var(--help-positive-bg, #d4edda);
+  border: 1px solid var(--help-positive-border, #c3e6cb);
+  color: var(--help-positive-color, #155724);
+}
+
+/* Usage Syntax Styling */
+.hwh-usage {
+  background: var(--hwh-usage-bg);
+  border: 2px solid var(--hwh-usage);
+  border-radius: 6px;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+.hwh-usage .usage-header {
+  font-weight: 600;
+  color: var(--hwh-usage);
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+}
+
+.hwh-usage .usage-header i.icon {
+  margin-right: 0.5em;
+}
+
+.hwh-usage pre {
+  background: var(--hwh-code-bg, #ffffff);
+  border: 1px solid var(--hwh-code, #dee2e6);
+  border-radius: 4px;
+  padding: 0.8em;
+  margin: 0.5em 0 0 0;
+  overflow-x: auto;
+}
+
+.hwh-usage code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--help-code-font, 'Monaco', 'Menlo', 'Ubuntu Mono', monospace);
+  font-size: 0.9em;
+  color: var(--hwh-code, #495057);
+}
+
+.hwh-usage .usage-note {
+  font-size: 0.85em;
+  color: var(--help-usage-note-color, #6c757d);
+  margin-top: 0.5em;
+  font-style: italic;
+}
+
+/* Scrollbar Styling for Modal Content */
+.hwh-modal .content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.hwh-modal .content::-webkit-scrollbar-track {
+  background: var(--help-scrollbar-track, #f1f1f1);
+  border-radius: 4px;
+}
+
+.hwh-modal .content::-webkit-scrollbar-thumb {
+  background: var(--help-scrollbar-thumb, #c1c1c1);
+  border-radius: 4px;
+}
+
+.hwh-modal .content::-webkit-scrollbar-thumb:hover {
+  background: var(--help-scrollbar-thumb-hover, #a8a8a8);
+}
+
+.hw-help {
+  padding-bottom: 1em;;
+}
+.hw-help code {
+  color: olive;
+}
+.hw-help .param {
+  font-family: monospace;
+  color:maroon;
+}
+.hw-help .param-type {
+  font-family: monospace;
+  color:blue;
+}
+.hw-help .header {
+  padding-left: 1em;
+  padding-top: 0.5em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hwh-modal .content {
+    padding: 1em;
+    max-height: 60vh;
+  }
+
+  .hwh-modal .header {
+    padding: 0.8em 1em;
+  }
+
+  .hwh-example pre,
+  .hwh-usage pre {
+    font-size: 0.8em;
+    overflow-x: auto;
+  }
+
+  .hwh-param {
+    padding: 0.6em 0.8em;
+  }
+}
+
+/* Dark Theme Support */
+@media (prefers-color-scheme: dark) {
+  .hwh-modal {
+    --help-header-bg: #343a40;
+    --help-header-border: #495057;
+    --help-code-bg: #2d3748;
+    --help-code-border: #4a5568;
+    --help-code-color: #e2e8f0;
+
+    --help-param-bg: #2d3748;
+    --help-param-border: #4299e1;
+    --help-param-name-color: #63b3ed;
+    --help-param-type-color: #b794f6;
+
+    --help-example-bg: #2d3748;
+    --help-example-border: #4a5568;
+    --help-example-desc-bg: #1a202c;
+    --help-example-desc-color: #e2e8f0;
+    --help-code-block-bg: #1a202c;
+    --help-code-block-color: #e2e8f0;
+    --help-example-note-bg: #2c5282;
+    --help-example-note-color: #bee3f8;
+
+    --help-info-bg: #2c5282;
+    --help-info-border: #3182ce;
+    --help-info-color: #bee3f8;
+    --help-warning-bg: #744210;
+    --help-warning-border: #975a16;
+    --help-warning-color: #faf089;
+    --help-positive-bg: #22543d;
+    --help-positive-border: #2f855a;
+    --help-positive-color: #9ae6b4;
+  }
+}
+</style>
+
+<script>
+// Help Modal JavaScript - Auto-display modals
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Help system: DOM loaded');
+
+  // Check if jQuery and Fomantic UI are available
+  if (typeof $ === 'undefined' || typeof $.fn.modal === 'undefined') {
+    console.error('Help system: jQuery or Fomantic UI modal not loaded');
+    return;
+  }
+
+  // Find all elements with IDs matching help-modal-[0-9]{5}
+  const helpModalPattern = /^help-modal-\d{5}$/;
+  const allElements = document.querySelectorAll('[id]');
+  const helpModals = [];
+
+  allElements.forEach(el => {
+    if (helpModalPattern.test(el.id)) {
+      helpModals.push(el);
+    }
+  });
+
+  console.log(`Help system: Found ${helpModals.length} modals matching pattern help-modal-[0-9]{5}`);
+
+  if (helpModals.length === 0) {
+    console.log('Help system: No help modals found');
+    return;
+  }
+
+  // Log each modal ID
+  helpModals.forEach((modal, index) => {
+    console.log(`  ${index}: ${modal.id}`);
+  });
+
+  // Ensure proper classes and initialize modals
+  $(helpModals).each(function() {
+    if (!this.classList.contains('ui')) this.classList.add('ui');
+    if (!this.classList.contains('modal')) this.classList.add('modal');
+    if (!this.classList.contains('hwh-modal')) this.classList.add('hwh-modal');
+  });
+
+  // Initialize and show
+  $(helpModals).modal({
+    blurring: true,
+    centered: true,
+    closable: true,
+    duration: 300
+  }).modal('show');
+
+  // Connect close buttons to hide modal
+  $(helpModals).each(function() {
+    const modalId = this.id;
+    $(this).find('.cancel.button').on('click', function() {
+      $(`#${modalId}`).modal('hide');
+    });
+  });
+
+  console.log(`Help system: Showing ${helpModals.length} modals`);
+});
+</script>
+

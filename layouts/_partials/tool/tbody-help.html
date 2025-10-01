@@ -1,0 +1,91 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table body partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; tbody &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "tbody"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Table body content")
+    (dict "name" "inner" "required" false "example" "Row content")
+  )
+  "note" "Must be used inside a table partial, contains tr partials with table data"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an HTML tbody element that contains the main data rows of a table. This is where your actual table content goes, wrapped in tr (table row) partials."
+  "notes" (slice
+    "Must be **nested inside** a table partial"
+    "Contains **tr partials** with table data rows"
+    "Supports **markdown content** and Hugo shortcodes"
+    "Essential for **semantic table structure**"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary tbody content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional tbody content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic table body with data rows"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}John{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Developer{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Jane{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Designer{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Table body with markdown-formatted content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}**Important Note**{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}\n        - Point 1\n        - Point 2\n        - Point 3\n      {{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Markdown **lists and formatting** work perfectly in table cells"
+    )
+    (dict
+      "description" "Table body with included content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}API Documentation{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}{{&lt;hw t=\"include\" from=\"api-docs.md\"&gt;}}{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **shortcodes to include** external content in table cells"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Semantic structure**: table > thead/tbody/tfoot > tr > td/th"
+    "Use **multiple tbody** elements to group related rows if needed"
+    "**Markdown content** is automatically processed for rich formatting"
+    "Perfect for **data tables, documentation, and content organization**"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within table structure"
+    "Large tbody sections may impact **page load performance**"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

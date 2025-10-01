@@ -1,0 +1,50 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Include another page as an item in a list
+
+from = filepath e.g. /assets/doc/banana.md
+src = /path/to/image  ... if not specified use partial get-feature-resource to find one
+*/}}
+{{- $from := .from -}}
+{{- if fileExists $from -}}
+
+{{/* --- trim front matter and spew out the rest of the included file --- */}}
+{{ $summary := "" }}
+{{/* check the page for a Params.IncludeSummary substitution */}}
+{{ $p := site.GetPage $from }}
+
+{{ if $p.Page.Params.IncludeSummary }}
+{{ $summary = $p.Page.Params.IncludeSummary | markdownify }}
+{{end -}}{{/* end of GetPage */}}
+
+{{ if not $summary }}{{/* -- make a summary if one is not provided ------------------------------------------------ */}}
+  {{ if eq ".md" (path.Ext $from) }}{{/* == make a plain text string of the words in the file ===================== */}}
+    {{ $summary = (printf "%s" $from) | readFile | replaceRE "^---[\\s\\S]+?---" "" | markdownify }}
+  {{else}}
+    {{ $summary = (printf "%s" $from) | readFile | replaceRE "^---[\\s\\S]+?---" "" | safeHTML }}
+  {{end}}{{/* end of md / html summary maker ====================================================================== */}}
+{{end -}}{{/* -- end of no summary -------------------------------------------------------------------------------- */}}
+{{ $link := $p.RelPermalink }}
+{{ $header := $p.Page.LinkTitle }}
+{{ $featureImg := ($p.Page.Resources.ByType "image").GetMatch "*feature*"}}
+{{ if $featureImg}}{{$featureImg = $featureImg}}{{end}}
+{{ if $p.Page.Params.src}}{{$featureImg = $p.Page.Params.src}}{{end}}
+{{ if $p.Page.Params.img}}{{$featureImg = $p.Page.Params.img}}{{end}}
+{{ if .src}}{{$featureImg = .src }}{{end}}
+  {{ $description := $p.Page.Plain | safeHTML | truncate 300 }}
+  {{with .text}}{{$description = .}}{{end}}
+  {{ $minutes := add ( div ( countwords $p.Page.Plain ) 220 ) 1 }}
+  {{ $meta := printf "~%v min read" $minutes }}
+  {{ $d := dict "description" $description 
+  "header" $header
+   "src" $featureImg
+    "srcOn" "left" 
+    "meta" $meta 
+    "link" $link 
+    "srcLink" $link 
+    "headerLink" $link}}
+  {{ partial "tool/item" $d}}
+{{- else -}}
+
+{{ partial "tool/dbg-err.html" (dict "p" "tool/include" "a" "from" "m" (printf "cannot include unknown project file: %s" $from) "d" .) }}
+
+{{- end -}}{{/* end of if file exists */}}

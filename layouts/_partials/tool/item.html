@@ -1,0 +1,45 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+.srcOn "left"
++--------+-------------------------+
+| ------ | --.header-------------- |
+| ------ | --.meta---------------- |
+| -.src- | --.text---------------- |
+| ------ | --.description--------- |
+| ------ | --.inner--------------- |
++--------+-------------------------+
+
+*/}}
+{{- $DBG := false -}}
+{{with $DBG}}<p>
+  <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(60,255,180);">start tool/block
+</p>{{end}}
+{{/* ---make src dict----------------------------------------------------- */}}
+{{ $srcAlt := .alt | default "summary image" }}
+{{ $srcClass := .srcClass | default "ui medium image" }}
+{{ $srcDict := dict "alt" $srcAlt "src" .src "srcLink" .srcLink "srcClass" $srcClass}}
+{{/* --------------------------------------------------------------------- */}}
+  <div class="ui item"  {{if .id}}id="{{ .id }}" {{end}}>
+    {{- if and .src (eq .srcOn "left") -}}
+    {{ partial "tool/media" $srcDict }}
+    {{- end -}}
+    <div class="ui content">
+      {{- if .header -}}
+      <div class="header">
+        {{if .headerLink}}<a href="{{.headerLink}}">{{.header}}</a>
+        {{else}}{{ .header }}{{end}}
+      </div>{{- end -}}
+      {{- with .meta -}}
+      <div class="meta"><span class="category">{{ . }}</span></div>
+      {{- end -}}
+      <div class="description">
+        {{- .description | markdownify -}}
+        {{- .inner | markdownify -}}
+      </div>
+    </div>
+    {{ if and .src (eq .srcOn "right") }}
+    {{ partial "tool/media" $srcDict }}
+    {{end}}
+  </div>
+{{with $DBG}}<p>END fohuw-block
+  <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(255,90,180);">
+</p>{{end}}

@@ -1,0 +1,147 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Banner partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"banner\" &gt;}}"
+  "color" "orange"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "banner"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" true "example" "Important announcement")
+    (dict "name" "header" "required" false "example" "Notice")
+    (dict "name" "src" "required" false "example" "/images/icon.png")
+    (dict "name" "class" "required" false "example" "ui warning message")
+    (dict "name" "srcClass" "required" false "example" "ui mini image")
+  )
+  "note" "Creates full-width banner messages with optional images and custom styling"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates a prominent full-width banner for important announcements, notifications, or highlighted content. Perfect for alerts, promotions, or key information that needs user attention."
+  "notes" (slice
+    "Creates **full-width centered** banner display"
+    "Supports **optional images** with flexible positioning"
+    "Uses **Fomantic UI styling** by default"
+    "Content is **HTML-safe** for rich formatting"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" true
+      "description" "Main banner content (processed as safe HTML)"
+      "default" ""
+    )
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Optional header text displayed before the main content"
+      "default" ""
+    )
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" false
+      "description" "Path to image to display in the banner"
+      "default" ""
+    )
+    (dict
+      "name" "class"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the banner container"
+      "default" "ui message"
+    )
+    (dict
+      "name" "srcClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the image element"
+      "default" "ui mini image"
+    )
+    (dict
+      "name" "srcLink"
+      "type" "string"
+      "required" false
+      "description" "URL to wrap around the image (makes image clickable)"
+      "default" ""
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt text for the image"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic announcement banner using hw shortcode"
+      "code" "{{&lt;hw t=\"banner\" text=\"Welcome to our new website! We've redesigned everything for a better user experience.\"&gt;}}"
+      "note" "Use **hw shortcode** with standard text parameter for simple announcements"
+    )
+    (dict
+      "description" "Warning banner with header and custom styling"
+      "code" "{{&lt;hw t=\"banner\" \n  header=\"System Maintenance\" \n  text=\"Scheduled maintenance will occur from 2:00 AM to 4:00 AM EST. Services may be temporarily unavailable.\" \n  class=\"ui warning message\"&gt;}}"
+      "note" "Use **header parameter** and **custom classes** for different message types"
+    )
+    (dict
+      "description" "Promotional banner with image and link"
+      "code" "{{&lt;hw t=\"banner\" \n  header=\"New Feature Release\" \n  text=\"Introducing our advanced analytics dashboard with real-time insights and custom reporting.\" \n  src=\"/images/analytics-icon.png\" \n  srcLink=\"/features/analytics\" \n  alt=\"Analytics dashboard icon\" \n  class=\"ui positive message\"&gt;}}"
+      "note" "**Combine image, link, and styling** for engaging promotional banners"
+    )
+    (dict
+      "description" "Error banner with critical information"
+      "code" "{{&lt;hw t=\"banner\" \n  header=\"Service Alert\" \n  text=\"We are currently experiencing issues with our payment processing system. {{&lt;hw t=\\\"include\\\" from=\\\"status-updates.md\\\"&gt;}}\" \n  src=\"/images/alert-icon.svg\" \n  class=\"ui negative message\" \n  srcClass=\"ui tiny image\"&gt;}}"
+      "note" "**Include dynamic content** and use **semantic styling** for alerts"
+    )
+    (dict
+      "description" "Information banner with rich HTML content"
+      "code" "{{&lt;hw t=\"banner\" \n  header=\"Documentation Update\" \n  text=\"&lt;strong&gt;New tutorials available!&lt;/strong&gt; Check out our &lt;a href='/tutorials'&gt;getting started guides&lt;/a&gt; and &lt;a href='/api-docs'&gt;API documentation&lt;/a&gt;.\" \n  class=\"ui info message\"&gt;}}"
+      "note" "**HTML content** is processed safely for rich formatting options"
+    )
+    (dict
+      "description" "Event banner with structured content"
+      "code" "{{&lt;hw t=\"banner\" \n  header=\"🎉 Conference 2024\" \n  text=\"Join us for our annual developer conference! &lt;br&gt;&lt;strong&gt;Date:&lt;/strong&gt; March 15-17, 2024 &lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; San Francisco, CA &lt;br&gt;&lt;a href='/conference/register'&gt;Register now&lt;/a&gt; for early bird pricing!\" \n  src=\"/images/conference-logo.png\" \n  srcLink=\"/conference\" \n  class=\"ui purple message\"&gt;}}"
+      "note" "**Structure complex information** with HTML formatting and emojis"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Full-width display**: Banners span the entire content width for maximum visibility"
+    "**Flexible styling**: Supports Fomantic UI message classes (positive, negative, warning, info)"
+    "**Image integration**: Optional images enhance visual appeal and context"
+    "**HTML content**: Text parameter accepts safe HTML for rich formatting"
+    "**Responsive design**: Automatically adapts to different screen sizes"
+  )
+  "warnings" (slice
+    "**Text parameter required** - banners without text will not display"
+    "**HTML safety**: Only use trusted HTML content in text parameter"
+    "**Image optimization**: Large images may impact page load performance"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

@@ -1,0 +1,33 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Notes component for help modals - displays additional information, warnings, and best practices
+*/}}
+{{- /* Notes component for additional information */ -}}
+{{- $notes := .notes | default slice -}}
+{{- $warnings := .warnings | default slice -}}
+
+{{- if or $notes $warnings -}}
+<div class="hwh-section">
+  <div class="header">
+    <i class="info circle icon"></i>
+    Additional Information
+  </div>
+
+  {{- if $notes -}}
+    {{- range $notes -}}
+    <div class="hwh-message info">
+      <i class="info circle icon"></i>
+      <div>{{ . | markdownify | safeHTML }}</div>
+    </div>
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $warnings -}}
+    {{- range $warnings -}}
+    <div class="hwh-message warning">
+      <i class="warning sign icon"></i>
+      <div>{{ . | markdownify | safeHTML }}</div>
+    </div>
+    {{- end -}}
+  {{- end -}}
+</div>
+{{- end -}}

@@ -1,4 +1,6 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Hugo partial that renders individual feature blocks with header, text, and media within feature groups
+*/}}
 {{$h := slice "A feature is a block in a feature-group" }}
 {{$h = $h | append (dict "a" "class " "h" "inner class of the block" "d" "message" "eg" "green messsage")}}
 {{$h = $h | append (dict "a" "header" "h" "bold heading above media" "d" "nil" "eg" "Spring Sale")}}
@@ -10,14 +12,25 @@
 {{/* --- create a page object for the included page ---------------------- */}}
 {{- $headerClass := .headerClass | default "header" -}}
 {{- $featureClass := .class | default "message" -}}
+{{- $srcClass := .srcClass | default "" -}}
+
+{{/* features don't have captions, so remove .text and .header */}}
+{{- $mediaDot := merge . (dict "srcClass" $srcClass "process" "fit 200x200" "header" false "text" false "page" .page) }}
+
+{{ $link := .link}}
+{{$u := urls.Parse $link}}
+{{- if and $link (not $u.IsAbs) -}}
+  {{if not (fileExists $u.Path)}}
+    {{$err := printf "bad link(%s) for image" $link}}
+    {{- partial "tool/dbg" (dict "wrn" $err "kv" (dict "link" .link "resolved-link" $link "page" .page) ) -}}
+  {{end}}
+{{end}}
 <div class="{{.class}}">
-  {{- with .link -}}
-  <a href="{{ relref . }}">
-    {{ end }}
+  {{- if $link -}}<a href="{{ $link }}">{{ end }}
+
     {{- with .header}}<h2 class="{{$headerClass}}">{{.}}</h2>{{- end -}}
     {{- with .text}}<p>{{.}}</p>{{- end -}}
-    {{ partial "tool/media" . }}
-    {{- with .link -}}
-  </a>
-  {{- end -}}
+    {{ partial "tool/media"  $mediaDot }}
+    {{- with $link -}}</a>{{- end -}}
+
 </div>

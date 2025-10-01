@@ -1,0 +1,32 @@
+
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Debug utility to return page hierarchy information - used for development debugging
+*/}}
+  {{ $pageList := "❓"}}
+  {{ if hugo.IsServer }}{{/*
+
+    return the hierarchy of this page (If any)
+      $pList := partial "hw-tk/pList" .
+
+  */}}
+  {{partial "tmpl/dbg-template-comment" . }}
+  {{$page := false}}
+  {{if .Page}}{{$page = .Page}}{{end}}
+  {{if .page}}{{$page = .page}}{{end}}
+  {{with $page}}
+    {{$pageList = .Path }}
+    {{with .Parent}}
+      {{$pageList = printf "%s◀%s" $pageList .Path }}
+      {{with .Parent}}
+        {{$pageList = printf "%s◀%s" $pageList .Path }}
+        {{with .Parent}}
+          {{$pageList = printf "%s◀%s" $pageList .Path }}
+          {{with .Parent}}
+          {{$pageList = printf "%s◀%s" $pageList .Path }}
+          {{end}}
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+{{end}}
+{{return $pageList}}

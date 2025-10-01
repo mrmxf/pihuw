@@ -1,0 +1,30 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Examples component for help modals - displays code examples with descriptions and notes
+*/}}
+{{- /* Examples component for help content */ -}}
+{{- $examples := .examples | default slice -}}
+
+{{- if $examples -}}
+<div class="hwh-section">
+  <div class="header">
+    <i class="list alternate outline icon"></i>
+    Examples
+  </div>
+
+  {{- range $examples -}}
+  <div class="hwh-example">
+    {{- if .description -}}
+      <div class="example-description">
+        {{ .description | markdownify | safeHTML }}
+      </div>
+    {{- end -}}
+    <pre><code>{{ .code | safeHTML }}</code></pre>
+    {{- if .note -}}
+      <div class="example-note">
+        {{ .note | markdownify | safeHTML }}
+      </div>
+    {{- end -}}
+  </div>
+  {{- end -}}
+</div>
+{{- end -}}

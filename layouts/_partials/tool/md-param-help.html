@@ -1,0 +1,109 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Markdown parameter partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"md-param\" &gt;}}"
+  "color" "black"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "md-param"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "from" "required" true "example" "parameterName")
+  )
+  "note" "Includes and renders markdown content from page frontmatter parameters"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Retrieves content from a page frontmatter parameter and processes it as markdown. Perfect for dynamic content that can be configured per page while maintaining markdown formatting capabilities."
+  "notes" (slice
+    "**Frontmatter integration** - reads directly from page parameters"
+    "**Markdown processing** - automatically converts markdown to HTML"
+    "**Dynamic content** - allows page-specific customization"
+    "**Error handling** - shows debug messages for missing parameters"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" true
+      "description" "Name of the frontmatter parameter to retrieve and process"
+      "default" ""
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Include custom page content using hw shortcode"
+      "code" "{{&lt;hw t=\"md-param\" from=\"customIntro\"&gt;}}"
+      "note" "Use **hw shortcode** with from parameter to include frontmatter markdown content"
+    )
+    (dict
+      "description" "Page with frontmatter parameter and md-param usage"
+      "code" "---\ntitle: \"Product Features\"\ncustomIntro: |\n  **Welcome to our platform!** \n  \n  Here are the key features that make us different:\n  \n  - **Fast Performance**: Lightning-quick response times\n  - **Secure by Design**: Enterprise-grade security\n  - **Easy Integration**: Simple API and SDKs\n  \n  [Get started today](/signup)\n---\n\n{{&lt;hw t=\"md-param\" from=\"customIntro\"&gt;}}\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Performance\" \n    text=\"Optimized for speed and efficiency.\" \n    src=\"/images/icons/speed.png\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Define markdown in frontmatter** and render it with full formatting support"
+    )
+    (dict
+      "description" "Dynamic banners and announcements"
+      "code" "---\ntitle: \"Documentation\"\nannouncement: |\n  🎉 **New API Version Released!** \n  \n  API v2.0 is now available with improved performance and new features. \n  [Migration guide](/docs/api-v2-migration) available.\nwarningMessage: |\n  ⚠️ **Maintenance Notice**: Scheduled downtime on March 20, 2024 from 2-4 AM EST.\n---\n\n{{&lt;hw t=\"md-param\" from=\"announcement\"&gt;}}\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Important Updates\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"warningMessage\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n# Documentation\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Create dynamic announcements** that can be easily updated in frontmatter"
+    )
+    (dict
+      "description" "Product pages with customizable descriptions"
+      "code" "---\ntitle: \"Enterprise Plan\"\nproductDescription: |\n  Our **Enterprise Plan** is designed for large organizations that need:\n  \n  - Unlimited users and projects\n  - Advanced security features\n  - 24/7 priority support\n  - Custom integrations\n  \n  {{&lt;hw t=\"table\"&gt;}}\n    {{&lt;hw t=\"thead\"&gt;}}\n      {{&lt;hw t=\"trth\"&gt;}}Feature{{&lt;/hw&gt;}}\n      {{&lt;hw t=\"trth\"&gt;}}Included{{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"tbody\"&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}Users{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}Unlimited{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\npricing: |\n  **Custom pricing** based on your organization's needs.\n  \n  [Contact sales](/contact) for a personalized quote.\n---\n\n{{&lt;hw t=\"md-param\" from=\"productDescription\"&gt;}}\n\n## Pricing\n\n{{&lt;hw t=\"md-param\" from=\"pricing\"&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Ready to upgrade? Contact our sales team for a demo and custom pricing.\"&gt;}}"
+      "note" "**Frontmatter can contain hw shortcodes** for complex nested content structures"
+    )
+    (dict
+      "description" "Multi-language content with parameter selection"
+      "code" "---\ntitle: \"Welcome\"\nwelcomeEn: |\n  **Welcome to our platform!** \n  \n  We're excited to have you join our growing community of developers.\nwelcomeEs: |\n  **¡Bienvenido a nuestra plataforma!** \n  \n  Estamos emocionados de tenerte en nuestra creciente comunidad de desarrolladores.\nwelcomeFr: |\n  **Bienvenue sur notre plateforme!** \n  \n  Nous sommes ravis de vous accueillir dans notre communauté grandissante de développeurs.\n---\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"🇺🇸 English\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"welcomeEn\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🇪🇸 Español\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"welcomeEs\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🇫🇷 Français\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"welcomeFr\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Global Platform\" \n    text=\"Supporting developers worldwide with localized content.\" \n    src=\"/images/icons/global.png\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Support multiple languages** by storing different versions in frontmatter parameters"
+    )
+    (dict
+      "description" "Dynamic FAQ and help content"
+      "code" "---\ntitle: \"FAQ\"\nfaqGeneral: |\n  **How do I get started?**\n  \n  1. Create your account\n  2. Set up your first project\n  3. {{&lt;hw t=\"include\" from=\"docs/quick-start.md\"&gt;}}\nfaqBilling: |\n  **What payment methods do you accept?**\n  \n  We accept all major credit cards and PayPal. Enterprise customers can also pay by invoice.\n  \n  **Can I change my plan anytime?**\n  \n  Yes! You can upgrade or downgrade your plan at any time from your account settings.\nfaqTechnical: |\n  **What are the API rate limits?**\n  \n  - Starter: 1,000 requests/hour\n  - Professional: 10,000 requests/hour\n  - Enterprise: Custom limits\n  \n  {{&lt;hw t=\"caption\" text=\"Need higher limits? Contact support for custom arrangements\"&gt;}}\n---\n\n# Frequently Asked Questions\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"General Questions\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"faqGeneral\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Billing & Plans\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"faqBilling\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Technical\"&gt;}}\n    {{&lt;hw t=\"md-param\" from=\"faqTechnical\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Can't find your answer? Contact our support team for personalized help.\"&gt;}}"
+      "note" "**Organize FAQ content** in frontmatter for easy maintenance and updates"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Frontmatter flexibility**: Store markdown content directly in page frontmatter"
+    "**Markdown processing**: Full markdown syntax support including links, lists, and formatting"
+    "**Nested shortcodes**: Frontmatter parameters can contain hw shortcode calls"
+    "**Dynamic content**: Each page can have different parameter values"
+    "**Content management**: Easier to maintain than separate markdown files"
+    "**Error handling**: Provides debug warnings for missing parameters"
+  )
+  "warnings" (slice
+    "**Parameter required**: Will show error if 'from' parameter not specified"
+    "**Frontmatter dependency**: Target parameter must exist in page frontmatter"
+    "**Syntax care**: Frontmatter YAML syntax must be correct for complex content"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

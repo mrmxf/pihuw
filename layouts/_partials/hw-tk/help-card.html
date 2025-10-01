@@ -1,0 +1,36 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Modal wrapper for help content - creates clickable help triggers and Fomantic UI modals
+*/}}
+{{- /* Main modal wrapper for help content */ -}}
+{{- $color := .color | default "orange" -}}
+{{- $title := .title -}}
+{{- if not $title -}}
+  {{- errorf "title is required for hw-tk/help-card" -}}
+{{- end -}}
+
+{{- /* Generate unique modal ID from title, context, and instance */ -}}
+{{- $modalId := printf "help-modal-%s" (substr now.UnixNano -5 5) -}}
+
+{{- /* Include help styles once per page */ -}}
+{{- if not (.Page.Scratch.Get "help-tk-included") -}}
+  {{- .Page.Scratch.Set "help-tk-included" true -}}
+  {{- partial "hw-tk/help-tk.html" . -}}
+{{- end -}}
+
+{{- /* Help modal - auto-displays on page load */ -}}
+<div id="{{ $modalId }}" class="ui modal hwh-modal">
+  <div class="header">
+    <i class="help circle icon"></i>
+    <code>{{ $title | safeHTML }}</code>
+    <div class="ui right floated cancel button">
+      <i class="remove icon"></i>
+    </div>
+</div>
+
+  <div class="content">
+    {{ .Inner | safeHTML }}
+  </div>
+</div>
+
+{{- /* Help placeholder */ -}}
+<button class="ui red button" style="padding:0;margin:0;font-weight:100;"><small>help displayed for</small><br>{{$title|markdownify}}</button>

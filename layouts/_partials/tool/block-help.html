@@ -1,0 +1,169 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Block partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"block\" &gt;}}"
+  "color" "blue"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "block"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "header" "required" false "example" "Block Title")
+    (dict "name" "description" "required" false "example" "Block content")
+    (dict "name" "src" "required" false "example" "/images/photo.jpg")
+    (dict "name" "srcOn" "required" false "example" "left")
+    (dict "name" "meta" "required" false "example" "Additional info")
+  )
+  "note" "Creates flexible content blocks with optional media and customizable layouts"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates versatile content blocks with optional media (images/videos) that can be positioned left or right. Perfect for feature descriptions, product showcases, or any content that benefits from visual enhancement."
+  "notes" (slice
+    "Supports **flexible grid layouts** with customizable column widths"
+    "**Media positioning** (left/right) with automatic responsive behavior"
+    "Handles **images and videos** with proper type detection"
+    "Uses **Fomantic UI styling** for consistent appearance"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Block title/header text"
+      "default" ""
+    )
+    (dict
+      "name" "description"
+      "type" "string"
+      "required" false
+      "description" "Main block content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional content appended after description (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" false
+      "description" "Path to image or video file"
+      "default" ""
+    )
+    (dict
+      "name" "srcOn"
+      "type" "string"
+      "required" false
+      "description" "Position of media: 'left' or 'right'"
+      "default" "left"
+      "values" (slice "left" "right")
+    )
+    (dict
+      "name" "srcGrid"
+      "type" "string"
+      "required" false
+      "description" "Grid width for media column (e.g., 'four wide')"
+      "default" "zero wide"
+    )
+    (dict
+      "name" "txtGrid"
+      "type" "string"
+      "required" false
+      "description" "Grid width for text column (e.g., 'twelve wide')"
+      "default" "sixteen wide"
+    )
+    (dict
+      "name" "meta"
+      "type" "string"
+      "required" false
+      "description" "Metadata or additional information displayed below header"
+      "default" ""
+    )
+    (dict
+      "name" "headerLink"
+      "type" "string"
+      "required" false
+      "description" "URL to make the header clickable"
+      "default" ""
+    )
+    (dict
+      "name" "id"
+      "type" "string"
+      "required" false
+      "description" "HTML ID for the block section"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic content block using hw shortcode"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"Welcome to Our Platform\" \n  description=\"Discover powerful tools and features designed to streamline your workflow and boost productivity.\"&gt;}}"
+      "note" "Use **hw shortcode** with header and description for simple content blocks"
+    )
+    (dict
+      "description" "Feature block with left-aligned image"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"Advanced Analytics\" \n  description=\"Get deep insights into your data with our comprehensive analytics dashboard featuring real-time metrics and custom reporting.\" \n  src=\"/images/analytics-dashboard.png\" \n  srcOn=\"left\" \n  meta=\"Available in Pro plan\"&gt;}}"
+      "note" "**Combine text and media** with metadata for feature descriptions"
+    )
+    (dict
+      "description" "Product showcase with right-aligned video"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"See It In Action\" \n  description=\"Watch how our platform transforms complex workflows into simple, automated processes.\" \n  src=\"/videos/product-demo.mp4\" \n  srcOn=\"right\" \n  headerLink=\"/demo\"&gt;}}\n  \n  **Key Features:**\n  - Drag-and-drop workflow builder\n  - {{&lt;hw t=\"include\" from=\"features/automation.md\"&gt;}}\n  - Real-time collaboration tools\n{{&lt;/hw&gt;}}"
+      "note" "**Use inner content** for additional details and **include external content**"
+    )
+    (dict
+      "description" "Team member profile block"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"Jane Smith\" \n  description=\"Senior Software Engineer with 8 years of experience in full-stack development and team leadership.\" \n  src=\"/images/team/jane-smith.jpg\" \n  srcOn=\"left\" \n  meta=\"Engineering Team Lead\" \n  headerLink=\"/team/jane-smith\"&gt;}}\n  \n  **Expertise:**\n  - React & Node.js development\n  - DevOps and CI/CD\n  - Agile methodologies\n  \n  {{&lt;hw t=\"caption\" text=\"Connect with Jane on LinkedIn\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Profile blocks** work great with personal images and detailed information"
+    )
+    (dict
+      "description" "Documentation block with custom grid"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"API Integration Guide\" \n  description=\"Step-by-step instructions for integrating our REST API into your application.\" \n  src=\"/images/api-diagram.svg\" \n  srcOn=\"right\" \n  srcGrid=\"six wide\" \n  txtGrid=\"ten wide\" \n  id=\"api-guide\"&gt;}}\n  \n  {{&lt;hw t=\"table\"&gt;}}\n    {{&lt;hw t=\"thead\"&gt;}}\n      {{&lt;hw t=\"trth\"&gt;}}Endpoint{{&lt;/hw&gt;}}\n      {{&lt;hw t=\"trth\"&gt;}}Method{{&lt;/hw&gt;}}\n      {{&lt;hw t=\"trth\"&gt;}}Description{{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"tbody\"&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}/api/users{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}GET{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}List users{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Custom grid sizing** and **nested tables** for technical documentation"
+    )
+    (dict
+      "description" "News article block with featured image"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"Company Reaches 1 Million Users\" \n  description=\"We're excited to announce that our platform has reached the milestone of serving over one million active users worldwide.\" \n  src=\"/images/news/milestone-celebration.jpg\" \n  srcOn=\"left\" \n  meta=\"Published March 15, 2024\" \n  headerLink=\"/news/1-million-users\"&gt;}}\n  \n  This achievement represents years of hard work and dedication from our team, \n  and most importantly, the trust our users have placed in our platform.\n  \n  {{&lt;hw t=\"include\" from=\"news/user-testimonials.md\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**News and article blocks** benefit from featured images and timestamps"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Flexible layout**: Automatic responsive grid system adapts to different screen sizes"
+    "**Media support**: Handles both images and videos with appropriate styling"
+    "**Rich content**: Supports markdown in description and inner content"
+    "**Semantic structure**: Uses proper HTML5 section elements when ID is provided"
+    "**Grid customization**: Fine-tune column widths with srcGrid and txtGrid parameters"
+  )
+  "warnings" (slice
+    "**Media optimization**: Large images/videos may impact page load performance"
+    "**Grid balance**: Ensure srcGrid and txtGrid values add up to 16 for proper layout"
+    "**Content accessibility**: Provide alt text for images when using media"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

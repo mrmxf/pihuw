@@ -1,16 +1,17 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/* pihuw shortcode
+{{partial "tmpl/dbg-template-comment" .}}{{/* hw shortcode
 
-I was struggling to explain & remember all the shortcodes & partials in the pihuw theme.
-I was also having name clashes with other themes, so I had a simple idea to crete a consistent
-set of parameters and names
+Changing themes is a pain, so hw is a hugo wrapper theme - it provides
+tools and templates wrapped in a single shortcode. Implement once with
+the style engine of your choice
 
-Props(see hw-help partial or insert `hw t="help"` in your code):
+Props(see tool/help partial or insert `hw t="help"` in your code):
              t  = "partial tool/$t ."
            help = "any string and the help for that partial will be rendered"
             alt = alt text for image/ video/resource
      blockClass = class for the containing div - the outermost block (default = container)
           class = class for the main element (e.g. Message or Card or Accordion Group)
           count = number of things to show e.g. blogs
+            dbg = anything - dump the content passed to the partial
     description = hover text or similar
            from = path to source file (instead of a Page) when t=include
          header = is the markdown h1 text or "Figure 1" in a caption
@@ -19,8 +20,7 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
              id = "some id to create an anchor"
            link = default href around any element
            meta = text adding extra information to the header/text
-           mode = "mode defining string" e.g. "log" or "dump" for t=dbg
-     ???   page = "name of page to get with site.GetPage $page"
+           mode = "mode defining string" e.g. "log" or "dump" for tool/debug
            skip = number of things to skip before output e.g. blogs
             src = "relative path or URL image/video/resource"
        srcClass = "class string surrounding the src"
@@ -33,6 +33,7 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 
           Inner   contains markdown and is after the rendered description
 */}}
+{{- $workerPartial := "hw" -}}
 
 {{- $args:=""}}{{if .IsNamedParams}}{{$args =.Get "args"}}{{else}}{{$args =.Get 0}}{{end -}}
 {{- $id := .Get "id" | default (printf "block-%d" .Ordinal) -}}
@@ -41,13 +42,14 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $blockClass := .Get "blockClass" -}}
 {{- $class := .Get "class" -}}
 {{- $count := .Get "count" | default 1 -}}
-{{- $debug := .Get "debug" -}}
+{{- $dbg := .Get "dbg" -}}
 {{- $description := .Get "description" -}}
 {{- $from := .Get "from" -}}
 {{- $header := .Get "header" -}}
 {{- $headerClass := .Get "headerClass" -}}
 {{- $headerLink := .Get "headerLink" -}}
 {{- $help := .Get "help" -}}
+{{- $link := .Get "link" | default $headerLink -}}
 {{- $meta := .Get "meta" -}}
 {{- $skip := .Get "skip" | default 0 -}}
 {{- $src := .Get "src" -}}
@@ -87,13 +89,14 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $d = merge $d (dict "blockClass" $blockClass) -}}
 {{- $d = merge $d (dict "class" $class) -}}
 {{- $d = merge $d (dict "count" $count) -}}
-{{- $d = merge $d (dict "debug" $debug) -}}
+{{- $d = merge $d (dict "dbg" $dbg) -}}
 {{- $d = merge $d (dict "description" $description) -}}
 {{- $d = merge $d (dict "inner" .Inner) -}}
 {{- $d = merge $d (dict "help" $help) -}}
 {{- $d = merge $d (dict "header" $header) -}}
 {{- $d = merge $d (dict "headerClass" $headerClass) -}}
 {{- $d = merge $d (dict "headerLink" $headerLink) -}}
+{{- $d = merge $d (dict "link" $link) -}}
 {{- $d = merge $d (dict "meta" $meta) -}}
 {{- $d = merge $d (dict "skip" $skip) -}}
 {{- $d = merge $d (dict "src" $src) -}}
@@ -107,4 +110,12 @@ Props(see hw-help partial or insert `hw t="help"` in your code):
 {{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
 {{- $d = merge $d (dict "text" $text) -}}
 {{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
-{{- partial "hw" $d -}}
+
+{{- if $dbg -}}
+<details class="" open="">
+  <summary class="title"><span style="color:red;">HW dbg</span></summary>
+  <div><pre><code>{{ debug.Dump $d }}</code></pre></div>
+</details>
+{{- end -}}
+
+{{- partial $workerPartial $d -}}

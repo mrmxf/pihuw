@@ -1,0 +1,137 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Feature partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"feature\" &gt;}}"
+  "color" "pink"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "feature"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "header" "required" false "example" "Feature Title")
+    (dict "name" "text" "required" false "example" "Feature description")
+    (dict "name" "src" "required" false "example" "/images/feature-icon.png")
+    (dict "name" "link" "required" false "example" "/features/details")
+    (dict "name" "class" "required" false "example" "ui message")
+  )
+  "note" "Must be used inside a feature-group partial to create feature showcase blocks"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates individual feature blocks designed to be used within feature-group containers. Features combine images, headers, descriptions, and optional links to showcase product capabilities or service offerings."
+  "notes" (slice
+    "Must be **nested inside** feature-group partial"
+    "Supports **responsive display** with different layouts for mobile/desktop"
+    "**Media processing** automatically resizes images to 200x200"
+    "**Link validation** checks for valid internal/external URLs"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Feature title/heading text"
+      "default" ""
+    )
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" true
+      "description" "Feature description text"
+      "default" ""
+    )
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" false
+      "description" "Path to feature image or icon"
+      "default" ""
+    )
+    (dict
+      "name" "link"
+      "type" "string"
+      "required" false
+      "description" "URL to link the entire feature (internal or external)"
+      "default" ""
+    )
+    (dict
+      "name" "class"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the feature container"
+      "default" "message"
+    )
+    (dict
+      "name" "headerClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the header element"
+      "default" "header"
+    )
+    (dict
+      "name" "srcClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the image element"
+      "default" "ui fluid image"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic feature showcase using hw shortcode"
+      "code" "{{&lt;hw t = \"feature-group\"&gt;}}\n  {{&lt;hw t = \"feature\" \n    header=\"Fast Performance\" \n    text=\"Lightning-fast response times with optimized code and efficient algorithms.\" \n    src=\"/images/icons/speed.png\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Secure & Reliable\" \n    text=\"Enterprise-grade security with 99.9% uptime guarantee.\" \n    src=\"/images/icons/security.png\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Easy Integration\" \n    text=\"Simple API integration with comprehensive documentation.\" \n    src=\"/images/icons/integration.png\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "Use **hw shortcode** within feature-group for consistent feature displays"
+    )
+    (dict
+      "description" "Linked features with detailed descriptions"
+      "code" "{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Advanced Analytics\" \n    text=\"Real-time insights with customizable dashboards and automated reporting. Track KPIs and make data-driven decisions.\" \n    src=\"/images/features/analytics-dashboard.png\" \n    link=\"/features/analytics.md\" \n    class=\"ui positive message\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Team Collaboration\" \n    text=\"Seamless teamwork with shared workspaces, real-time editing, and integrated communication tools.\" \n    src=\"/images/features/collaboration.png\" \n    link=\"/features/collaboration\" \n    class=\"ui info message\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Add links and custom styling** to create interactive feature showcases"
+    )
+    (dict
+      "description" "Product feature grid with detailed information"
+      "code" "# Platform Features\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"🚀 High Performance\" \n    text=\"Built for scale with microservices architecture and global CDN distribution.\" \n    src=\"/images/tech/performance.svg\" \n    link=\"/docs/performance\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"🔒 Enterprise Security\" \n    text=\"{{&lt;hw t=\\\"include\\\" from=\\\"features/security-overview.md\\\"&gt;}}\" \n    src=\"/images/tech/security.svg\" \n    link=\"/security\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"📊 Advanced Monitoring\" \n    text=\"Comprehensive monitoring with custom alerts and detailed performance metrics.\" \n    src=\"/images/tech/monitoring.svg\" \n    link=\"/monitoring\"&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Click any feature to learn more about implementation details\"&gt;}}"
+      "note" "**Include dynamic content** and **use emojis** for engaging feature displays"
+    )
+    (dict
+      "description" "Service offering features with custom styling"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Our Services\"&gt;}}\n    {{&lt;hw t=\"feature-group\"&gt;}}\n      {{&lt;hw t=\"feature\" \n        header=\"Web Development\" \n        text=\"Custom web applications built with modern frameworks and best practices.\" \n        src=\"/images/services/web-dev.png\" \n        link=\"/services/web-development\" \n        class=\"ui blue message\" \n        headerClass=\"ui blue header\"&gt;}}\n      \n      {{&lt;hw t=\"feature\" \n        header=\"Mobile Apps\" \n        text=\"Native and cross-platform mobile applications for iOS and Android.\" \n        src=\"/images/services/mobile.png\" \n        link=\"/services/mobile-development\" \n        class=\"ui green message\" \n        headerClass=\"ui green header\"&gt;}}\n      \n      {{&lt;hw t=\"feature\" \n        header=\"Cloud Solutions\" \n        text=\"Scalable cloud infrastructure and deployment solutions.\" \n        src=\"/images/services/cloud.png\" \n        link=\"/services/cloud-solutions\" \n        class=\"ui purple message\" \n        headerClass=\"ui purple header\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with accordions** and **use color coding** for organized service displays"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Container dependency**: Must be used within feature-group partial for proper layout"
+    "**Responsive design**: Automatically adjusts header display for mobile/desktop views"
+    "**Image optimization**: Automatically processes images to 200x200 pixels"
+    "**Link validation**: Validates internal links and warns about broken references"
+    "**Flexible styling**: Supports custom CSS classes for containers and elements"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within feature-group partial"
+    "**Link validation**: Broken internal links will generate warnings in development"
+    "**Image sizing**: Large images are automatically resized to 200x200 pixels"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

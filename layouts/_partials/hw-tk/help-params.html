@@ -1,0 +1,36 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Parameters component for help modals - displays parameter documentation with types and requirements
+*/}}
+{{- /* Parameters component for help content */ -}}
+{{- $params := .params | default slice -}}
+
+{{- if $params -}}
+<div class="hwh-section">
+  <div class="header">
+    <i class="question circle icon"></i>
+    Parameters
+  </div>
+  <p><small><i class="exclamation triangle icon"></i> indicates required parameter</small></p>
+
+  {{- range $params -}}
+  <div class="hwh-param">
+    <div>
+      <span class="param-name">{{ .name }}</span> =
+      "<span class="param-type">{{ .type | default "string" }}</span>"
+      {{- if .required -}}
+        <span class="param-required">REQUIRED</span>
+      {{- end -}}
+      {{- if .default -}}
+        <span class="param-default">{{ .default }}</span>
+      {{- end -}}
+    </div>
+    <div style="margin-top: 0.5em;">
+      {{ .description | markdownify | safeHTML }}
+      {{- if .values -}}
+        <br><small><strong>Possible values:</strong> {{ delimit .values ", " " or " }}</small>
+      {{- end -}}
+    </div>
+  </div>
+  {{- end -}}
+</div>
+{{- end -}}

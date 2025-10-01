@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "tmpl/dbg-template-comment" .}}{{/* Hugo partial that creates individual collapsible tabs for use within accordion containers */}}
 {{- $n := (site.Store.Get "tab-index") | int -}}
 {{- site.Store.Add "tab-index" 1 -}}
 {{- $id := printf "tab-%d" $n -}}

@@ -1,0 +1,38 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Header component for help modals - displays usage syntax and parameters
+*/}}
+{{- /* Header component for shortcode syntax */ -}}
+{{- $shortcode := .shortcode | default "fo" -}}
+{{- $type := .type -}}
+{{- if not $type -}}
+  {{- errorf "type is required for help-fmt-header" -}}
+{{- end -}}
+{{- $params := .params | default slice -}}
+
+{{- $syntax := printf "{{&lt; %s" $shortcode -}}
+{{- if ne $type "partial" -}}
+  {{- $syntax = printf "%s t = \"%s\"" $syntax $type -}}
+{{- end -}}
+
+{{- range $params -}}
+  {{- if .required -}}
+    {{- $syntax = printf "%s %s = \"%s\"" $syntax .name .example -}}
+  {{- else -}}
+    {{- $syntax = printf "%s [%s = \"%s\"]" $syntax .name .example -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $syntax = printf "%s >}}" $syntax -}}
+
+<div class="hwh-section">
+  <div class="hwh-usage">
+    <div class="usage-header">
+      <i class="code icon"></i>
+      Usage
+    </div>
+    <pre><code>{{ $syntax | safeHTML }}</code></pre>
+    {{- if .note -}}
+      <div class="usage-note">{{ .note | markdownify | safeHTML }}</div>
+    {{- end -}}
+  </div>
+</div>

@@ -1,0 +1,34 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Debug utility to return template hierarchy information - used for development debugging
+*/}}
+{{ $tpl := templates.Current.Parent.Name}}
+{{ if hugo.IsServer }}{{/*
+
+    return the hierarchy of this template (If any)
+      $tList := partial "hw-tk/tList" .
+
+  */}}
+  {{partial "tmpl/dbg-template-comment" . }}
+    {{with templates.Current.Parent.Parent}}
+    {{$tpl = printf "%s◀%s" $tpl .Name }}
+    {{with .Parent}}
+      {{$tpl = printf "%s◀%s" $tpl .Name }}
+      {{with .Parent}}
+        {{$tpl = printf "%s◀%s" $tpl .Name }}
+        {{with .Parent}}
+          {{$tpl = printf "%s◀%s" $tpl .Name }}
+          {{with .Parent}}
+            {{$tpl = printf "%s◀%s" $tpl .Name }}
+            {{with .Parent}}
+              {{$tpl = printf "%s◀%s" $tpl .Name }}
+              {{with .Parent}}
+                {{$tpl = printf "%s◀%s" $tpl .Name }}
+              {{end}}
+            {{end}}
+          {{end}}
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+{{end}}
+{{return (replace (replace $tpl ".html" "") "_partials/" "")}}

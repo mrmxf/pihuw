@@ -1,0 +1,98 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; table &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "table"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Table content")
+    (dict "name" "inner" "required" false "example" "More content")
+  )
+  "note" "Use with other table partials (thead, tbody, tfoot, tr, th, td) for complete table structure"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an HTML table element that can contain table structure partials. Essential for building complex data tables with proper semantic markup. Supports markdown content and Hugo shortcodes within table cells."
+  "notes" (slice
+    "Must be used as the **outermost container** for all table content"
+    "Content is processed through Hugo's **markdownify** function"
+    "Supports **nested shortcodes** like `{{<hw t=\"include\" from=\"path.md\">}}`"
+    "Works seamlessly with **CSS frameworks** for styling"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary table content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional table content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic table with nested table structure partials"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}Name{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Age{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}John{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}25{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Table with markdown content in cells"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}**Bold text**{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}\n        - List item 1\n        - List item 2\n      {{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Markdown is **automatically processed** in table cells"
+    )
+    (dict
+      "description" "Table with included content using shortcodes"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}Documentation{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}{{&lt;hw t=\"include\" from=\"docs/api.md\"&gt;}}{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Include external markdown files **directly in table cells**"
+    )
+    (dict
+      "description" "Table with custom CSS classes"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th class=\"ui center aligned\" &gt;}}Centered Header{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td class=\"ui warning\" &gt;}}Warning cell{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **CSS framework classes** for advanced styling"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "Table structure follows **semantic HTML** standards: table > thead/tbody/tfoot > tr > th/td"
+    "**Markdown processing** allows rich content: lists, links, emphasis, code blocks"
+    "**Shortcode nesting** enables dynamic content inclusion and complex layouts"
+    "Use **CSS classes** on individual elements (th, td) for styling control"
+    "Tables are **responsive-ready** when used with CSS frameworks like Fomantic UI"
+  )
+  "warnings" (slice
+    "Always use proper **table structure** - missing thead/tbody can cause styling issues"
+    "Large tables with complex content may **slow page rendering**"
+    "Mobile display requires **responsive design** considerations"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

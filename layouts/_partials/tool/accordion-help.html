@@ -1,0 +1,86 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Accordion partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"accordion\" &gt;}}"
+  "color" "green"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "accordion"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "inner" "required" true "example" "acc-tab content")
+  )
+  "note" "Use with acc-tab partials to create collapsible content sections"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an interactive accordion container with collapsible sections. Perfect for organizing content into expandable/collapsible tabs that help manage page space and improve user experience."
+  "notes" (slice
+    "Must contain **acc-tab partials** as child content"
+    "Uses **CSS transitions** for smooth animations"
+    "Supports **multiple open tabs** simultaneously"
+    "Includes **hover animations** for better user interaction"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" true
+      "description" "Contains acc-tab partials that define the accordion sections"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic accordion with FAQ sections using hw shortcode"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"What is this service?\"&gt;}}\n    Our service provides comprehensive solutions for modern web development.\n    \n    - Fast deployment\n    - Scalable architecture\n    - 24/7 support\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"How do I get started?\"&gt;}}\n    Getting started is easy:\n    \n    1. Sign up for an account\n    2. Choose your plan\n    3. {{&lt;hw t=\"include\" from=\"quick-start.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"What are the pricing options?\"&gt;}}\n    We offer flexible pricing:\n    \n    - **Starter**: $10/month\n    - **Professional**: $25/month  \n    - **Enterprise**: Custom pricing\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "Use **hw shortcode** with common vocabulary for consistent styling"
+    )
+    (dict
+      "description" "Technical documentation accordion"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"API Configuration\"&gt;}}\n    **Database Setup**\n    \n    {{&lt;hw t=\"include\" from=\"docs/database-config.md\"&gt;}}\n    \n    **Environment Variables**\n    \n    Set these required variables:\n    - `DATABASE_URL`\n    - `API_SECRET_KEY`\n    - `REDIS_URL`\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Authentication Methods\"&gt;}}\n    We support multiple authentication methods:\n    \n    {{&lt;hw t=\"table\"&gt;}}\n      {{&lt;hw t=\"thead\"&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Method{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Security Level{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Use Case{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n      {{&lt;hw t=\"tbody\"&gt;}}\n        {{&lt;hw t=\"tr\"&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}JWT{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}High{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}API access{{&lt;/hw&gt;}}\n        {{&lt;/hw&gt;}}\n        {{&lt;hw t=\"tr\"&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}OAuth2{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}High{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}Third-party integration{{&lt;/hw&gt;}}\n        {{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with other partials** like tables and includes for rich content"
+    )
+    (dict
+      "description" "Project status accordion with media"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Frontend Development\"&gt;}}\n    {{&lt;hw t=\"block\" header=\"React Components\" src=\"/images/react-demo.png\" srcOn=\"right\"&gt;}}\n      Current progress on the user interface components.\n      \n      - ✅ Login/Registration forms\n      - ✅ Dashboard layout\n      - 🚧 Settings panel\n      - ⏳ User profile pages\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Backend API\"&gt;}}\n    {{&lt;hw t=\"caption\" header=\"API Status\" text=\"All core endpoints are operational and tested\"&gt;}}\n    \n    {{&lt;hw t=\"include\" from=\"api-status.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Nest other hw partials** for complex layouts with media and formatting"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Interactive design**: Users can expand/collapse sections independently"
+    "**Smooth animations**: CSS transitions provide polished user experience"
+    "**Accessible markup**: Proper checkbox/label structure for screen readers"
+    "**Flexible content**: Supports markdown, shortcodes, and nested partials"
+    "**Common vocabulary**: Use hw shortcode parameters for consistent styling"
+  )
+  "warnings" (slice
+    "Must contain **acc-tab partials** - empty accordions will not display properly"
+    "**Performance consideration**: Many open sections with complex content may impact page speed"
+    "**Mobile responsive**: Test accordion behavior on smaller screens"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

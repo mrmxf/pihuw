@@ -1,0 +1,119 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table data cell partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; td &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "td"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Cell content")
+    (dict "name" "inner" "required" false "example" "More content")
+    (dict "name" "class" "required" false "example" "ui center aligned")
+    (dict "name" "txtGrid" "required" false "example" "2")
+  )
+  "note" "Must be used inside tr partial for table data cells"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an HTML td element for table data cells. This is where your actual content goes in table rows. Supports CSS classes and column spanning for flexible layouts."
+  "notes" (slice
+    "Must be **nested inside** tr partial"
+    "Supports **CSS classes** for styling"
+    "Can **span multiple columns** with txtGrid parameter"
+    "Content is **markdown-processed** automatically"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary cell content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional cell content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "class"
+      "type" "string"
+      "required" false
+      "description" "CSS class names to apply to the td element"
+      "default" ""
+    )
+    (dict
+      "name" "txtGrid"
+      "type" "number"
+      "required" false
+      "description" "Number of columns to span (colspan attribute)"
+      "default" "1"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic table data cells"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Name{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}John Smith{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Role{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Developer{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Table cells with markdown content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}**Features**{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}\n        - Fast performance\n        - Easy to use\n        - [Documentation](./docs)\n      {{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Markdown formatting** including lists and links work perfectly"
+    )
+    (dict
+      "description" "Table cells with CSS classes"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td class=\"ui center aligned\" &gt;}}Centered{{&lt; /td &gt;}}\n      {{&lt; td class=\"ui right aligned positive\" &gt;}}Success{{&lt; /td &gt;}}\n      {{&lt; td class=\"ui negative\" &gt;}}Error{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **CSS framework classes** for styling and alignment"
+    )
+    (dict
+      "description" "Table cells with column spanning"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td txtGrid=\"3\" class=\"ui center aligned\" &gt;}}**Header spanning 3 columns**{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Col 1{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Col 2{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Col 3{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **txtGrid** for colspan to create spanning cells"
+    )
+    (dict
+      "description" "Table cells with included content and shortcodes"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Documentation{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}{{&lt;hw t=\"include\" from=\"quick-start.md\"&gt;}}{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Examples{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}{{&lt;hw t=\"include\" from=\"examples/basic.md\"&gt;}}{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Include external files** directly in table cells for dynamic content"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Semantic structure**: Each td represents one data cell in a table row"
+    "**Markdown processing** enables rich content: links, emphasis, lists, code"
+    "**CSS classes** provide styling control with frameworks like Fomantic UI"
+    "**Column spanning** with txtGrid creates flexible table layouts"
+    "**Shortcode support** allows dynamic content inclusion"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within tr partial"
+    "**Column spans** must align with table structure"
+    "Complex content may **impact rendering performance**"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

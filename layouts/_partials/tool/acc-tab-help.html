@@ -1,0 +1,99 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Accordion tab partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"acc-tab\" &gt;}}"
+  "color" "green"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "acc-tab"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "header" "required" true "example" "Section Title")
+    (dict "name" "inner" "required" false "example" "Section content")
+  )
+  "note" "Must be used inside an accordion partial to create collapsible sections"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an individual collapsible section within an accordion. Each acc-tab has a clickable header that reveals or hides the content below with smooth animations."
+  "notes" (slice
+    "Must be **nested inside** an accordion partial"
+    "Creates **clickable header** with expand/collapse functionality"
+    "Supports **markdown content** and Hugo shortcodes"
+    "Uses **unique IDs** automatically generated for proper functionality"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" true
+      "description" "The clickable header text for the accordion section (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "The collapsible content of the section (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic accordion tab using hw shortcode"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Getting Started\"&gt;}}\n    Welcome to our platform! Here's what you need to know:\n    \n    1. Create your account\n    2. Set up your profile\n    3. {{&lt;hw t=\"include\" from=\"onboarding-steps.md\"&gt;}}\n    \n    [Complete setup guide](/setup)\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "Use **hw shortcode** with standard parameters for consistent functionality"
+    )
+    (dict
+      "description" "Accordion tab with rich markdown content"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"**API Documentation** - REST Endpoints\"&gt;}}\n    ## Available Endpoints\n    \n    ### User Management\n    - `GET /api/users` - List all users\n    - `POST /api/users` - Create new user\n    - `PUT /api/users/{id}` - Update user\n    \n    ### Authentication\n    - `POST /api/auth/login` - User login\n    - `POST /api/auth/logout` - User logout\n    \n    **Rate Limiting**: 1000 requests per hour\n    \n    {{&lt;hw t=\"caption\" header=\"Note\" text=\"All endpoints require valid API key\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Headers support markdown** for styling and **content supports full markdown**"
+    )
+    (dict
+      "description" "Accordion tab with nested partials and tables"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Configuration Options\"&gt;}}\n    {{&lt;hw t=\"table\"&gt;}}\n      {{&lt;hw t=\"thead\"&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Setting{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Default Value{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Description{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n      {{&lt;hw t=\"tbody\"&gt;}}\n        {{&lt;hw t=\"tr\"&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}**timeout**{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}`30s`{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}Request timeout duration{{&lt;/hw&gt;}}\n        {{&lt;/hw&gt;}}\n        {{&lt;hw t=\"tr\"&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}**retries**{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}`3`{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}Number of retry attempts{{&lt;/hw&gt;}}\n        {{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n    \n    {{&lt;hw t=\"banner\" header=\"Important\" text=\"Changes require service restart\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with other hw partials** for complex structured content"
+    )
+    (dict
+      "description" "Multiple accordion tabs with included content"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Installation Guide\"&gt;}}\n    {{&lt;hw t=\"include\" from=\"docs/installation.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Configuration\"&gt;}}\n    {{&lt;hw t=\"include\" from=\"docs/configuration.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Troubleshooting\"&gt;}}\n    {{&lt;hw t=\"include\" from=\"docs/troubleshooting.md\"&gt;}}\n    \n    **Still having issues?**\n    \n    {{&lt;hw t=\"block\" header=\"Get Support\" src=\"/images/support.png\"&gt;}}\n      Contact our support team for personalized assistance.\n      \n      - Email: support@example.com\n      - Live chat: Available 24/7\n      - Phone: 1-800-SUPPORT\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Include external files** and **mix static/dynamic content** effectively"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Automatic IDs**: Each tab gets a unique ID for proper checkbox functionality"
+    "**Smooth transitions**: CSS animations provide polished expand/collapse effects"
+    "**Independent operation**: Each tab can be opened/closed independently"
+    "**Markdown processing**: Both header and content support full markdown formatting"
+    "**Nested content**: Can contain other hw partials for complex layouts"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within accordion partial"
+    "**Header is required** - tabs without headers will not function properly"
+    "**Complex content** in many tabs may impact page performance"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

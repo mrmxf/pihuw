@@ -1,0 +1,118 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Media partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"media\" &gt;}}"
+  "color" "orange"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "media"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "src" "required" true "example" "/media/video.mp4")
+    (dict "name" "srcIsVideo" "required" false "example" "true")
+    (dict "name" "srcIsImage" "required" false "example" "false")
+  )
+  "note" "Intelligently displays images or videos based on file type detection"
+-}}
+
+{{- $descriptionData := dict
+  "description" "A smart media router that automatically determines whether to display content as an image or video based on file extension detection. Provides a unified interface for mixed media content."
+  "notes" (slice
+    "**Automatic type detection** based on file extensions"
+    "**Delegates to specialized partials** (image or video) for rendering"
+    "**Unified interface** for mixed media content"
+    "**Extension-based routing** for proper media handling"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" true
+      "description" "Path to media file (image or video)"
+      "default" ""
+    )
+    (dict
+      "name" "srcIsVideo"
+      "type" "boolean"
+      "required" false
+      "description" "Override to force video handling (automatically detected)"
+      "default" "false"
+    )
+    (dict
+      "name" "srcIsImage"
+      "type" "boolean"
+      "required" false
+      "description" "Override to force image handling (automatically detected)"
+      "default" "false"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Auto-detecting media display using hw shortcode"
+      "code" "{{&lt;hw t=\"media\" src=\"/content/demo.mp4\"&gt;}}\n\n{{&lt;hw t=\"media\" src=\"/images/screenshot.png\"&gt;}}"
+      "note" "Use **hw shortcode** with src parameter - media type is automatically detected"
+    )
+    (dict
+      "description" "Mixed media gallery with consistent interface"
+      "code" "# Project Gallery\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Screenshots\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/images/gallery/dashboard.png\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/images/gallery/settings.jpg\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/images/gallery/reports.webp\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Demo Videos\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/videos/product-demo.mp4\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/videos/tutorial-intro.mkv\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"All media is automatically optimized for web delivery\"&gt;}}"
+      "note" "**Perfect for mixed media** galleries where content types vary"
+    )
+    (dict
+      "description" "Documentation with varied media types"
+      "code" "# API Integration Tutorial\n\n## Step 1: Authentication Setup\n\n{{&lt;hw t=\"media\" src=\"/images/tutorials/auth-setup.png\"&gt;}}\n\n## Step 2: Making Your First Request\n\n{{&lt;hw t=\"media\" src=\"/videos/first-request-demo.mp4\"&gt;}}\n\n## Step 3: Handling Responses\n\n{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Response Examples{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"media\" src=\"/images/docs/success-response.svg\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"media\" src=\"/images/docs/error-response.svg\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Need help? Check out our video tutorials and interactive examples\"&gt;}}"
+      "note" "**Mix images and videos** seamlessly in technical documentation"
+    )
+    (dict
+      "description" "Product showcase with comprehensive media"
+      "code" "{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Product Demo\" \n    text=\"See our platform in action with this comprehensive walkthrough.\" \n    src=\"/videos/product-overview.mp4\" \n    link=\"/demo\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"User Interface\" \n    text=\"Clean, intuitive design that your team will love to use.\" \n    src=\"/images/ui-showcase.png\" \n    link=\"/interface\"&gt;}}\n{{&lt;/hw&gt;}}\n\n## Detailed Media\n\n{{&lt;hw t=\"block\" \n  header=\"Platform Overview\" \n  description=\"Complete visual guide to our platform's capabilities.\" \n  src=\"/videos/platform-tour.mp4\" \n  srcOn=\"right\"&gt;}}\n  \n  **What you'll see:**\n  - Dashboard navigation\n  - {{&lt;hw t=\"include\" from=\"features/overview-highlights.md\"&gt;}}\n  - Advanced customization options\n  \n  {{&lt;hw t=\"media\" src=\"/images/platform-architecture.svg\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with other partials** for rich multimedia presentations"
+    )
+    (dict
+      "description" "Blog post with inline media"
+      "code" "# Building Modern Web Applications\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Visual Development Process\n\nOur development workflow combines the best of modern tooling:\n\n{{&lt;hw t=\"media\" src=\"/images/blog/workflow-diagram.png\"&gt;}}\n\nHere's a quick demonstration of our build process:\n\n{{&lt;hw t=\"media\" src=\"/videos/build-process.mp4\"&gt;}}\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Code Examples\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/images/code/component-structure.png\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" \n      header=\"Code Structure\" \n      text=\"Our component architecture promotes reusability and maintainability\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Performance Metrics\"&gt;}}\n    {{&lt;hw t=\"media\" src=\"/videos/performance-analysis.mp4\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Perfect for blog posts** that need both static and dynamic media content"
+    )
+    (dict
+      "description" "Case study with supporting media"
+      "code" "# Case Study: E-commerce Platform Migration\n\n{{&lt;hw t=\"item\" \n  header=\"Project Overview\" \n  description=\"Complete migration of legacy e-commerce platform to modern microservices architecture.\" \n  src=\"/images/case-studies/ecommerce-before-after.png\" \n  meta=\"6 month project • 500% performance improvement\"&gt;}}\n  \n  ## Architecture Evolution\n  \n  **Before:** Monolithic architecture\n  {{&lt;hw t=\"media\" src=\"/images/case-studies/architecture-before.svg\"&gt;}}\n  \n  **After:** Microservices with event-driven design\n  {{&lt;hw t=\"media\" src=\"/images/case-studies/architecture-after.svg\"&gt;}}\n  \n  ## Implementation Timeline\n  \n  {{&lt;hw t=\"media\" src=\"/videos/migration-timeline.mp4\"&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"case-studies/client-testimonial\"&gt;}}"
+      "note" "**Support case studies** with mixed media for compelling storytelling"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Intelligent routing**: Automatically determines whether to use image or video partial"
+    "**File extension detection**: Supports common image (.jpg, .png, .svg, .webp) and video (.mp4, .mkv) formats"
+    "**Unified interface**: Same parameters work regardless of media type"
+    "**Fallback handling**: Gracefully handles unknown file types"
+    "**Performance optimization**: Delegates to specialized partials for optimal rendering"
+    "**Parameter passthrough**: All parameters are passed to the appropriate specialized partial"
+  )
+  "warnings" (slice
+    "**Source required**: Media without valid src will not display properly"
+    "**File type support**: Limited to predefined image and video extensions"
+    "**Performance consideration**: Video files should be optimized for web delivery"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

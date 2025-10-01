@@ -1,0 +1,49 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+   partial to create a list of latest blogs. Wordcount assumes 220 w/min */}}
+{{ $header := "None" }}
+{{ $srcClass := .scrClass | default "" }}
+{{ $srcLink := "" }}
+{{ $src := "" }}
+{{ $description := "" }}
+{{ $link := "" }}
+{{ $meta := "" }}
+{{ $featured := "" }}
+{{ $count := 1 }}{{ if (isset . "count") }}{{ $count = .count }}{{ end }}
+{{ $skip := 0 }}{{ if (isset . "skip") }}{{ $skip = index . "skip" }}{{ end }}
+{{ $blogCount := add $count $skip }}
+{{ $dot := . }}
+{{/* --- debug the blog  filtering --------------------------------------- */}}
+{{ if false }}{{ range first $blogCount ( where .page.Site.Pages "Type" "blog" )  | last $count }}
+<pre>
+  count:        {{ $count }}
+  skip:         {{ $skip }}
+  Title:        {{.Title}}
+  Date:         {{.Date}}
+  LinkTitle:    {{.LinkTitle}}
+  RelPermalink: {{.RelPermalink}}
+</pre><hr>{{end}}{{end}}
+{{/* --- find latest blog ------------------------------------------------ */}}
+{{ range first $blogCount ( where .page.Site.Pages "Type" "blog" )  | last $count }}
+{{ $srcLink = .RelPermalink }}
+{{ $header = .LinkTitle }}
+{{ $featured = (.Resources.ByType "image").GetMatch "*feature*" }}
+{{ $description = .Plain | safeHTML | truncate 300 }}
+{{ $minutes := add ( div ( countwords .Plain ) 220 ) 1 }}
+{{ $meta = printf "~%v min read" $minutes }}
+{{ $link = .RelPermalink }}
+
+{{/* --- update the dict for the block -----------------------------------*/}}
+{{- $d := merge $dot (dict "src" "") -}}
+{{if $featured}}
+{{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
+{{- $d = merge $d (dict "srcClass" $srcClass) -}}
+{{- $d = merge $d (dict "srcLink" $srcLink) -}}
+{{- $d = merge $d (dict "headerLink" $srcLink) -}}
+{{end}}
+{{- $d = merge $d (dict "header" $header) -}}
+{{- $d = merge $d (dict "description" $description) -}}
+{{- $min := add ( div ( countwords $description ) 220 ) 1 -}}
+{{- $d = merge $d (dict "meta" (printf "~%v min read" $min)) -}}
+
+{{ partial "tool/item" $d }}
+{{ end }}{{/* end of range*/}}

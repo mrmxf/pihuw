@@ -13,7 +13,7 @@ Display stylized pihuw text:
 {{if strings.Contains . "v"}}{{$showVersion = true}}{{end}}
 {{ end -}}
 <a href="https://github.com/mrmxf/pihuw" target="_blank">
-  {{- if $showText}}<span class="logo-fo">F</span><span class="ui grey text">o</span><span class="logo-hu">H</span><span class="ui grey text">u</span><span class="logo-w">W</span>{{end}}
+  {{- if $showText}}<span style="color:red;">P</span><span style="color:grey;">i</span><span style="color:green;">H</span><span style="color:grey;">u</span><span style="color:blue;">W</span>{{end}}
   {{if $showVersion}}
   {{$versionData := (partial "tmpl/get-version-data")}}
   {{$v := $versionData.version}}

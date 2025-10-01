@@ -1,0 +1,97 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+SmsChat shortcode help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; smschat header=\"My Chat\" from=\"Me\" alt=\"Friend\" &gt;}}"
+  "color" "green"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "smschat"
+  "type" "shortcode"
+  "params" (slice
+    (dict "name" "header" "required" false "example" "Messages")
+    (dict "name" "from" "required" false "example" "Me")
+    (dict "name" "alt" "required" false "example" "Friend")
+  )
+-}}
+
+{{- $descriptionData := dict
+  "description" "Display an animated iPhone-style SMS chat conversation. Messages alternate between two participants with typing indicators and realistic timing."
+  "notes" (slice
+    "Chat data comes from **frontmatter** parameters `smschat.chat` and `smschat.delay`"
+    "Animation starts automatically after page load"
+    "Responsive design works on mobile and desktop"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Title shown in the chat header"
+      "default" "Messages (or page title)"
+    )
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" false
+      "description" "Name of the first participant (blue messages)"
+      "default" "Me"
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Name of the second participant (grey messages)"
+      "default" "Friend"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic chat with default settings"
+      "code" "{{&lt; smschat &gt;}}"
+      "note" "**Frontmatter:** `smschat: { chat: [\"Hello!\", \"Hi there!\", \"How are you?\"], delay: [2, 1, 3] }`"
+    )
+    (dict
+      "description" "Custom chat participants"
+      "code" "{{&lt; smschat header=\"Support Chat\" from=\"Customer\" alt=\"Agent\" &gt;}}"
+    )
+    (dict
+      "description" "Family conversation"
+      "code" "{{&lt; smschat header=\"Family Group\" from=\"Mom\" alt=\"Dad\" &gt;}}"
+      "note" "Messages alternate between the two participants automatically"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Chat array:** Array of message strings that alternate between participants"
+    "**Delay array:** Array of seconds to wait between messages (optional)"
+    "**Typing indicators:** Shown before each message for realistic effect"
+    "**iPhone styling:** Authentic iOS Messages app appearance with rounded corners"
+  )
+  "warnings" (slice
+    "Long messages may not display well on small screens"
+    "Chat animation cannot be paused or controlled by user"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

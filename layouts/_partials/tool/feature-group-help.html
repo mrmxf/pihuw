@@ -1,0 +1,99 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Feature group partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"feature-group\" &gt;}}"
+  "color" "pink"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "feature-group"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "inner" "required" true "example" "feature partials")
+    (dict "name" "blockClass" "required" false "example" "ui horizontal equal width segments")
+  )
+  "note" "Container for organizing feature partials in horizontal equal-width layouts"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates a container that organizes feature partials into a horizontal, equal-width segment layout. Perfect for showcasing product features, service offerings, or capability highlights in a visually balanced grid."
+  "notes" (slice
+    "Must contain **feature partials** as child content"
+    "Uses **Fomantic UI segments** for consistent spacing and alignment"
+    "Creates **equal-width columns** automatically"
+    "**Responsive design** adapts to different screen sizes"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" true
+      "description" "Contains feature partials that define the feature showcase"
+      "default" ""
+    )
+    (dict
+      "name" "blockClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the outer container"
+      "default" "ui horizontal equal width segments"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic feature showcase using hw shortcode"
+      "code" "{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Easy Setup\" \n    text=\"Get started in minutes with our simple installation process.\" \n    src=\"/images/icons/setup.png\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Powerful Tools\" \n    text=\"Access professional-grade tools for all your development needs.\" \n    src=\"/images/icons/tools.png\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"24/7 Support\" \n    text=\"Our expert team is available around the clock to help you succeed.\" \n    src=\"/images/icons/support.png\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "Use **hw shortcode** to create balanced three-column feature displays"
+    )
+    (dict
+      "description" "Product capabilities with linked features"
+      "code" "# Why Choose Our Platform?\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Scalable Architecture\" \n    text=\"Built to handle millions of users with auto-scaling infrastructure and load balancing.\" \n    src=\"/images/features/scalability.svg\" \n    link=\"/architecture\" \n    class=\"ui blue message\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Advanced Security\" \n    text=\"{{&lt;hw t=\\\"include\\\" from=\\\"security/overview.md\\\"&gt;}}\" \n    src=\"/images/features/security.svg\" \n    link=\"/security\" \n    class=\"ui green message\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Developer Friendly\" \n    text=\"Comprehensive APIs, SDKs, and documentation to accelerate your development.\" \n    src=\"/images/features/developer.svg\" \n    link=\"/developers\" \n    class=\"ui purple message\"&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Each feature is designed to maximize your productivity and success\"&gt;}}"
+      "note" "**Include dynamic content** and **add color coding** for feature differentiation"
+    )
+    (dict
+      "description" "Service tiers with detailed features"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Service Plans\"&gt;}}\n    {{&lt;hw t=\"feature-group\"&gt;}}\n      {{&lt;hw t=\"feature\" \n        header=\"Starter Plan\" \n        text=\"Perfect for individuals and small teams getting started with basic features and support.\" \n        src=\"/images/plans/starter.png\" \n        link=\"/pricing/starter\" \n        class=\"ui message\"&gt;}}\n      \n      {{&lt;hw t=\"feature\" \n        header=\"Professional Plan\" \n        text=\"Advanced features for growing businesses with enhanced security and priority support.\" \n        src=\"/images/plans/professional.png\" \n        link=\"/pricing/professional\" \n        class=\"ui positive message\"&gt;}}\n      \n      {{&lt;hw t=\"feature\" \n        header=\"Enterprise Plan\" \n        text=\"Complete solution for large organizations with custom integrations and dedicated support.\" \n        src=\"/images/plans/enterprise.png\" \n        link=\"/pricing/enterprise\" \n        class=\"ui blue message\"&gt;}}\n    {{&lt;/hw&gt;}}\n    \n    {{&lt;hw t=\"table\"&gt;}}\n      {{&lt;hw t=\"thead\"&gt;}}\n        {{&lt;hw t=\"trth\"&gt;}}Plan Comparison{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n      {{&lt;hw t=\"tbody\"&gt;}}\n        {{&lt;hw t=\"tr\"&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}**Feature**{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}**Starter**{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}**Professional**{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}**Enterprise**{{&lt;/hw&gt;}}\n        {{&lt;/hw&gt;}}\n        {{&lt;hw t=\"tr\"&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}Users{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}5{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}50{{&lt;/hw&gt;}}\n          {{&lt;hw t=\"td\"&gt;}}Unlimited{{&lt;/hw&gt;}}\n        {{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with tables** and **organize in accordions** for comprehensive plan displays"
+    )
+    (dict
+      "description" "Technology stack showcase"
+      "code" "# Our Technology Stack\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Frontend\" \n    text=\"Modern React applications with TypeScript and responsive design frameworks.\" \n    src=\"/images/tech/frontend.png\" \n    link=\"/tech/frontend\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Backend\" \n    text=\"Scalable Node.js microservices with PostgreSQL and Redis for optimal performance.\" \n    src=\"/images/tech/backend.png\" \n    link=\"/tech/backend\"&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Infrastructure\" \n    text=\"Cloud-native deployment on AWS with Docker containers and Kubernetes orchestration.\" \n    src=\"/images/tech/infrastructure.png\" \n    link=\"/tech/infrastructure\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Monitoring\" \n    text=\"Comprehensive observability with logging, metrics, and distributed tracing.\" \n    src=\"/images/tech/monitoring.png\" \n    link=\"/tech/monitoring\"&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Explore our complete technology documentation for implementation details\"&gt;}}"
+      "note" "**Create multiple feature groups** for organized categorical displays"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Layout container**: Organizes features into equal-width horizontal segments"
+    "**Responsive design**: Automatically adapts to mobile and desktop layouts"
+    "**Fomantic UI integration**: Uses segment components for consistent styling"
+    "**Flexible content**: Can contain any number of feature partials"
+    "**Nested structure**: Features are automatically arranged in balanced columns"
+  )
+  "warnings" (slice
+    "Must contain **feature partials** - empty groups will not display properly"
+    "**Column balance**: Works best with 2-4 features per group for optimal layout"
+    "**Mobile consideration**: Many features may stack vertically on small screens"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

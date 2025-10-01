@@ -1,0 +1,98 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table row with data cell partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; trtd &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "trtd"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Cell content")
+    (dict "name" "inner" "required" false "example" "Additional content")
+  )
+  "note" "Convenience partial that creates a tr row containing a single td cell"
+-}}
+
+{{- $descriptionData := dict
+  "description" "A convenience partial that creates an HTML tr element containing a single td element. Perfect for single-column table rows or when you need a quick way to add a row with one data cell."
+  "notes" (slice
+    "**Shorthand** for `{{< tr >}}{{< td >}}content{{< /td >}}{{< /tr >}}`"
+    "Must be **nested inside** thead, tbody, or tfoot partials"
+    "Creates a **single-cell row** automatically"
+    "Supports **markdown content** and Hugo shortcodes"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary cell content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional cell content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Simple single-column table"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}**Important Notes**{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}Remember to backup your data before proceeding{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}All changes are logged for audit purposes{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}Contact support if you encounter any issues{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Table with mixed row types"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}Name{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}Status{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Project Alpha{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Active{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; trtd &gt;}}**Note:** Project Beta is currently on hold{{&lt; /trtd &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Project Gamma{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Planning{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Mix trtd** with regular tr rows for notes and separators"
+    )
+    (dict
+      "description" "Single-cell rows with rich content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}\n      **Getting Started**\n      \n      Follow these steps to begin:\n      \n      1. Install dependencies\n      2. Configure your environment\n      3. Run the setup script\n      \n      [Detailed guide](./setup-guide)\n    {{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}\n      **Advanced Configuration**\n      \n      {{&lt;hw t=\"include\" from=\"advanced-config.md\"&gt;}}\n    {{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Rich markdown** and **shortcodes** work perfectly in single cells"
+    )
+    (dict
+      "description" "Table sections with descriptive rows"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}**System Requirements**{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}**Hardware Requirements**{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}- CPU: 2.0 GHz dual-core processor{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}- RAM: 4 GB minimum, 8 GB recommended{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}- Storage: 20 GB available space{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}&nbsp;{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}**Software Requirements**{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}- Operating System: Windows 10, macOS 10.14, or Linux{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}- Browser: Chrome 90+, Firefox 88+, or Safari 14+{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **trtd for list-like** table content with sections"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Convenience shorthand**: Saves typing when you need single-cell rows"
+    "**Perfect for lists**: Great for creating list-like content in table format"
+    "**Section separators**: Useful for adding notes or separators in tables"
+    "**Content flexibility**: Supports full markdown and shortcode processing"
+    "**Table structure**: Still maintains proper semantic table structure"
+  )
+  "warnings" (slice
+    "Creates **single-cell rows** - not suitable for multi-column data"
+    "Must be **properly nested** within table sections"
+    "Consider **accessibility** when using for non-tabular content"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

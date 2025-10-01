@@ -1,0 +1,117 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Item socials partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"item-socials\" &gt;}}"
+  "color" "yellow"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "item-socials"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "count" "required" false "example" "3")
+    (dict "name" "skip" "required" false "example" "1")
+    (dict "name" "from" "required" false "example" "instagram linkedin twitter")
+  )
+  "note" "Generates social media links and icons (currently minimal implementation)"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates social media link items based on configuration. This partial appears to be minimally implemented and may require additional development for full functionality."
+  "notes" (slice
+    "**Minimal implementation** - currently only has parameter comments"
+    "**Configuration-based** - expects social media platform names"
+    "**Count and skip** parameters for selective display"
+    "**Extensible design** for future social media integration"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "count"
+      "type" "number"
+      "required" false
+      "description" "Number of social media items to display"
+      "default" "1"
+    )
+    (dict
+      "name" "skip"
+      "type" "number"
+      "required" false
+      "description" "Number of social media items to skip"
+      "default" "1"
+    )
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" false
+      "description" "Space-separated list of social media platforms"
+      "default" "instagram linkedin instagram-mrmxf"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic social media links using hw shortcode"
+      "code" "{{&lt;hw t=\"item-socials\"&gt;}}"
+      "note" "Use **hw shortcode** for default social media configuration (currently minimal)"
+    )
+    (dict
+      "description" "Custom social media selection"
+      "code" "{{&lt;hw t=\"item-socials\" from=\"twitter linkedin github\"&gt;}}"
+      "note" "**Specify platforms** with from parameter (requires implementation)"
+    )
+    (dict
+      "description" "Limited social media display"
+      "code" "{{&lt;hw t=\"item-socials\" count=\"2\" from=\"instagram linkedin facebook\"&gt;}}"
+      "note" "**Control quantity** with count parameter (requires implementation)"
+    )
+    (dict
+      "description" "Social media in contact section"
+      "code" "# Contact Us\n\n{{&lt;hw t=\"block\" \n  header=\"Get In Touch\" \n  description=\"Connect with us through multiple channels for support and updates.\"&gt;}}\n  \n  ## Social Media\n  \n  {{&lt;hw t=\"item-socials\" from=\"twitter linkedin instagram\"&gt;}}\n  \n  ## Direct Contact\n  \n  {{&lt;hw t=\"table\"&gt;}}\n    {{&lt;hw t=\"tbody\"&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}**Email**{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}contact@example.com{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}**Phone**{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}+1 (555) 123-4567{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Integrate with contact information** for comprehensive communication options"
+    )
+    (dict
+      "description" "Footer social media section"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Follow Us\"&gt;}}\n    Stay connected for the latest updates, tips, and community news.\n    \n    {{&lt;hw t=\"item-socials\" from=\"twitter linkedin youtube instagram\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" text=\"Follow us on your preferred platform for regular updates\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Community\"&gt;}}\n    {{&lt;hw t=\"item-include\" from=\"community/overview.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Organize in accordions** for clean footer or sidebar social media sections"
+    )
+    (dict
+      "description" "Team member social profiles"
+      "code" "{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"John Smith\" \n    text=\"Lead Developer with expertise in full-stack development and DevOps.\" \n    src=\"/images/team/john.jpg\" \n    class=\"ui message\"&gt;}}\n{{&lt;/hw&gt;}}\n\n**Connect with John:**\n\n{{&lt;hw t=\"item-socials\" from=\"linkedin github twitter\" count=\"3\"&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"All team members are active in our developer community\"&gt;}}"
+      "note" "**Personal social profiles** for team member pages (requires implementation)"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Development status**: This partial appears to be minimally implemented"
+    "**Future potential**: Designed for social media integration with count/skip functionality"
+    "**Configuration ready**: Parameters suggest support for multiple platforms"
+    "**Extensible structure**: Framework exists for full social media implementation"
+    "**Integration friendly**: Designed to work with other hw partials"
+  )
+  "warnings" (slice
+    "**Limited functionality**: Current implementation may not produce visible output"
+    "**Requires development**: May need additional implementation for full functionality"
+    "**Configuration dependency**: Likely requires site-level social media configuration"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

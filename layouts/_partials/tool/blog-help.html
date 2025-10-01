@@ -1,0 +1,117 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Blog partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"blog\" &gt;}}"
+  "color" "teal"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "blog"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "count" "required" false "example" "3")
+    (dict "name" "skip" "required" false "example" "1")
+  )
+  "note" "Automatically generates blog post previews from your site's blog content"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Dynamically creates blog post preview blocks by scanning your site's blog content. Automatically includes featured images, reading time estimates, and post summaries with proper linking."
+  "notes" (slice
+    "**Automatically scans** blog posts from site pages with type 'blog'"
+    "**Generates reading time** estimates based on word count (220 words/minute)"
+    "**Featured image detection** looks for images with 'feature' in filename"
+    "**Smart content truncation** limits summaries to 300 characters"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "count"
+      "type" "number"
+      "required" false
+      "description" "Number of blog posts to display"
+      "default" "1"
+    )
+    (dict
+      "name" "skip"
+      "type" "number"
+      "required" false
+      "description" "Number of recent posts to skip before displaying"
+      "default" "0"
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Display latest blog post using hw shortcode"
+      "code" "{{&lt;hw t=\"blog\"&gt;}}"
+      "note" "Use **hw shortcode** to show the most recent blog post with automatic formatting"
+    )
+    (dict
+      "description" "Show three latest blog posts"
+      "code" "{{&lt;hw t=\"blog\" count=\"3\"&gt;}}"
+      "note" "Use **count parameter** to display multiple recent posts"
+    )
+    (dict
+      "description" "Skip featured post and show next two"
+      "code" "{{&lt;hw t=\"blog\" count=\"2\" skip=\"1\"&gt;}}"
+      "note" "**Combine count and skip** to show specific range of posts"
+    )
+    (dict
+      "description" "Blog sidebar with recent posts"
+      "code" "## Recent Articles\n\n{{&lt;hw t=\"blog\" count=\"5\"&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Subscribe to our newsletter for weekly updates!\"&gt;}}"
+      "note" "**Perfect for sidebars** and content sections with automatic updates"
+    )
+    (dict
+      "description" "Featured blog section with custom layout"
+      "code" "# Latest from Our Blog\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## More Articles\n\n{{&lt;hw t=\"blog\" count=\"4\" skip=\"1\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Create sections** by combining different count/skip combinations"
+    )
+    (dict
+      "description" "Blog posts with contextual information"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Latest Updates\"&gt;}}\n    {{&lt;hw t=\"blog\" count=\"3\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" text=\"All blog posts are automatically updated with reading time estimates\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Archive\"&gt;}}\n    {{&lt;hw t=\"blog\" count=\"10\" skip=\"3\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Organize blog content** within accordions and other layout partials"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Automatic content detection**: Scans all pages with 'Type: blog' in frontmatter"
+    "**Reading time calculation**: Uses 220 words per minute standard for estimates"
+    "**Featured image discovery**: Looks for images with 'feature' in filename within page bundle"
+    "**Smart linking**: Automatically creates links to full blog posts"
+    "**Responsive design**: Uses block partial for consistent, mobile-friendly layout"
+    "**Content truncation**: Limits preview text to 300 characters for consistency"
+  )
+  "warnings" (slice
+    "**Requires blog content**: No output if no pages with 'Type: blog' exist"
+    "**Performance consideration**: Large numbers of blog posts may slow page generation"
+    "**Featured images**: Blog posts should include images named with 'feature' for best results"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

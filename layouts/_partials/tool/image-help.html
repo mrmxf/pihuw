@@ -1,0 +1,148 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Image partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"image\" &gt;}}"
+  "color" "olive"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "image"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "src" "required" true "example" "/images/photo.jpg")
+    (dict "name" "alt" "required" false "example" "Photo description")
+    (dict "name" "srcClass" "required" false "example" "ui fluid image")
+    (dict "name" "srcLink" "required" false "example" "/gallery")
+    (dict "name" "process" "required" false "example" "fit 300x200")
+  )
+  "note" "Displays images with automatic processing, captions, and optional linking"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Displays images with intelligent resource handling, automatic processing, and optional captions. Supports both page bundle resources and global assets with Hugo's image processing pipeline."
+  "notes" (slice
+    "**Smart resource detection** tries page resources first, then global assets"
+    "**Image processing** with Hugo's built-in pipeline for optimization"
+    "**Automatic captions** using caption partial when text/header provided"
+    "**Link validation** for internal URLs and page references"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" true
+      "description" "Path to image file (page resource or global asset)"
+      "default" ""
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt text for accessibility (falls back to text parameter)"
+      "default" ""
+    )
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Caption text (also used as fallback alt text)"
+      "default" ""
+    )
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Caption header (e.g., 'Figure 1')"
+      "default" ""
+    )
+    (dict
+      "name" "srcClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the image container"
+      "default" "ui fluid image"
+    )
+    (dict
+      "name" "srcLink"
+      "type" "string"
+      "required" false
+      "description" "URL to wrap around the image (makes image clickable)"
+      "default" ""
+    )
+    (dict
+      "name" "process"
+      "type" "string"
+      "required" false
+      "description" "Hugo image processing parameters (e.g., 'fit 300x200')"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Simple image display using hw shortcode"
+      "code" "{{&lt;hw t=\"image\" \n  src=\"/images/product-dashboard.png\" \n  alt=\"Product dashboard screenshot\"&gt;}}"
+      "note" "Use **hw shortcode** with src and alt for basic accessible image display"
+    )
+    (dict
+      "description" "Image with caption and processing"
+      "code" "{{&lt;hw t=\"image\" \n  src=\"/images/architecture-diagram.png\" \n  header=\"Figure 1\" \n  text=\"System architecture showing microservices communication patterns and data flow.\" \n  process=\"fit 600x400\" \n  srcClass=\"ui centered image\"&gt;}}"
+      "note" "**Add captions and processing** for professional documentation images"
+    )
+    (dict
+      "description" "Clickable image gallery item"
+      "code" "{{&lt;hw t=\"image\" \n  src=\"/images/gallery/project-screenshot.jpg\" \n  alt=\"Project management interface\" \n  srcLink=\"/gallery/project-screenshots\" \n  text=\"Click to view full gallery\" \n  srcClass=\"ui medium image\"&gt;}}"
+      "note" "**Make images clickable** with srcLink for gallery and navigation functionality"
+    )
+    (dict
+      "description" "Technical documentation with linked diagrams"
+      "code" "# API Integration Guide\n\n{{&lt;hw t=\"include\" from=\"docs/api-intro.md\"&gt;}}\n\n{{&lt;hw t=\"image\" \n  src=\"/images/docs/api-flow-diagram.svg\" \n  header=\"Diagram 1\" \n  text=\"Authentication flow showing token exchange and API request validation process.\" \n  srcLink=\"/docs/authentication\" \n  process=\"fit 800x500\"&gt;}}\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Implementation Examples\"&gt;}}\n    {{&lt;hw t=\"image\" \n      src=\"/images/docs/code-example.png\" \n      header=\"Code Example\" \n      text=\"JavaScript implementation showing proper error handling and token refresh.\" \n      srcClass=\"ui fluid bordered image\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with other partials** for comprehensive technical documentation"
+    )
+    (dict
+      "description" "Product showcase with optimized images"
+      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Product Features{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"image\" \n        src=\"/images/features/analytics.jpg\" \n        text=\"Advanced analytics dashboard with real-time data visualization and custom reporting capabilities.\" \n        srcLink=\"/features/analytics\" \n        process=\"fit 400x300\" \n        srcClass=\"ui rounded image\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"image\" \n        src=\"/images/features/collaboration.jpg\" \n        text=\"Team collaboration tools with shared workspaces and real-time editing.\" \n        srcLink=\"/features/collaboration\" \n        process=\"fit 400x300\" \n        srcClass=\"ui rounded image\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Click any image to explore detailed feature documentation\"&gt;}}"
+      "note" "**Embed in tables** and **use consistent processing** for product galleries"
+    )
+    (dict
+      "description" "Blog post with inline images"
+      "code" "# Getting Started with Our Platform\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Quick Setup Process\n\nSetting up your account is straightforward:\n\n{{&lt;hw t=\"image\" \n  src=\"/images/tutorials/setup-step1.png\" \n  header=\"Step 1\" \n  text=\"Create your account by filling out the registration form with your basic information.\" \n  process=\"fit 500x300\"&gt;}}\n\n{{&lt;hw t=\"image\" \n  src=\"/images/tutorials/setup-step2.png\" \n  header=\"Step 2\" \n  text=\"Configure your workspace settings and invite team members to collaborate.\" \n  process=\"fit 500x300\"&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Need help with setup? Our support team is available 24/7 to assist you.\"&gt;}}"
+      "note" "**Perfect for tutorials** with step-by-step visual instructions"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Resource hierarchy**: Checks page bundle resources first, then global assets"
+    "**Image processing**: Supports Hugo's full image processing pipeline (fit, resize, crop, etc.)"
+    "**Automatic optimization**: Processes images for web delivery when processing parameters provided"
+    "**Caption integration**: Automatically generates captions when text/header parameters provided"
+    "**Link validation**: Validates internal links and provides warnings for broken references"
+    "**Accessibility**: Ensures proper alt text for screen readers"
+  )
+  "warnings" (slice
+    "**Source required**: Images without valid src will show debug warnings"
+    "**Alt text important**: Always provide alt text for accessibility compliance"
+    "**Processing performance**: Complex image processing may slow build times"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

@@ -1,0 +1,103 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table row partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; tr &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "tr"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Row content")
+    (dict "name" "inner" "required" false "example" "Cell content")
+  )
+  "note" "Must be used inside thead, tbody, or tfoot partials, contains td or th partials"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an HTML tr element that represents a table row. This is the container for individual table cells (td or th) and is essential for organizing your table data into horizontal rows."
+  "notes" (slice
+    "Must be **nested inside** thead, tbody, or tfoot partials"
+    "Contains **td or th partials** as table cells"
+    "Represents a **horizontal row** of data"
+    "Essential for **table structure** organization"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary row content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional row content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic table row with data cells"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}John Smith{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Developer{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Engineering{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Jane Doe{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Designer{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Marketing{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Header row with th cells"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}**Name**{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}**Role**{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}**Department**{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **th elements** in header rows for semantic correctness"
+    )
+    (dict
+      "description" "Mixed row with header and data cells"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}**Q1 Results**{{&lt; /th &gt;}}\n      {{&lt; td &gt;}}$125,000{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}15% growth{{&lt; /td &gt;}}\n      {{&lt; td class=\"ui positive\" &gt;}}Target met{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}**Q2 Results**{{&lt; /th &gt;}}\n      {{&lt; td &gt;}}$140,000{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}12% growth{{&lt; /td &gt;}}\n      {{&lt; td class=\"ui positive\" &gt;}}Exceeded{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Mix th and td** for row headers with data"
+    )
+    (dict
+      "description" "Row with complex cell content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}\n        **API Documentation**\n        \n        Complete guide with examples\n      {{&lt; /td &gt;}}\n      {{&lt; td &gt;}}\n        - Authentication\n        - Endpoints\n        - Rate limiting\n        - [Full docs](./api)\n      {{&lt; /td &gt;}}\n      {{&lt; td &gt;}}{{&lt;hw t=\"include\" from=\"api-status.md\"&gt;}}{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Rich markdown** and **shortcodes** work within table cells"
+    )
+    (dict
+      "description" "Row with spanning cells"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td txtGrid=\"3\" class=\"ui center aligned\" &gt;}}\n        **Important Notice**\n        \n        This section contains critical information\n      {{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Detail 1{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Detail 2{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Detail 3{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **txtGrid** for colspan to create cells spanning multiple columns"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Semantic structure**: tr organizes table cells into horizontal rows"
+    "**Flexibility**: Can contain any combination of th and td elements"
+    "**Content processing**: Supports markdown and shortcodes in nested cells"
+    "**Styling**: Often styled with alternating colors or hover effects"
+    "**Accessibility**: Essential for screen readers to understand table structure"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within thead, tbody, or tfoot"
+    "Should contain **appropriate cell elements** (td or th)"
+    "**Column alignment** across rows is important for table integrity"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

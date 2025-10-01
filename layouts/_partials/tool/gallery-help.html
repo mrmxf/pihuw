@@ -1,0 +1,91 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Gallery shortcode help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; gallery \"my-photos\" size=\"medium\" &gt;}}"
+  "color" "blue"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "gallery"
+  "type" "shortcode"
+  "params" (slice
+    (dict "name" "from" "required" true "example" "my-photos")
+    (dict "name" "mode" "required" false "example" "medium")
+  )
+  "note" "The first unnamed parameter can be used instead of 'from'"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Display a responsive image gallery with modal popups and file extension indicators. Images are automatically resized and optimized using Hugo's image processing pipeline."
+  "notes" (slice
+    "Images are looked up first in **assets** folder, then in **page bundle**"
+    "Supports automatic image processing for common formats (jpg, png, gif, webp, etc.)"
+    "Each thumbnail shows a colored border based on file extension"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" true
+      "description" "Name of the frontmatter parameter containing array of image paths"
+      "default" "gallery"
+    )
+    (dict
+      "name" "mode"
+      "type" "string"
+      "required" false
+      "description" "Size of gallery thumbnails: **large** (300px), **medium** (180px), **small** (75px)"
+      "default" "large"
+      "values" (slice "small" "medium" "large")
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic large gallery using frontmatter parameter 'photos'"
+      "code" "{{&lt; gallery \"photos\" &gt;}}"
+    )
+    (dict
+      "description" "Medium-sized gallery with named parameter"
+      "code" "{{&lt; gallery from=\"my-images\" mode=\"medium\" &gt;}}"
+      "note" "**Frontmatter:** `my-images: [\"/images/photo1.jpg\", \"/images/photo2.png\"]`"
+    )
+    (dict
+      "description" "Small gallery for thumbnail overview"
+      "code" "{{&lt; gallery \"thumbnails\" mode=\"small\" &gt;}}"
+      "note" "Small size hides file extension labels for cleaner look"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "Images are **cached and optimized** automatically by Hugo's image processing"
+    "File extension **colors** are defined in `params.yaml` under `ui.gallery.default.colors`"
+    "Gallery uses **Fomantic UI modals** for full-size viewing with close button"
+    "Thumbnails maintain **aspect ratio** using CSS `object-fit: cover`"
+  )
+  "warnings" (slice
+    "Large galleries may slow down site build time due to image processing"
+    "External URLs (http/https) are not processed and use original images"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

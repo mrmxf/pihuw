@@ -1,0 +1,101 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Children partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"children\" &gt;}}"
+  "color" "violet"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "children"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "page" "required" true "example" "current page context")
+  )
+  "note" "Automatically lists child pages with links and descriptions for navigation"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Automatically generates a list of child pages for the current page, displaying them with file icons, titles, and descriptions. Perfect for section indexes and navigation aids."
+  "notes" (slice
+    "**Automatically discovers** child pages from current page context"
+    "**Sorts by weight** for predictable ordering"
+    "Uses **Fomantic UI list styling** with file icons"
+    "**Includes descriptions** when available in page frontmatter"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided by hw shortcode)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic child page listing using hw shortcode"
+      "code" "# Documentation Sections\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "Use **hw shortcode** to automatically list all child pages with proper formatting"
+    )
+    (dict
+      "description" "Section index with child pages and description"
+      "code" "# API Documentation\n\nThis section covers all aspects of our REST API, from authentication to advanced usage patterns.\n\n## Available Guides\n\n{{&lt;hw t=\"children\"&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"All guides include practical examples and code samples\"&gt;}}"
+      "note" "**Perfect for section indexes** that need automatic navigation to subsections"
+    )
+    (dict
+      "description" "Tutorial series with child page navigation"
+      "code" "{{&lt;hw t=\"block\" \n  header=\"Tutorial Series: Getting Started\" \n  description=\"Follow these step-by-step tutorials to master our platform.\"&gt;}}\n  \n  ## Tutorials in This Series\n  \n  {{&lt;hw t=\"children\"&gt;}}\n  \n  {{&lt;hw t=\"banner\" text=\"Complete all tutorials to unlock advanced features!\"&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Combine with other partials** for rich tutorial and course navigation"
+    )
+    (dict
+      "description" "Documentation hub with organized sections"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"📚 Available Documentation\"&gt;}}\n    {{&lt;hw t=\"children\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🔗 Related Resources\"&gt;}}\n    {{&lt;hw t=\"include\" from=\"docs/external-links.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"❓ Need Help?\"&gt;}}\n    {{&lt;hw t=\"block\" header=\"Contact Support\" src=\"/images/support-icon.png\"&gt;}}\n      Can't find what you're looking for? Our support team is here to help.\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Organize child pages** within accordions for better space management"
+    )
+    (dict
+      "description" "Course module index with progress tracking"
+      "code" "# Course: Web Development Fundamentals\n\n{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Module Overview{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"children\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" \n  header=\"Progress Tip\" \n  text=\"Complete modules in order for the best learning experience\"&gt;}}"
+      "note" "**Embed child listings** in tables and other structures for custom layouts"
+    )
+    (dict
+      "description" "Product feature sections with auto-navigation"
+      "code" "# Platform Features\n\nExplore the powerful features that make our platform the choice for modern developers.\n\n{{&lt;hw t=\"children\"&gt;}}\n\n---\n\n{{&lt;hw t=\"blog\" count=\"2\"&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Stay updated with our latest feature announcements and tutorials\"&gt;}}"
+      "note" "**Mix with blog content** to show both static navigation and dynamic updates"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Automatic discovery**: No manual maintenance required - updates as you add/remove pages"
+    "**Weight-based sorting**: Use page weight in frontmatter to control display order"
+    "**Rich metadata**: Displays page LinkTitle and Description when available"
+    "**Consistent styling**: Matches site theme with Fomantic UI list components"
+    "**Responsive design**: List adapts properly to different screen sizes"
+  )
+  "warnings" (slice
+    "**Requires child pages**: No output if current page has no children"
+    "**Page context dependency**: Must be used within a page context to function"
+    "**Description dependency**: Pages without descriptions will show title only"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

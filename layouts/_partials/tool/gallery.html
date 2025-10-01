@@ -1,0 +1,157 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/* Hugo partial that creates responsive image galleries with modal popups and thumbnails */}}
+{{- $page := .page -}}
+{{- $from := .from -}}
+{{- $mode := .mode | default "large" -}}
+{{- $images := slice -}}
+
+{{- if not $from -}}
+  {{- partial "tool/dbg" (dict "wrn" "Gallery partial missing required 'from' parameter" "kv" (dict "page" $page "mode" $mode)) -}}
+{{- else if not (isset $page.Params $from) -}}
+  {{- partial "tool/dbg" (dict "err" (printf "Gallery parameter '%s' not found in page frontmatter" $from) "kv" (dict "from" $from "page" $page "params" $page.Params)) -}}
+{{- else -}}
+  {{- $images = index $page.Params $from -}}
+{{- end -}}
+
+{{- $galleryId := printf "gallery-%s" $from -}}
+{{- $modeClass := cond (eq $mode "large") "" $mode -}}
+
+<style>
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.gallery-item {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 3px solid;
+  position: relative;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.gallery-proxy {
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-modal .content {
+  text-align: center;
+  padding: 0;
+}
+
+.gallery-modal .content img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.gallery-ext-label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  font-size: 0.7em;
+  text-transform: uppercase;
+}
+
+.gallery-container.small .gallery-ext-label {
+  display: none;
+}
+
+.gallery-proxy {
+  width: 300px;
+  height: 300px;
+}
+
+.gallery-container.medium .gallery-proxy {
+  width: 180px;
+  height: 180px;
+}
+
+.gallery-container.small .gallery-proxy {
+  width: 75px;
+  height: 75px;
+}
+
+{{- /* Generate CSS classes for each media type from config */ -}}
+{{- range site.Params.ui.gallery.default.colors -}}
+.gallery-{{ .media }} {
+  border-color: {{ .border | safeCSS }};
+  background-color: {{ .fill | safeCSS }};
+}
+{{- end -}}
+</style>
+
+<div class="gallery-container {{ $modeClass }}" id="{{ $galleryId }}">
+  {{- range $index, $imagePath := $images -}}
+    {{- $imageResource := "" -}}
+    {{- $proxyUrl := "" -}}
+    {{- $fullUrl := "" -}}
+
+    {{- /* Use the same robust image resolution pattern as tool/image.html */ -}}
+    {{- $src := $imagePath -}}
+    {{- $imageResource := $page.Resources.Get $imagePath -}}
+    {{- /* Try global resources if page resource not found */ -}}
+    {{- if not $imageResource -}}
+      {{- $imageResource = resources.Get $imagePath -}}
+    {{- end -}}
+
+    {{- /* Get file extension for CSS class */ -}}
+    {{- $ext := path.Ext $imagePath | strings.TrimPrefix "." | lower -}}
+
+    {{- if $imageResource -}}
+      {{- /* Create optimized versions if resource can be processed */ -}}
+      {{- $proxy := $imageResource.Fit "300x300 q75" -}}
+      {{- $full := $imageResource.Resize "1920x1920 q85" -}}
+      {{- $proxyUrl = $proxy.RelPermalink -}}
+      {{- $fullUrl = $full.RelPermalink -}}
+    {{- else -}}
+      {{- /* Resource not found or not processable, use original paths */ -}}
+      {{- $proxyUrl = $imagePath -}}
+      {{- $fullUrl = $imagePath -}}
+    {{- end -}}
+
+    <div class="gallery-item gallery-{{ $ext }}"
+         onclick="openGalleryModal('{{ $galleryId }}-modal-{{ $index }}')">
+      <img src="{{ $proxyUrl }}"
+           alt="Gallery image {{ add $index 1 }}"
+           class="gallery-proxy">
+      <div class="ui olive corner label gallery-ext-label">
+        {{ $ext }}
+      </div>
+    </div>
+
+    {{- /* Create modal for each image */ -}}
+    <div id="{{ $galleryId }}-modal-{{ $index }}" class="ui modal gallery-modal">
+      <i class="close icon"></i>
+      <div class="content">
+        <img src="{{ $fullUrl }}" alt="Gallery image {{ add $index 1 }}">
+      </div>
+    </div>
+  {{- end -}}
+</div>
+
+<script>
+function openGalleryModal(modalId) {
+  $('#' + modalId).modal('show');
+}
+
+// Initialize Fomantic UI modals for gallery
+$(document).ready(function() {
+  $('.gallery-modal').modal({
+    blurring: true,
+    centered: true,
+    closable: true
+  });
+});
+</script>

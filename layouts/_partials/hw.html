@@ -1,14 +1,54 @@
 {{partial "tmpl/dbg-template-comment" .}}{{/*
-  ---* The main dispatcher for pi- partials.
-  ----   R= required
-  
-  ---* .blockClass Outer container = default "", e.g. "my-segment"
-  */}}
-{{$id := .id}}
-{{if false}}{{partial "tool/dbg-dump-dot" .}}{{end}}
-{{- $block := "tool/help" -}}
-{{- with .t }}{{ $block = printf "tool/%s" . }}{{ end -}}
-{{- if or .id .blockClass }}<div class="{{.blockClass}}" {{if .id}}id="{{.id}}"{{end}}>{{end -}}
-{{partial $block .}}
-{{- if or .id .blockClass }}</div>{{end -}}
+The main dispatcher for the hw blocks.
 
+Set .t = "help" for dict definitions
+Set .help = "anything" to render help for the partial instead of the partial
+*/}}
+{{$id := .id}}
+{{- $blockTemplate := "my-help" -}}
+{{- with .t }}{{ $blockTemplate = printf "tool/%s" . }}{{ end -}}
+{{- $blockPath := printf "_partials/%s.html" $blockTemplate -}}
+{{ if templates.Exists $blockPath }}
+ {{printf "<!-- t = \"%s\" found at %s-->" .t $blockPath|safeHTML}}
+ {{ if .help }}{{/* help requested ================================ */}}
+  {{ $helpTemplate := printf "tool/%s-help" .t }}
+  {{ $helpPath := printf "_partials/%s.html" $helpTemplate }}
+
+  {{ if templates.Exists $helpPath }}{{/* helpPath for t ≡≡≡≡≡≡≡≡≡≡*/}}
+    {{printf "<!-- t = \"%s\", help found at %s -->" .t $helpPath|safeHTML}}
+    {{partial $helpTemplate  .}}
+  {{else}}{{/* else helpPath does not exist for t */}}
+   {{printf "<!-- t = \"%s\", help missing from %s -->" .t $helpPath|safeHTML}}
+   <div class="ui red message">
+     <div class="header"><h2>No help available for <code>t = "{{.t}}"</code></h2></div>
+     <div class="content">
+       <p>Default help location is <code>layouts/{{$helpPath}}</code> </p>
+     </div>
+   </div>
+  {{end}}{{/* end helpPath for t ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */}}
+
+ {{else}}{{/* else no help, just template t ====================== */}}
+
+  {{/* --------------render a partial --------------------
+  in lists like item-lists don't emit extra divs unless instructed
+  - it might break frameworks like fomantic
+   */}}
+  {{printf "<!-- t = \"%s\" found at %s-->" .t $blockPath|safeHTML}}
+  {{if .blockClass }}<div class="{{.blockClass}}" {{if .id}}id="{{.id}}"{{end}}>{{end}}
+  {{partial $blockTemplate .}}
+  {{- if .blockClass }}</div>{{end -}}
+  {{/* --------------------------------------------------- */}}
+  
+ {{end}}{{/* end render template t that exists ================== */}}
+
+{{else}}{{/* missing template t  ------------------------------ */}}
+
+  {{printf "<!-- t = \"%s\" missing from  %s-->" .t $blockPath|safeHTML}}
+  {{$em := printf "style=\"%s\"" "color:blue;"}}
+  {{$msg := printf "check spelling of<code %s> t = \"%s\"</code>" $em .t}}
+  {{partial "tool/dbg" (dict
+   "wrn" "hw partial not found"
+   "kv" (dict "msg" $msg "path" $blockPath "page" .page)
+   )}}
+
+{{ end }}{{/* missing template t  ------------------------------- */}}

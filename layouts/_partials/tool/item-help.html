@@ -1,0 +1,177 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Item partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"item\" &gt;}}"
+  "color" "grey"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "item"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "header" "required" false "example" "Item Title")
+    (dict "name" "description" "required" false "example" "Item description")
+    (dict "name" "src" "required" false "example" "/images/item-image.jpg")
+    (dict "name" "srcOn" "required" false "example" "left")
+    (dict "name" "meta" "required" false "example" "Additional info")
+  )
+  "note" "Creates list-style content items with optional media and flexible positioning"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates individual content items designed for list layouts. Similar to blocks but uses Fomantic UI item styling for cleaner list presentations. Perfect for content lists, search results, or article previews."
+  "notes" (slice
+    "Uses **Fomantic UI item styling** for consistent list appearance"
+    "**Media positioning** (left/right) with automatic layout adjustment"
+    "**Markdown processing** for rich content in descriptions"
+    "**Flexible metadata** display with customizable styling"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Item title/header text"
+      "default" ""
+    )
+    (dict
+      "name" "description"
+      "type" "string"
+      "required" false
+      "description" "Main item content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional content appended after description (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" false
+      "description" "Path to image or media file"
+      "default" ""
+    )
+    (dict
+      "name" "srcOn"
+      "type" "string"
+      "required" false
+      "description" "Position of media: 'left' or 'right'"
+      "default" "left"
+      "values" (slice "left" "right")
+    )
+    (dict
+      "name" "meta"
+      "type" "string"
+      "required" false
+      "description" "Metadata or additional information displayed below header"
+      "default" ""
+    )
+    (dict
+      "name" "headerLink"
+      "type" "string"
+      "required" false
+      "description" "URL to make the header clickable"
+      "default" ""
+    )
+    (dict
+      "name" "srcLink"
+      "type" "string"
+      "required" false
+      "description" "URL to wrap around the media element"
+      "default" ""
+    )
+    (dict
+      "name" "srcClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the media element"
+      "default" "ui medium image"
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt text for media accessibility"
+      "default" "summary image"
+    )
+    (dict
+      "name" "id"
+      "type" "string"
+      "required" false
+      "description" "HTML ID for the item"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic content item using hw shortcode"
+      "code" "{{&lt;hw t=\"item\" \n  header=\"Getting Started Guide\" \n  description=\"Comprehensive guide to setting up your development environment and creating your first project.\" \n  meta=\"5 min read\"&gt;}}"
+      "note" "Use **hw shortcode** with header and description for simple content items"
+    )
+    (dict
+      "description" "Article list with images and links"
+      "code" "# Recent Articles\n\n{{&lt;hw t=\"item\" \n  header=\"Building Scalable APIs\" \n  description=\"Learn best practices for designing and implementing REST APIs that can handle millions of requests.\" \n  src=\"/images/articles/api-design.png\" \n  srcOn=\"left\" \n  meta=\"Published March 15, 2024 • 8 min read\" \n  headerLink=\"/articles/scalable-apis\"&gt;}}\n\n{{&lt;hw t=\"item\" \n  header=\"Database Optimization Techniques\" \n  description=\"Advanced strategies for improving database performance and reducing query execution times.\" \n  src=\"/images/articles/database.png\" \n  srcOn=\"left\" \n  meta=\"Published March 10, 2024 • 12 min read\" \n  headerLink=\"/articles/database-optimization\"&gt;}}"
+      "note" "**Create article lists** with consistent formatting and navigation links"
+    )
+    (dict
+      "description" "Product feature items with rich content"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Platform Features\"&gt;}}\n    {{&lt;hw t=\"item\" \n      header=\"Real-time Analytics\" \n      description=\"Monitor your application performance with live dashboards and custom metrics.\" \n      src=\"/images/features/analytics.jpg\" \n      srcOn=\"right\" \n      meta=\"Enterprise feature\"&gt;}}\n      \n      **Key Benefits:**\n      - Live data visualization\n      - {{&lt;hw t=\"include\" from=\"features/analytics-benefits.md\"&gt;}}\n      - Custom alert configurations\n    {{&lt;/hw&gt;}}\n    \n    {{&lt;hw t=\"item\" \n      header=\"Team Collaboration\" \n      description=\"Seamless teamwork with shared workspaces and real-time collaboration tools.\" \n      src=\"/images/features/collaboration.jpg\" \n      srcOn=\"right\" \n      meta=\"All plans\"&gt;}}\n      \n      **Collaboration Tools:**\n      - Shared project workspaces\n      - Real-time editing and comments\n      - Integrated communication\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Use inner content** for detailed features and **organize in accordions**"
+    )
+    (dict
+      "description" "Search results or content listing"
+      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Documentation Search Results{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item\" \n        header=\"API Authentication Guide\" \n        description=\"Complete guide to implementing secure authentication in your applications using JWT tokens and OAuth2.\" \n        src=\"/images/docs/auth-icon.svg\" \n        srcClass=\"ui tiny image\" \n        meta=\"Documentation • Updated recently\" \n        headerLink=\"/docs/authentication\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item\" \n        header=\"Rate Limiting Best Practices\" \n        description=\"Learn how to implement effective rate limiting to protect your API from abuse while maintaining good user experience.\" \n        src=\"/images/docs/rate-limit-icon.svg\" \n        srcClass=\"ui tiny image\" \n        meta=\"Documentation • Popular\" \n        headerLink=\"/docs/rate-limiting\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Found 24 results for 'authentication' - showing most relevant\"&gt;}}"
+      "note" "**Perfect for search results** with consistent formatting and metadata"
+    )
+    (dict
+      "description" "Team member directory"
+      "code" "# Our Team\n\n{{&lt;hw t=\"item\" \n  header=\"Sarah Johnson\" \n  description=\"Senior Software Engineer with 8 years of experience in full-stack development and system architecture.\" \n  src=\"/images/team/sarah.jpg\" \n  srcOn=\"left\" \n  meta=\"Engineering Team Lead\" \n  headerLink=\"/team/sarah-johnson\"&gt;}}\n  \n  **Expertise:**\n  - React and Node.js development\n  - Microservices architecture\n  - {{&lt;hw t=\"include\" from=\"team/sarah-specialties.md\"&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"item\" \n  header=\"Michael Chen\" \n  description=\"DevOps Engineer specializing in cloud infrastructure and continuous deployment pipelines.\" \n  src=\"/images/team/michael.jpg\" \n  srcOn=\"left\" \n  meta=\"DevOps Team\" \n  headerLink=\"/team/michael-chen\"&gt;}}\n  \n  **Certifications:**\n  - AWS Solutions Architect\n  - Kubernetes Administrator\n  - Docker Certified Associate\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Join our growing team! Check out our open positions.\"&gt;}}"
+      "note" "**Team directories** with personal details and **include dynamic content**"
+    )
+    (dict
+      "description" "Blog post previews with mixed content"
+      "code" "# Latest Updates\n\n{{&lt;hw t=\"item-blog-group\" count=\"1\"&gt;}}\n\n## Featured Content\n\n{{&lt;hw t=\"item\" \n  header=\"Platform Roadmap 2024\" \n  description=\"Exciting new features coming this year including advanced automation, enhanced security, and improved performance.\" \n  src=\"/images/blog/roadmap-2024.png\" \n  srcLink=\"/blog/roadmap-2024\" \n  meta=\"Strategic update • 6 min read\"&gt;}}\n  \n  {{&lt;hw t=\"table\"&gt;}}\n    {{&lt;hw t=\"thead\"&gt;}}\n      {{&lt;hw t=\"trth\"&gt;}}Upcoming Features{{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"tbody\"&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}**Q2 2024**{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}Advanced automation workflows{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}**Q3 2024**{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}Enhanced security features{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Mix with other partials** for comprehensive content pages"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**List-optimized styling**: Uses Fomantic UI item classes for clean list presentations"
+    "**Flexible media positioning**: Images/media can be positioned left or right"
+    "**Rich content support**: Supports markdown in description and inner content"
+    "**Metadata display**: Clean meta information presentation below headers"
+    "**Link integration**: Supports both header and media linking"
+    "**Responsive design**: Adapts well to different screen sizes and containers"
+  )
+  "warnings" (slice
+    "**Media optimization**: Large images should be properly sized for list contexts"
+    "**Content length**: Very long descriptions may affect list layout consistency"
+    "**Accessibility**: Always provide alt text for images in list items"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

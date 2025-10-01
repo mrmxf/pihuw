@@ -1,0 +1,109 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Caption partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"caption\" &gt;}}"
+  "color" "grey"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "caption"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" true "example" "Caption content")
+    (dict "name" "header" "required" false "example" "Figure 1")
+  )
+  "note" "Creates centered caption text with optional header for figures, images, or explanatory content"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates a centered caption with optional header text, perfect for image captions, figure labels, or explanatory notes that need visual separation from main content."
+  "notes" (slice
+    "**Centered display** with constrained width (60% of container)"
+    "Uses **Fomantic UI message styling** for consistent appearance"
+    "**Optional header** with blue styling and emphasis"
+    "**Inline-block layout** centers content properly"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" true
+      "description" "Main caption content"
+      "default" ""
+    )
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Optional header/label text (styled in blue with emphasis)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Simple caption using hw shortcode"
+      "code" "{{&lt;hw t=\"caption\" text=\"This diagram illustrates the basic architecture of our microservices platform.\"&gt;}}"
+      "note" "Use **hw shortcode** with text parameter for basic explanatory captions"
+    )
+    (dict
+      "description" "Figure caption with header label"
+      "code" "{{&lt;hw t=\"caption\" \n  header=\"Figure 1\" \n  text=\"User authentication flow showing the complete process from login to session management.\"&gt;}}"
+      "note" "**Add header parameter** for formal figure numbering and identification"
+    )
+    (dict
+      "description" "Image caption with description"
+      "code" "![API Dashboard](/images/dashboard-screenshot.png)\n\n{{&lt;hw t=\"caption\" \n  header=\"Screenshot\" \n  text=\"The main dashboard showing real-time API metrics, response times, and error rates.\"&gt;}}"
+      "note" "**Perfect companion** for images that need descriptive captions"
+    )
+    (dict
+      "description" "Code example caption"
+      "code" "```javascript\nconst user = await User.findById(id);\nif (!user) throw new Error('User not found');\n```\n\n{{&lt;hw t=\"caption\" \n  header=\"Code Example 1\" \n  text=\"Basic user lookup with error handling in our Node.js API.\"&gt;}}"
+      "note" "**Explain code blocks** with numbered examples and clear descriptions"
+    )
+    (dict
+      "description" "Table caption with context"
+      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Service{{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Status{{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Uptime{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"tr\"&gt;}}\n      {{&lt;hw t=\"td\"&gt;}}API Gateway{{&lt;/hw&gt;}}\n      {{&lt;hw t=\"td\"&gt;}}✅ Operational{{&lt;/hw&gt;}}\n      {{&lt;hw t=\"td\"&gt;}}99.9%{{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" \n  header=\"Table 1\" \n  text=\"Current system status as of {{&lt;hw t=\\\"include\\\" from=\\\"last-update.md\\\"&gt;}}. Updated automatically every 5 minutes.\"&gt;}}"
+      "note" "**Caption tables** with dynamic content using includes for current information"
+    )
+    (dict
+      "description" "Note caption for important information"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Installation Instructions\"&gt;}}\n    {{&lt;hw t=\"include\" from=\"docs/install-steps.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"caption\" \n  header=\"Important Note\" \n  text=\"Installation requires administrator privileges and a system restart may be necessary.\"&gt;}}"
+      "note" "**Add important notes** and warnings with proper visual separation"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Visual separation**: Captions provide clear distinction between content and explanatory text"
+    "**Consistent styling**: Uses theme's message styling for uniform appearance"
+    "**Responsive design**: Automatically adapts to different screen sizes"
+    "**Semantic purpose**: Perfect for figure captions, code explanations, and contextual notes"
+    "**Header emphasis**: Optional header gets blue styling and italic emphasis"
+  )
+  "warnings" (slice
+    "**Text parameter required** - captions without text will not display"
+    "**Width constraint**: 60% width may not be suitable for very short captions"
+    "**Content placement**: Consider caption placement relative to the content it describes"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

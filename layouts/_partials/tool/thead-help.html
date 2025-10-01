@@ -1,0 +1,103 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table header partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; thead &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "thead"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Table header content")
+    (dict "name" "inner" "required" false "example" "Header rows")
+  )
+  "note" "Must be used inside a table partial, contains tr partials with header cells"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an HTML thead element that contains the header rows of a table. This is where your column headers and any introductory information goes, providing structure and context for your table data."
+  "notes" (slice
+    "Must be **nested inside** a table partial"
+    "Contains **tr partials** with header cells (th)"
+    "Provides **semantic structure** for table headers"
+    "Usually appears **before tbody** in table structure"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary thead content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional thead content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic table with header row"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}Name{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}Position{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}Department{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}John Smith{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Developer{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Engineering{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Table header with styled columns"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th class=\"ui center aligned\" &gt;}}**Product**{{&lt; /th &gt;}}\n      {{&lt; th class=\"ui right aligned\" &gt;}}**Price**{{&lt; /th &gt;}}\n      {{&lt; th class=\"ui center aligned\" &gt;}}**Status**{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Widget A{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$29.99{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}Available{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **CSS classes** for alignment and **markdown** for emphasis"
+    )
+    (dict
+      "description" "Multi-row header with grouping"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th txtGrid=\"3\" class=\"ui center aligned\" &gt;}}**Q4 2024 Sales Report**{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}Month{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}Revenue{{&lt; /th &gt;}}\n      {{&lt; th &gt;}}Growth{{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}October{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$45,000{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}8%{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **multiple header rows** for complex table structures"
+    )
+    (dict
+      "description" "Header with rich content and links"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; th &gt;}}\n        **API Endpoints**\n        \n        [Full Documentation](./api-reference)\n      {{&lt; /th &gt;}}\n      {{&lt; th &gt;}}\n        **Status**\n        \n        *Updated {{&lt;hw t=\"include\" from=\"last-update.md\"&gt;}}*\n      {{&lt; /th &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /thead &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Rich markdown content** and **shortcodes** work in headers"
+    )
+    (dict
+      "description" "Convenient shorthand using trth partial"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}Feature{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Description{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Status{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Authentication{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}JWT-based user auth{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}✅ Complete{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **trth shorthand** for simple single-header-cell rows"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Semantic structure**: table > thead/tbody/tfoot > tr > th/td"
+    "**Accessibility**: Essential for screen readers to understand table structure"
+    "**Styling**: Often styled with different background colors or fonts"
+    "**Flexibility**: Can contain multiple rows for complex header structures"
+    "**Best practices**: Use th elements within thead for proper semantics"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within table structure"
+    "Should contain **appropriate header content** (th elements)"
+    "**Multiple header rows** require careful planning for accessibility"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

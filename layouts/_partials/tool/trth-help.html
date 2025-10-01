@@ -1,0 +1,103 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table row with header cell partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; trth &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "trth"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Header content")
+    (dict "name" "inner" "required" false "example" "Additional content")
+  )
+  "note" "Convenience partial that creates a tr row containing a single th cell"
+-}}
+
+{{- $descriptionData := dict
+  "description" "A convenience partial that creates an HTML tr element containing a single th element. Perfect for single-column table headers or when you need a quick way to add a header row with one cell."
+  "notes" (slice
+    "**Shorthand** for `{{< tr >}}{{< th >}}content{{< /th >}}{{< /tr >}}`"
+    "Must be **nested inside** thead, tbody, or tfoot partials"
+    "Creates a **single-header-cell row** automatically"
+    "Supports **markdown content** and Hugo shortcodes"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary header cell content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional header cell content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Simple single-column table headers"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}**Configuration Options**{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}Database URL: postgresql://localhost:5432/mydb{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}API Key: your-secret-key-here{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}Debug Mode: enabled{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Multiple single-header rows"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}**API Endpoints**{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}**Authentication Required**{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}**Rate Limited**{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}/api/users - GET, POST{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}/api/orders - GET, POST, PUT, DELETE{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}/api/reports - GET{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Multiple headers** can provide layered information structure"
+    )
+    (dict
+      "description" "Header with rich markdown content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}\n      **System Status Dashboard**\n      \n      *Last updated: {{&lt;hw t=\"include\" from=\"last-update.md\"&gt;}}*\n      \n      [View full status](./status)\n    {{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}Database: ✅ Operational{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}API Server: ✅ Operational{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}CDN: ⚠️ Degraded Performance{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Rich content** including links and **dynamic includes** work perfectly"
+    )
+    (dict
+      "description" "Table sections with category headers"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trth &gt;}}**Frontend Technologies**{{&lt; /trth &gt;}}\n    {{&lt; trtd &gt;}}React 18.2 - Component framework{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}TypeScript 4.9 - Type safety{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}Tailwind CSS 3.2 - Styling{{&lt; /trtd &gt;}}\n    {{&lt; trth &gt;}}**Backend Technologies**{{&lt; /trth &gt;}}\n    {{&lt; trtd &gt;}}Node.js 18 - Runtime environment{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}Express 4.18 - Web framework{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}PostgreSQL 15 - Database{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **trth in tbody** to create section headers within table content"
+    )
+    (dict
+      "description" "Documentation table with included content"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}\n      **Getting Started Guide**\n      \n      {{&lt;hw t=\"include\" from=\"docs/intro.md\"&gt;}}\n    {{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; trtd &gt;}}{{&lt;hw t=\"include\" from=\"docs/installation.md\"&gt;}}{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}{{&lt;hw t=\"include\" from=\"docs/configuration.md\"&gt;}}{{&lt; /trtd &gt;}}\n    {{&lt; trtd &gt;}}{{&lt;hw t=\"include\" from=\"docs/first-steps.md\"&gt;}}{{&lt; /trtd &gt;}}\n  {{&lt; /tbody &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Dynamic documentation** can be included directly in table headers and cells"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Convenience shorthand**: Saves typing when you need single-header-cell rows"
+    "**Perfect for titles**: Great for table titles, section headers, or category labels"
+    "**Semantic correctness**: Maintains proper th semantics for accessibility"
+    "**Content flexibility**: Supports full markdown and shortcode processing"
+    "**Mixed usage**: Can be combined with regular tr/th/td structures"
+  )
+  "warnings" (slice
+    "Creates **single-header-cell rows** - not suitable for multi-column headers"
+    "Must be **properly nested** within table sections"
+    "Should be used **semantically** - only for actual header content"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

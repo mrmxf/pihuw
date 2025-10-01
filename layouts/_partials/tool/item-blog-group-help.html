@@ -1,0 +1,125 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Item blog group partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"item-blog-group\" &gt;}}"
+  "color" "teal"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "item-blog-group"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "count" "required" false "example" "3")
+    (dict "name" "skip" "required" false "example" "1")
+    (dict "name" "scrClass" "required" false "example" "ui image")
+  )
+  "note" "Generates blog post item lists automatically from your site's blog content"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates a list of blog post items by scanning your site's blog content. Similar to the blog partial but uses the item layout for list-style displays. Automatically includes featured images, reading time estimates, and post summaries."
+  "notes" (slice
+    "**Automatically scans** blog posts from site pages with type 'blog'"
+    "**Uses item layout** for list-style presentation instead of block layout"
+    "**Reading time calculation** based on word count (220 words/minute)"
+    "**Featured image detection** looks for images with 'feature' in filename"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "count"
+      "type" "number"
+      "required" false
+      "description" "Number of blog posts to display"
+      "default" "1"
+    )
+    (dict
+      "name" "skip"
+      "type" "number"
+      "required" false
+      "description" "Number of recent posts to skip before displaying"
+      "default" "0"
+    )
+    (dict
+      "name" "scrClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for blog post images (note: uses 'scrClass' not 'srcClass')"
+      "default" ""
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Blog post list using hw shortcode"
+      "code" "{{&lt;hw t=\"item-blog-group\"&gt;}}"
+      "note" "Use **hw shortcode** to show the most recent blog post in item format"
+    )
+    (dict
+      "description" "Recent articles sidebar"
+      "code" "## Recent Articles\n\n{{&lt;hw t=\"item-blog-group\" count=\"4\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Perfect for sidebars** showing recent blog posts with automatic item formatting"
+    )
+    (dict
+      "description" "Blog archive with skip functionality"
+      "code" "# Blog Archive\n\n## Featured Post\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Recent Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"5\" skip=\"1\"&gt;}}\n\n## Older Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"10\" skip=\"6\"&gt;}}"
+      "note" "**Combine with blog partial** to create comprehensive blog layouts"
+    )
+    (dict
+      "description" "Categorized blog content in accordion"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"📝 Latest Updates\"&gt;}}\n    {{&lt;hw t=\"item-blog-group\" count=\"3\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"📚 Popular Articles\"&gt;}}\n    {{&lt;hw t=\"item-blog-group\" count=\"5\" skip=\"3\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" text=\"These articles have been most helpful to our community\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🗂️ All Categories\"&gt;}}\n    {{&lt;hw t=\"children\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Organize blog lists** within accordions for better content management"
+    )
+    (dict
+      "description" "Blog showcase with custom image styling"
+      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Latest Blog Posts{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item-blog-group\" count=\"3\" scrClass=\"ui small image\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Subscribe to our newsletter for weekly blog updates and exclusive content\"&gt;}}"
+      "note" "**Embed in tables** and **customize image styling** for structured blog displays"
+    )
+    (dict
+      "description" "Mixed content page with blog integration"
+      "code" "# Welcome to Our Platform\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Latest Features\" \n    text=\"Stay updated with our newest platform capabilities and improvements.\" \n    src=\"/images/icons/features.png\" \n    link=\"/features\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Community\" \n    text=\"Join our growing community of developers and creators.\" \n    src=\"/images/icons/community.png\" \n    link=\"/community\"&gt;}}\n{{&lt;/hw&gt;}}\n\n## Latest Blog Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"4\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"docs/getting-started\"&gt;}}"
+      "note" "**Mix with other partials** to create comprehensive landing pages"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Item layout**: Uses item partial for list-style presentation instead of block layout"
+    "**Automatic discovery**: Scans all pages with 'Type: blog' in frontmatter"
+    "**Reading time estimates**: Calculates based on 220 words per minute standard"
+    "**Featured image support**: Automatically detects and displays featured images"
+    "**Smart truncation**: Limits preview text to 300 characters for consistency"
+    "**Responsive design**: Item layout adapts well to different screen sizes"
+  )
+  "warnings" (slice
+    "**Requires blog content**: No output if no pages with 'Type: blog' exist"
+    "**Performance consideration**: Large numbers of blog posts may slow page generation"
+    "**Image parameter**: Uses 'scrClass' (not 'srcClass') for image styling"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

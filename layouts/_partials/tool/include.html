@@ -3,23 +3,26 @@
 {{- $f := .from -}}
 {{ if $f}}
 {{- if fileExists $f -}}
-{{/* --- trim front matter and spew out the rest of the included file --- */}}
-{{ $content := "" }}
-{{/* check the page for a Params.IncludeSummary substitution */}}
-{{ $p := site.GetPage $f }}
-{{ if $p.Page.Params.IncludeSummary }}
-{{ $content = $p.Page.Params.IncludeSummary | markdownify }}
-{{end -}}{{/* end of GetPage */}}
 
-{{ if not $content }}
-{{ if eq ".md" (path.Ext $f) }}
-{{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | markdownify }}
-{{else}}
-{{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | safeHTML }}
-{{end}}{{/* end of md / html switch */}}
-{{end -}}{{/* end of content unset */}}
-{{$content}}
+ {{/* --- trim front matter and spew out the rest of the included file --- */}}
+ {{ $content := "" }}
+ {{/* check the page for a Params.IncludeSummary substitution */}}
+ {{ $p := site.GetPage $f }}
+ {{ if $p.Page.Params.IncludeSummary }}
+  {{ $content = $p.Page.Params.IncludeSummary | markdownify }}
+ {{end -}}{{/* end of GetPage */}}
+ 
+ {{ if not $content }}
+  {{ if eq ".md" (path.Ext $f) }}
+   {{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | markdownify }}
+  {{else}}
+   {{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | safeHTML }}
+  {{end}}{{/* end of md / html switch */}}
+ {{end -}}{{/* end of content unset */}}
+ {{$content}}
+
 {{- else -}}
+{{/* else if file doesn't exist* /}}
 {{ $err := dict "p" "tool/include" "a" "from" "m" (printf "from field does not point to a valid file:%s" $f) }}
 {{ partial "tool/dbg-err.html" $err }}
 

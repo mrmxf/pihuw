@@ -1,0 +1,93 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Table footer partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; tfoot &gt;}}"
+  "color" "purple"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "tfoot"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "text" "required" false "example" "Table footer content")
+    (dict "name" "inner" "required" false "example" "Footer rows")
+  )
+  "note" "Must be used inside a table partial, typically contains summary or totals rows"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Creates an HTML tfoot element that contains footer rows for a table. Perfect for totals, summaries, or other concluding information that should appear at the bottom of your table."
+  "notes" (slice
+    "Must be **nested inside** a table partial"
+    "Contains **tr partials** with footer data"
+    "Typically used for **totals, summaries, or conclusions**"
+    "Supports **markdown content** and Hugo shortcodes"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Primary tfoot content (processed with markdownify)"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Additional tfoot content (processed with markdownify)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Table with footer totals"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}Item{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Price{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Coffee{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$3.50{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Tea{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$2.50{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n  {{&lt; tfoot &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}**Total**{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}**$6.00**{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tfoot &gt;}}\n{{&lt; /table &gt;}}"
+    )
+    (dict
+      "description" "Table footer with summary information"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}Feature{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Status{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}API{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}✅ Complete{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}UI{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}🚧 In Progress{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n  {{&lt; tfoot &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td txtGrid=\"2\" class=\"ui center aligned\" &gt;}}\n        *Last updated: {{&lt;hw t=\"include\" from=\"last-update.md\"&gt;}}*\n      {{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tfoot &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "Use **spanning cells** and **included content** for dynamic footers"
+    )
+    (dict
+      "description" "Table footer with multiple summary rows"
+      "code" "{{&lt; table &gt;}}\n  {{&lt; thead &gt;}}\n    {{&lt; trth &gt;}}Product{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Quantity{{&lt; /trth &gt;}}\n    {{&lt; trth &gt;}}Price{{&lt; /trth &gt;}}\n  {{&lt; /thead &gt;}}\n  {{&lt; tbody &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Widget A{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}5{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$25.00{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tbody &gt;}}\n  {{&lt; tfoot &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Subtotal{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}5{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$25.00{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}Tax{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}&nbsp;{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}$2.50{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n    {{&lt; tr &gt;}}\n      {{&lt; td &gt;}}**Total**{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}**5**{{&lt; /td &gt;}}\n      {{&lt; td &gt;}}**$27.50**{{&lt; /td &gt;}}\n    {{&lt; /tr &gt;}}\n  {{&lt; /tfoot &gt;}}\n{{&lt; /table &gt;}}"
+      "note" "**Multiple footer rows** can show progressive calculations"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Semantic structure**: table > thead/tbody/tfoot > tr > td/th"
+    "**Best practices**: Use for totals, summaries, disclaimers, or metadata"
+    "**Styling**: Often styled differently from tbody to stand out"
+    "**Markdown support** enables rich formatting in footer content"
+    "**Accessibility**: Screen readers understand footer context"
+  )
+  "warnings" (slice
+    "Must be **properly nested** within table structure"
+    "Should be **semantically appropriate** (summary/conclusion content)"
+    "**Position matters**: tfoot should come after tbody"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

@@ -1,0 +1,109 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Cover partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"cover\" &gt;}}"
+  "color" "red"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "cover"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "from" "required" true "example" "path/to/page")
+  )
+  "note" "Includes and displays another page as a content block with automatic metadata"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Dynamically includes another page's content as a formatted block, automatically extracting the page's title, featured image, description, and metadata. Perfect for showcasing related content or creating content aggregations."
+  "notes" (slice
+    "**Automatically extracts** page metadata and content"
+    "**Featured image detection** looks for images with 'feature' in filename"
+    "**Reading time calculation** based on word count (220 words/minute)"
+    "**Smart content truncation** limits descriptions to 300 characters"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" true
+      "description" "Path to the page to include (relative to project root)"
+      "default" ""
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided by hw shortcode)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Include related page content using hw shortcode"
+      "code" "{{&lt;hw t=\"cover\" from=\"docs/getting-started\"&gt;}}"
+      "note" "Use **hw shortcode** with from parameter to include any page as a formatted block"
+    )
+    (dict
+      "description" "Feature multiple related pages in a section"
+      "code" "# Related Documentation\n\n{{&lt;hw t=\"cover\" from=\"api/authentication\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"api/rate-limiting\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"api/error-handling\"&gt;}}"
+      "note" "**Multiple covers** create an engaging content showcase with automatic formatting"
+    )
+    (dict
+      "description" "Showcase featured content with covers in accordion"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"📖 Essential Guides\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"guides/quickstart\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"guides/best-practices\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🔧 Advanced Topics\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"advanced/performance\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"advanced/security\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Organize covers** within accordions for better content management"
+    )
+    (dict
+      "description" "Tutorial series with cross-references"
+      "code" "# Tutorial: Building Your First App\n\n{{&lt;hw t=\"include\" from=\"tutorials/first-app.md\"&gt;}}\n\n## Related Tutorials\n\n{{&lt;hw t=\"cover\" from=\"tutorials/setup-environment\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"tutorials/deployment\"&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Complete all tutorials in sequence for best results\"&gt;}}"
+      "note" "**Mix covers with includes** to show full content plus related material"
+    )
+    (dict
+      "description" "Product showcase with feature pages"
+      "code" "# Platform Features\n\n{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Feature Highlights{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"cover\" from=\"features/analytics\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"cover\" from=\"features/automation\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"cover\" from=\"features/collaboration\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Explore detailed feature documentation by clicking any feature above\"&gt;}}"
+      "note" "**Embed covers in tables** for structured feature showcases"
+    )
+    (dict
+      "description" "News and announcements section"
+      "code" "# Latest Updates\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Featured Content\n\n{{&lt;hw t=\"cover\" from=\"announcements/new-features\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"case-studies/success-story\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Combine with blog and children** for comprehensive content sections"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Automatic metadata extraction**: Pulls title, description, and featured images from target page"
+    "**Reading time estimates**: Calculates based on standard 220 words per minute"
+    "**Featured image discovery**: Looks for images with 'feature' in filename within page bundle"
+    "**Responsive layout**: Uses block partial for consistent, mobile-friendly display"
+    "**Smart linking**: Creates clickable headers and images that link to the source page"
+    "**Content preservation**: Maintains the source page's formatting and structure"
+  )
+  "warnings" (slice
+    "**Path dependency**: Target page must exist or cover will show error message"
+    "**Performance consideration**: Multiple covers may slow page generation"
+    "**Image optimization**: Featured images should be properly sized for best performance"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

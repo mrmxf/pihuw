@@ -1,0 +1,25 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Description component for help modals - displays main description and info notes
+*/}}
+{{- /* Description component for help content */ -}}
+{{- $description := .description -}}
+{{- if not $description -}}
+  {{- errorf "description is required for hw-tk/help-description" -}}
+{{- end -}}
+
+<div class="hwh-section">
+  <div class="header">
+    <i class="info circle icon"></i>
+    Description
+  </div>
+  <p>{{ $description | markdownify | safeHTML }}</p>
+
+  {{- if .notes -}}
+    {{- range .notes -}}
+      <div class="hwh-message info">
+        <i class="info circle icon"></i>
+        <div>{{ . | markdownify | safeHTML }}</div>
+      </div>
+    {{- end -}}
+  {{- end -}}
+</div>

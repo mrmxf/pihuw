@@ -1,10 +1,41 @@
-{{partial "tmpl/dbg-template-comment" .}}
-{{ $color := "purple"}}
-{{- $p := "tool/image" -}}
-{{- $err := printf "is nil for %s" .src -}}
-{{- if not .src -}}{{- partial "tool/dbg-err" (dict "p" $p "a" ".src" "m" $err ) -}}{{- end -}}
-{{- if not .alt -}}{{- partial "tool/dbg-err" (dict "p" $p "a" ".alt" "m" $err ) -}}{{- end -}}
-{{- if .link -}}<a href="{{.link}}">{{- end -}}
-<img class="{{.srcClass}}" src="{{.src}}" {{with .alt }}alt="{{.}}"{{end}} />
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+  The .src property may be a string or a resource - do the right thing!
+*/}}
+{{$color := "purple"}}
+{{$type := (printf "%T" .src) }}
+{{$err := printf "is nil for %s" .src}}
+{{$alt := .alt}}
+{{$srcClass := .srcClass | default "ui fluid image"}}
+{{if not $alt}}{{ $alt = .text }}{{end}}
+{{if not .src}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "src" .src))}}{{end}}
+{{if not $alt}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "alt" .alt))}}{{end}}
+{{/*  try a page resource first */}}
+{{ $src := .src }}
+{{ $img := .page.Resources.Get .src }}
+{{/*  try a global resource second */}}
+{{if not $img}}
+  {{ $img = resources.Get .src }}
+{{end}}
+{{if $img}}
+  {{/* $img is not nil if we get a valid image resource i.e. .png or .jpg - NOT .svg */}}
+  {{if .process }}
+    {{/* apply image process if requested */}}
+    {{$img = $img.Process .process}}
+  {{end}}
+  {{$src = $img.RelPermalink}}
+{{end}}
+{{ $link := .srcLink}}
+{{$u := urls.Parse $link}}
+{{- if and $link (not $u.IsAbs) -}}
+  {{ $aFile := fileExists $u.Path}}
+  {{ $aBlog := strings.HasPrefix .srcLink "/blog/"}}
+  {{ $aPage := site.GetPage .srcLink }}
+  {{if and (not $aFile) (not $aBlog) (not $aPage)}}
+    {{$err := printf "bad srcLink(%s) for image" $link}}
+    {{- partial "tool/dbg" (dict "wrn" $err "kv" (dict "link" .srcLink "resolved-link" $link "page" .page) ) -}}
+  {{end}}
+{{end}}
+{{- if $link -}}<a href="{{$link}}">{{- end -}}
+<img class="{{$srcClass}}" src="{{$src}}" {{with $alt }}alt="{{.}}"{{end}} />
 {{- partial "tool/caption" . -}}
-{{- if .link -}}</a>{{- end -}}
+{{- if $link -}}</a>{{- end -}}

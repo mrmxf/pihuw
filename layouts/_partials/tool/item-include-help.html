@@ -1,0 +1,118 @@
+{{partial "tmpl/dbg-template-comment" .}}{{/*
+Item include partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"item-include\" &gt;}}"
+  "color" "brown"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "item-include"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "from" "required" true "example" "/docs/guide.md")
+    (dict "name" "src" "required" false "example" "/images/guide-icon.png")
+    (dict "name" "text" "required" false "example" "Custom description")
+  )
+  "note" "Includes another page as an item in a list with automatic metadata extraction"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Includes another page's content as a formatted item, automatically extracting the page's title, featured image, description, and metadata. Perfect for creating content lists and navigation aids with consistent item formatting."
+  "notes" (slice
+    "**Automatic metadata extraction** from target page's frontmatter"
+    "**Content processing** removes frontmatter and processes markdown/HTML"
+    "**Featured image discovery** with fallback options from page parameters"
+    "**Reading time calculation** based on word count (220 words/minute)"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" true
+      "description" "Path to the file to include (relative to project root)"
+      "default" ""
+    )
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" false
+      "description" "Override image source (takes precedence over automatic detection)"
+      "default" ""
+    )
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Override description text (takes precedence over page content)"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Include documentation page as item using hw shortcode"
+      "code" "{{&lt;hw t=\"item-include\" from=\"/docs/getting-started.md\"&gt;}}"
+      "note" "Use **hw shortcode** with from parameter to include any page as a formatted item"
+    )
+    (dict
+      "description" "Documentation index with included guides"
+      "code" "# Documentation Guides\n\n{{&lt;hw t=\"item-include\" from=\"/docs/installation.md\"&gt;}}\n\n{{&lt;hw t=\"item-include\" from=\"/docs/configuration.md\"&gt;}}\n\n{{&lt;hw t=\"item-include\" from=\"/docs/deployment.md\"&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"All guides include step-by-step instructions and code examples\"&gt;}}"
+      "note" "**Create documentation indexes** with automatic formatting and metadata"
+    )
+    (dict
+      "description" "Mixed content with custom descriptions"
+      "code" "## Featured Tutorials\n\n{{&lt;hw t=\"item-include\" \n  from=\"/tutorials/api-basics.md\" \n  text=\"Learn the fundamentals of our REST API with practical examples and best practices.\"&gt;}}\n\n{{&lt;hw t=\"item-include\" \n  from=\"/tutorials/advanced-features.md\" \n  src=\"/images/tutorials/advanced-icon.png\" \n  text=\"Explore advanced features including webhooks, batch operations, and custom integrations.\"&gt;}}\n\n{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Related Resources\"&gt;}}\n    {{&lt;hw t=\"item-include\" from=\"/resources/api-reference.md\"&gt;}}\n    {{&lt;hw t=\"item-include\" from=\"/resources/sdk-documentation.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "note" "**Override descriptions and images** for custom presentation within accordions"
+    )
+    (dict
+      "description" "Project showcase with included case studies"
+      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Success Stories{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item-include\" \n        from=\"/case-studies/startup-success.md\" \n        src=\"/images/case-studies/startup-logo.png\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item-include\" \n        from=\"/case-studies/enterprise-transformation.md\" \n        src=\"/images/case-studies/enterprise-logo.png\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Want to share your success story? Contact our team to be featured!\"&gt;}}"
+      "note" "**Embed in tables** and **use custom images** for case study showcases"
+    )
+    (dict
+      "description" "Blog-style content listing"
+      "code" "# Latest Content\n\n## Recent Blog Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"2\"&gt;}}\n\n## Featured Articles\n\n{{&lt;hw t=\"item-include\" from=\"/articles/platform-overview.md\"&gt;}}\n\n{{&lt;hw t=\"item-include\" from=\"/articles/best-practices.md\"&gt;}}\n\n## Documentation Updates\n\n{{&lt;hw t=\"item-include\" \n  from=\"/docs/api-v2-migration.md\" \n  text=\"Important migration guide for upgrading to API v2 with breaking changes and new features.\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "note" "**Mix with other content types** for comprehensive content aggregation"
+    )
+    (dict
+      "description" "Resource library with categorized includes"
+      "code" "{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"📚 Documentation\" \n    text=\"Comprehensive guides and references for all platform features.\" \n    src=\"/images/icons/docs.png\" \n    link=\"/docs\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"🎯 Tutorials\" \n    text=\"Step-by-step tutorials for common use cases and integrations.\" \n    src=\"/images/icons/tutorials.png\" \n    link=\"/tutorials\"&gt;}}\n{{&lt;/hw&gt;}}\n\n## Quick Start Resources\n\n{{&lt;hw t=\"item-include\" from=\"/quick-start/setup.md\"&gt;}}\n\n{{&lt;hw t=\"item-include\" from=\"/quick-start/first-project.md\"&gt;}}\n\n{{&lt;hw t=\"item-include\" from=\"/quick-start/deployment.md\"&gt;}}"
+      "note" "**Combine with feature groups** for organized resource presentations"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Smart content extraction**: Automatically removes frontmatter and processes markdown/HTML"
+    "**Metadata priority**: Uses page parameters, then automatic discovery for images and content"
+    "**Content fallback**: Uses IncludeSummary parameter if available, otherwise processes full content"
+    "**Image discovery**: Checks src parameter, img parameter, then featured images"
+    "**Reading time calculation**: Provides estimated reading time based on content length"
+    "**Link generation**: Creates proper links to the source page"
+  )
+  "warnings" (slice
+    "**File existence**: Target file must exist or will show error message"
+    "**Path accuracy**: Uses exact file paths - ensure correct relative paths"
+    "**Performance impact**: Multiple includes may slow page generation"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}
