@@ -23,13 +23,9 @@
   --mrx-ground: lighten(var(--mrx-purple), 25%);
 
   /* default screen break points */
-  --pi-break-s: 500px;
-  --pi-break-m: 800px;
-  --pi-break-w: 1100px;
-
-  /* named elements - pihuw controls */
-  --pihuw-dark-bg: var(--mm-purple);
-  --pihuw-blue: var(--mm-blue);
+  --break-s: 500px;
+  --break-m: 800px;
+  --break-w: 1100px;
 
   /* colors of the logo */
   --fomantic-theme-color: #35BDB2;
@@ -37,16 +33,18 @@
   --cardboard-wrapper: #D8B588;
 
   /* pihuw named colors & highlights */
-  --pi-text: var(--mm-dark);
+  --text: var(--mm-dark);
+  --bg-dark: var(--mm-purple);
+  --code:: var(--mm-blue);
   /* annotation text, reading time */
-  --pi-hi1: var(--mrx-green);
+  --hi1: var(--mrx-green);
   /* sidebar, th */
-  --pi-hi2: var(--mrx-purple);
+  --hi2: var(--mrx-purple);
   /* buttons */
-  --pi-hi3: var(--mrx-amber);
-  --pi-bg1: hsl(from var(--pi-hi1) h s 95%);
-  --pi-bg2: hsl(from var(--pi-hi2) h s 95%);
-  --pi-bg3: hsl(from var(--pi-hi3) h s 95%);
+  --hi3: var(--mrx-amber);
+ --bg1: hsl(from var(--hi1) h s 95%);
+ --bg2: hsl(from var(--hi2) h s 95%);
+ --bg3: hsl(from var(--hi3) h s 95%);
 }
 
 body {
@@ -61,13 +59,13 @@ body {
 
 /* general highlights for widgets */
 .card.hi-1 {
-  color: var(--pi-hi1);
+  color: var(--hi1);
   background-color: var(--pi-bg1);
 }
 
 /* specialty text styles & colors */
 code {
-  color: var(--pihuw-blue);
+  color: var(--code);
 }
 /*   _                            _                             _     */
 /*  | |__   _ _   ___   __ _   __| |  __   _ _   _  _   _ __   | |__  */
@@ -145,7 +143,7 @@ section img {
 main footer.caption {
   font-style: italic;
   font-weight: bold;
-  color: var(--pi-hi3);
+  color: var(--hi3);
   background-color: var(--pi-bg3);
   text-align: center;
 }
@@ -165,14 +163,14 @@ section  footer {
   text-align: center;
   font-size: smaller;
   font-style: italic;
-  color: var(--pi-hi2);
+  color: var(--hi2);
 }
 
 #block-1 > div > div.fifth > footer
 
 .pi-reading-time {
   size: 80%;
-  color: var(--pi-hi1)
+  color: var(--hi1)
 }
 /*                                _                     */
 /*   _ _    __ _  __ __  ___   __| |  _ _   ___   _ __  */
@@ -180,7 +178,7 @@ section  footer {
 /*  |_||_| \__,_|  \_/        \__,_| |_|   \___/ | .__/ */
 /*                                               |_|    */
 .dropbtn {
-  background-color: var(--pi-hi3);
+  background-color: var(--hi3);
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -213,7 +211,7 @@ section  footer {
   display: block;
 }
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: var(--pi-hi3)}
+.dropdown-content a:hover {background-color: var(--hi3)}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -230,9 +228,9 @@ section  footer {
 /* /__/ |_| \__,_| \___| |_.__/ \__,_| |_|   */
 sidebar {
   display: inline-flex;
-  color: var(--pi-hi2);
+  color: var(--hi2);
   background-color: var(--pi-bg2);
-  border: 1px solid var(--pi-hi2);
+  border: 1px solid var(--hi2);
   border-radius: 0.5em;
   padding: 0.6em;
   height: 100%;
@@ -244,7 +242,7 @@ sidebar {
   width: 100%;
 }
 .childbar-horizontal .divider {
-  color:var(--pi-hi3);
+  color:var(--hi3);
   font-weight:bold;
 }
 /* #          _   _                        _                      */
@@ -267,7 +265,7 @@ sidebar {
 /* custom styling for the site title text in the menu*/
 #siteTitleMenu {
   font-weight: bold;
-  color: var(--pi-hi1);
+  color: var(--hi1);
   margin-top: auto;
   vertical-align: middle;
 }
@@ -297,22 +295,22 @@ sidebar {
 
 /* pihuw taxonomy label classes */
 .ui.pi-tax-1.label {
-  background: hsl(from var(--pi-hi1) h s 95%);
+  background: hsl(from var(--hi1) h s 95%);
   backdrop-filter: 200%;
-  border-color: var(--pi-hi1);
-  color: var(--pi-hi1);
+  border-color: var(--hi1);
+  color: var(--hi1);
 }
 
 .ui.pi-tax-2.label {
-  background: hsl(from var(--pi-hi2) h s 95%);
-  border-color: var(--pi-hi2);
-  color: var(--pi-hi2);
+  background: hsl(from var(--hi2) h s 95%);
+  border-color: var(--hi2);
+  color: var(--hi2);
 }
 
 .ui.pi-tax-3.label {
-  background: hsl(from var(--pi-hi3) h s 95%);
-  border-color: var(--pi-hi3);
-  color: var(--pi-hi3);
+  background: hsl(from var(--hi3) h s 95%);
+  border-color: var(--hi3);
+  color: var(--hi3);
 }
 
 .ui.pi-tax-4.label {
@@ -329,15 +327,15 @@ sidebar {
 .banner {
   display: block;
   text-align: center;
-  color: var(--pi-hi1);
-  background-color: hsl(from var(--pi-hi1) h s 95%);
+  color: var(--hi1);
+  background-color: hsl(from var(--hi1) h s 95%);
   font-size: 1.3em;
   padding: 0.5em;
   width: 100%;
 }
 
 .banner .text {
-  color: var(--pi-hi2);
+  color: var(--hi2);
   flex-grow: 1;
 }
 
@@ -351,7 +349,7 @@ sidebar {
 /*  | '_ \ | || | |  _| |  _| / _ \ | ' \  */
 /*  |_.__/  \_,_|  \__|  \__| \___/ |_||_| */
 .button {
-  background-color: var(--pi-hi3);
+  background-color: var(--hi3);
 }
 
 /*                                    _     _   _     _        */
@@ -362,7 +360,7 @@ sidebar {
 main div.page-title {
   background-color: var(--pi-bg2);
   border-radius: 0.5em;
-  border: solid 1px var(--pi-hi2);
+  border: solid 1px var(--hi2);
   align-items: center;
   padding: .2em;
 }
@@ -372,7 +370,7 @@ main div.page-title {
 /*  |  _| / _` | | '_ \ | | / -_) */
 /*   \__| \__,_| |_.__/ |_| \___| */
 th {
-  background-color: var(--pi-hi2);
+  background-color: var(--hi2);
   color: var(--pi-bg2);
 }
 

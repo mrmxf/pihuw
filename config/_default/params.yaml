@@ -89,7 +89,7 @@ ui:
     maxDepth: 2
   # printing the date of the page
   pageDate:
-    color: var(--pi-hi2)                   # highlight color 2 == purple
+    color: var(--hi2)                   # highlight color 2 == purple
     format: 2 January 2006
   # elements in the footer
   footer:
