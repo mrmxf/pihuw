@@ -4,17 +4,18 @@
 
 {{- $logoTypes := slice ".svg" ".jpg" ".gif" ".png" }}
 {{- $searchingForLogo := true}}
-{{- $logo := ""}}
+{{/* logo is the path to the logo without extension */}}
+{{- $logo := site.Params.ui.logo | default "logo"}}
 {{- $img := ""}}
 {{- range $k, $v := $logoTypes}}
-{{- $imgPath := printf "logo%s" $v}}
+{{- $imgPath := printf "%s%s" $logo $v}}
 {{- if $searchingForLogo}}
-{{- if fileExists (printf "static/logo%s" $v) }}
+{{- if fileExists (printf "static/%s" $imgPath) }}
 <div class="pi-nav-brand">
   {{- if not site.Params.ui.hide.navbar.logo }}
   <div class="logo">
     <a href="{{ site.Home.RelPermalink }}">
-      {{ printf "<img src=\"%s\" alt=\"logo\">" (printf "/logo%s" $v) | safeHTML}}
+      {{ printf "<img src=\"%s\" alt=\"logo\">" $imgPath | safeHTML}}
     </a>
   </div>
   {{end}}
