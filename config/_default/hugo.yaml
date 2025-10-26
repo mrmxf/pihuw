@@ -16,23 +16,24 @@ publishDir: kodata
 # Most menus are in the frontmatter of the relevant pages
 # Render the example site to see how menus work
 
-menus:
-  main:
-  - name: '🏷️'
-    pageRef: '/tags'
-  - name: 'Contact'
-    pageRef: '/contact'
-    weight: 20
-    pre: 📨
-  - name: 'Metarex'
-    pageRef: 'https://metarex.media'
-    weight: 30
-    pre: 🦖
+# menus hidden so they don't appear in live websites
+# menus:
+#   main:
+#   - name: '🏷️'
+#     pageRef: '/tags'
+#   - name: 'Contact'
+#     pageRef: '/contact'
+#     weight: 20
+#     pre: 📨
+#   - name: 'Metarex'
+#     pageRef: 'https://metarex.media'
+#     weight: 30
+#     pre: 🦖
 
-# footer menu
-  footer:
-    - name: Copyright
-      pageRef: https://mrmxf.com
+# # footer menu
+#   footer:
+#     - name: Copyright
+#       pageRef: https://mrmxf.com
 
 #   _ __    __ _   _ _  | |__  _  _   _ __
 #  | '  \  / _` | | '_| | / / | || | | '_ \
