@@ -9,7 +9,7 @@
 {{- if isset .Page.Params.ui "bodyClass" }}{{ $bodyClass = printf "class=\"%s\"" .Page.Params.ui.bodyClass }}{{ end }}
 
 <body >
-  {{partial "tmpl/dbg-template-comment" .}}
+  {{partial "hw-tk/dbg-template" .}}
   <header>
     {{partial "tmpl/navbar" .}}
     {{if not site.Params.ui.hide.breadcrumbs}}{{partial "tmpl/breadcrumb" .}}{{end}}

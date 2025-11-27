@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
 Debug utility to return template hierarchy information - used for development debugging
 */}}
 {{ $tpl := templates.Current.Parent.Name}}
@@ -8,7 +8,7 @@ Debug utility to return template hierarchy information - used for development de
       $tList := partial "hw-tk/tList" .
 
   */}}
-  {{partial "tmpl/dbg-template-comment" . }}
+  {{partial "hw-tk/dbg-template" . }}
     {{with templates.Current.Parent.Parent}}
     {{$tpl = printf "%s◀%s" $tpl .Name }}
     {{with .Parent}}

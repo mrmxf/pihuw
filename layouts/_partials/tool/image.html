@@ -1,6 +1,7 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
   The .src property may be a string or a resource - do the right thing!
 */}}
+{{$DBG := false}}
 {{$color := "purple"}}
 {{$type := (printf "%T" .src) }}
 {{$err := printf "is nil for %s" .src}}
@@ -10,19 +11,28 @@
 {{if not .src}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "src" .src))}}{{end}}
 {{if not $alt}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "alt" .alt))}}{{end}}
 {{/*  try a page resource first */}}
-{{ $src := .src }}
-{{ $img := .page.Resources.Get .src }}
+{{ $path := .src }}
+{{ if strings.HasPrefix $path "assets/" }}
+  {{if $DBG}}<pre>search ({{$path}})</pre>{{end}}
+  {{ $path = strings.TrimPrefix "assets/" $path }}
+   {{if $DBG}}<pre>trim to ({{$path}})</pre>{{end}}
+{{ end }}
+{{ $img := .page.Resources.Get $path }}
 {{/*  try a global resource second */}}
 {{if not $img}}
-  {{ $img = resources.Get .src }}
+  {{if $DBG}}<pre>no Page resource, try site ({{$path}})</pre>{{end}}
+  {{ $img = resources.Get $path }}
+  {{if $DBG}}<pre>got ({{$img}})</pre>{{end}}
 {{end}}
 {{if $img}}
   {{/* $img is not nil if we get a valid image resource i.e. .png or .jpg - NOT .svg */}}
   {{if .process }}
+    {{if $DBG}}<pre>processing image ({{.process}})</pre>{{end}}
     {{/* apply image process if requested */}}
     {{$img = $img.Process .process}}
   {{end}}
-  {{$src = $img.RelPermalink}}
+  {{$path = $img.RelPermalink}}
+  {{if $DBG}}<pre>path:({{$path}})</pre>{{end}}
 {{end}}
 {{ $link := .srcLink}}
 {{$u := urls.Parse $link}}
@@ -36,6 +46,6 @@
   {{end}}
 {{end}}
 {{- if $link -}}<a href="{{$link}}">{{- end -}}
-<img class="{{$srcClass}}" src="{{$src}}" {{with $alt }}alt="{{.}}"{{end}} />
+<img class="{{$srcClass}}" src="{{$path}}" {{with $alt }}alt="{{.}}"{{end}} />
 {{- partial "tool/caption" . -}}
 {{- if $link -}}</a>{{- end -}}

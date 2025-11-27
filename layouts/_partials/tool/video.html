@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
 Hugo partial that renders HTML5 video elements with optional links and captions
 */}}
 {{$color := "purple"}}
@@ -7,11 +7,11 @@ Hugo partial that renders HTML5 video elements with optional links and captions
 {{$alt := .alt}}
 {{$srcClass := .srcClass | default "ui fluid image"}}
 {{- if not .src -}}
-  {{- partial "tool/dbg" (dict "wrn" $err "kv" (dict "src" .src)) -}}
+  {{- partial "hw-tk/dbg" (dict "wrn" $err "kv" (dict "src" .src)) -}}
 {{- end -}}
 
 {{- if not $alt -}}
-  {{- partial "tool/dbg" (dict "wrn" $err "kv" (dict "alt" .alt)) -}}
+  {{- partial "hw-tk/dbg" (dict "wrn" $err "kv" (dict "alt" .alt)) -}}
 {{- end -}}
 
 {{ $link := .srcLink}}
@@ -20,7 +20,7 @@ Hugo partial that renders HTML5 video elements with optional links and captions
 {{- if and $link (not $u.IsAbs) -}}
   {{if not (fileExists $u.Path)}}
     {{$err := printf "bad link(%s) for video" $link}}
-    {{- partial "tool/dbg" (dict "wrn" $err "kv" . ) -}}
+    {{- partial "hw-tk/dbg" (dict "wrn" $err "kv" . ) -}}
   {{end}}
 {{end}}
 {{- if $link -}}<a href="{{$link}}">{{- end -}}

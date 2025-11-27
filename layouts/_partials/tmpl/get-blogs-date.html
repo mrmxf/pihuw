@@ -1,0 +1,4 @@
+{{- /* Get all pages from the blog section sorted by date (newest first) */ -}}
+{{- $blogPages := where site.RegularPages "Section" "blog" -}}
+{{- $sortedPages := sort $blogPages "Date" "desc" -}}
+{{- return $sortedPages -}}

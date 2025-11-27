@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "hw-tk/dbg-template" .}}
 {{/*
  Hugo partial that renders responsive content blocks with media and text in configurable layouts
 */}}
@@ -26,9 +26,14 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
   <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(60,255,180);">start tool/block
 </p>{{end}}
 {{/* ---handle src grid  ------------------------------------------------------------------------------------------ */}}
-{{- $divClass := printf "flex one three-%d grow" site.Params.resp.m -}}
-{{- $srcGrid := printf "full third-%d"          site.Params.resp.m -}}
-{{- $txtGrid := printf "full two-third-%d"      site.Params.resp.m -}}
+{{- $divClass := "flex one" -}}
+{{- $srcGrid :=  "none"     -}}
+{{- $txtGrid :=  "full"     -}}
+{{if .src}}
+{{- $divClass = printf "flex one four-%d grow"  site.Params.resp.m -}}
+{{- $srcGrid =  printf "full fourth-%d"         site.Params.resp.m -}}
+{{- $txtGrid =  printf "full three-fourth-%d"   site.Params.resp.m -}}
+{{end}}
 {{- with .class}}{{$divClass = .}}{{end}}
 {{- with .srcGrid}}{{$srcGrid = .}}{{end}}
 {{- with .txtGrid}}{{$txtGrid = .}}{{end}}

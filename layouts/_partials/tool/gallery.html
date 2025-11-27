@@ -1,13 +1,13 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/* Hugo partial that creates responsive image galleries with modal popups and thumbnails */}}
+{{partial "hw-tk/dbg-template" .}}{{/* Hugo partial that creates responsive image galleries with modal popups and thumbnails */}}
 {{- $page := .page -}}
 {{- $from := .from -}}
 {{- $mode := .mode | default "large" -}}
 {{- $images := slice -}}
 
 {{- if not $from -}}
-  {{- partial "tool/dbg" (dict "wrn" "Gallery partial missing required 'from' parameter" "kv" (dict "page" $page "mode" $mode)) -}}
+  {{- partial "hw-tk/dbg" (dict "wrn" "Gallery partial missing required 'from' parameter" "kv" (dict "page" $page "mode" $mode)) -}}
 {{- else if not (isset $page.Params $from) -}}
-  {{- partial "tool/dbg" (dict "err" (printf "Gallery parameter '%s' not found in page frontmatter" $from) "kv" (dict "from" $from "page" $page "params" $page.Params)) -}}
+  {{- partial "hw-tk/dbg" (dict "err" (printf "Gallery parameter '%s' not found in page frontmatter" $from) "kv" (dict "from" $from "page" $page "params" $page.Params)) -}}
 {{- else -}}
   {{- $images = index $page.Params $from -}}
 {{- end -}}

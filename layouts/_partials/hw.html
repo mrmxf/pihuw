@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
 The main dispatcher for the hw blocks.
 
 Set .t = "help" for dict definitions
@@ -46,7 +46,7 @@ Set .help = "anything" to render help for the partial instead of the partial
   {{printf "<!-- t = \"%s\" missing from  %s-->" .t $blockPath|safeHTML}}
   {{$em := printf "style=\"%s\"" "color:blue;"}}
   {{$msg := printf "check spelling of<code %s> t = \"%s\"</code>" $em .t}}
-  {{partial "tool/dbg" (dict
+  {{partial "hw-tk/dbg" (dict
    "wrn" "hw partial not found"
    "kv" (dict "msg" $msg "path" $blockPath "page" .page)
    )}}

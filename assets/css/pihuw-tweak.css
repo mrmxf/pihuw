@@ -35,16 +35,18 @@
   /* pihuw named colors & highlights */
   --text: var(--mm-dark);
   --bg-dark: var(--mm-purple);
-  --code:: var(--mm-blue);
-  /* annotation text, reading time */
-  --hi1: var(--mrx-green);
-  /* sidebar, th */
+  --code: : var(--mm-blue);
+
+  /* highlight & background colors */
+  --hi1: var(--mrx-amber);
   --hi2: var(--mrx-purple);
-  /* buttons */
-  --hi3: var(--mrx-amber);
- --bg1: hsl(from var(--hi1) h s 95%);
- --bg2: hsl(from var(--hi2) h s 95%);
- --bg3: hsl(from var(--hi3) h s 95%);
+  --hi3: var(--mrx-green);
+  --hi4: var(--mrx-blue);
+
+  --bg1: hsl(from var(--hi1) h s 95%);
+  --bg2: hsl(from var(--hi2) h s 95%);
+  --bg3: hsl(from var(--hi3) h s 95%);
+  --bg4: hsl(from var(--hi4) h s 95%);
 }
 
 body {
@@ -57,6 +59,14 @@ body {
   padding: 0;
 }
 
+/* basic headings */
+h1,h2 {   color: var(--hi1); }
+h3,h4 {   color: var(--hi2); }
+h5,h6 {   color: var(--hi3); }
+
+/* h6 is used for summary text & subheadings, not  headings */
+h6 { font-size: 0.8em; font-weight: medium; font-style: italic;}
+
 /* general highlights for widgets */
 .card.hi-1 {
   color: var(--hi1);
@@ -67,6 +77,7 @@ body {
 code {
   color: var(--code);
 }
+
 /*   _                            _                             _     */
 /*  | |__   _ _   ___   __ _   __| |  __   _ _   _  _   _ __   | |__  */
 /*  | '_ \ | '_| / -_) / _` | / _` | / _| | '_| | || | | '  \  | '_ \ */
@@ -78,6 +89,7 @@ code {
   box-shadow: none;
   text-align: center;
 }
+
 /*                      */
 /*  _ _    __ _  __ __  */
 /* | ' \  / _` | \ V /  */
@@ -130,8 +142,9 @@ nav .pi-nav-brand .title {
   display: block;
   object-fit: contain;
 }
+
 nav div.view-w div.menu {
-  color:#FF4088;
+  color: #FF4088;
 }
 
 section img {
@@ -143,42 +156,44 @@ section img {
 main footer.caption {
   font-style: italic;
   font-weight: bold;
-  color: var(--hi3);
+  color: var(--hi1);
   background-color: var(--pi-bg3);
   text-align: center;
 }
 
-section>div.block{
+section>div.block {
   align-items: stretch;
 }
+
 div img.src.block {
   display: flex;
-  width:100%;
+  width: 100%;
 }
- .txt.block .card{
-  height:100%;
+
+.txt.block .card {
+  height: 100%;
   padding: 0.3em;
 }
-section  footer {
+
+section footer {
   text-align: center;
   font-size: smaller;
   font-style: italic;
   color: var(--hi2);
 }
 
-#block-1 > div > div.fifth > footer
-
-.pi-reading-time {
+#block-1>div>div.fifth>footer .pi-reading-time {
   size: 80%;
-  color: var(--hi1)
+  color: var(--hi3)
 }
+
 /*                                _                     */
 /*   _ _    __ _  __ __  ___   __| |  _ _   ___   _ __  */
 /*  | ' \  / _` | \ V / |___| / _` | | '_| / _ \ | '_ \ */
 /*  |_||_| \__,_|  \_/        \__,_| |_|   \___/ | .__/ */
 /*                                               |_|    */
 .dropbtn {
-  background-color: var(--hi3);
+  background-color: var(--hi1);
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -198,9 +213,9 @@ section  footer {
   position: absolute;
   background-color: var(--pi-bg3);
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  right:0
+  right: 0
 }
 
 /* Links inside the dropdown */
@@ -210,8 +225,11 @@ section  footer {
   text-decoration: none;
   display: block;
 }
+
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: var(--hi3)}
+.dropdown-content a:hover {
+  background-color: var(--hi1)
+}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -220,8 +238,9 @@ section  footer {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-  background-color:  var(--pi-bg3);
+  background-color: var(--pi-bg3);
 }
+
 /*       _      _         _                  */
 /*  ___ (_)  __| |  ___  | |__   __ _   _ _  */
 /* (_-< | | / _` | / -_) | '_ \ / _` | | '_| */
@@ -237,14 +256,16 @@ sidebar {
 }
 
 .childbar-horizontal {
-  padding:0.3em 1em;
-  text-align:center;
+  padding: 0.3em 1em;
+  text-align: center;
   width: 100%;
 }
+
 .childbar-horizontal .divider {
-  color:var(--hi3);
-  font-weight:bold;
+  color: var(--hi1);
+  font-weight: bold;
 }
+
 /* #          _   _                        _                      */
 /* #   _ __  (_) | |_    _  _  __ __ __   | |  ___   __ _   ___   */
 /* #  | '_ \ | | | ' \  | || | \ V  V /   | | / _ \ / _` | / _ \  */
@@ -265,7 +286,7 @@ sidebar {
 /* custom styling for the site title text in the menu*/
 #siteTitleMenu {
   font-weight: bold;
-  color: var(--hi1);
+  color: var(--hi3);
   margin-top: auto;
   vertical-align: middle;
 }
@@ -295,10 +316,10 @@ sidebar {
 
 /* pihuw taxonomy label classes */
 .ui.pi-tax-1.label {
-  background: hsl(from var(--hi1) h s 95%);
+  background: hsl(from var(--hi3) h s 95%);
   backdrop-filter: 200%;
-  border-color: var(--hi1);
-  color: var(--hi1);
+  border-color: var(--hi3);
+  color: var(--hi3);
 }
 
 .ui.pi-tax-2.label {
@@ -308,9 +329,9 @@ sidebar {
 }
 
 .ui.pi-tax-3.label {
-  background: hsl(from var(--hi3) h s 95%);
-  border-color: var(--hi3);
-  color: var(--hi3);
+  background: hsl(from var(--hi1) h s 95%);
+  border-color: var(--hi1);
+  color: var(--hi1);
 }
 
 .ui.pi-tax-4.label {
@@ -327,8 +348,8 @@ sidebar {
 .banner {
   display: block;
   text-align: center;
-  color: var(--hi1);
-  background-color: hsl(from var(--hi1) h s 95%);
+  color: var(--hi3);
+  background-color: hsl(from var(--hi3) h s 95%);
   font-size: 1.3em;
   padding: 0.5em;
   width: 100%;
@@ -349,7 +370,7 @@ sidebar {
 /*  | '_ \ | || | |  _| |  _| / _ \ | ' \  */
 /*  |_.__/  \_,_|  \__|  \__| \___/ |_||_| */
 .button {
-  background-color: var(--hi3);
+  background-color: var(--hi1);
 }
 
 /*                                    _     _   _     _        */
@@ -468,98 +489,97 @@ th {
 /*  / _` | / _| / _| / _ \ | '_| / _` | | | / _ \ | ' \  */
 /*  \__,_| \__| \__| \___/ |_|   \__,_| |_| \___/ |_||_| */
 
-  /* Core styles/functionality */
-  .tab {
-    position: relative;
+/* Core styles/functionality */
+.tab {
+  position: relative;
+}
+
+.tab input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.tab__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+}
+
+.tab input:checked~.tab__content {
+  max-height: 100%;
+}
+
+/* --- Visual styles ---   */
+.accordion {
+  border-left: 1px solid lightgray;
+  border-radius: none;
+  overflow: hidden;
+}
+
+.tab__label,
+.tab__close {
+  display: flex;
+  background: var(--theme);
+  cursor: pointer;
+  padding: 0;
+}
+
+.tab__label {
+  justify-content: space-between;
+  padding: 0.2rem 1rem;
+}
+
+.tab__label::after {
+  content: "\276F";
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  transform: rotate(90deg);
+  transition: all 0.35s;
+}
+
+.tab input:checked+.tab__label::after {
+  transform: rotate(270deg);
+}
+
+.tab__content p {
+  margin: 0;
+  padding: 0.2rem 1rem;
+}
+
+.tab__close {
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+.accordion--radio {
+  --theme: var(--secondary);
+}
+
+/* Arrow animation */
+.tab input:not(:checked)+.tab__label:hover::after {
+  animation: bounce .5s infinite;
+}
+
+@keyframes bounce {
+  25% {
+    transform: rotate(90deg) translate(.25rem);
   }
 
-  .tab input {
-    position: absolute;
-    opacity: 0;
-    z-index: -1;
+  75% {
+    transform: rotate(90deg) translate(-.25rem);
   }
-
-  .tab__content {
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.35s;
-  }
-
-  .tab input:checked~.tab__content {
-    max-height: 100%;
-  }
-
-  /* --- Visual styles ---   */
-  .accordion {
-    border-left: 1px solid lightgray;
-    border-radius:none;
-    overflow: hidden;
-  }
-
-  .tab__label,
-  .tab__close {
-    display: flex;
-    background: var(--theme);
-    cursor: pointer;
-    padding: 0;
-  }
-
-  .tab__label {
-    justify-content: space-between;
-    padding: 0.2rem 1rem ;
-  }
-
-  .tab__label::after {
-    content: "\276F";
-    width: 1em;
-    height: 1em;
-    text-align: center;
-    transform: rotate(90deg);
-    transition: all 0.35s;
-  }
-
-  .tab input:checked+.tab__label::after {
-    transform: rotate(270deg);
-  }
-
-  .tab__content p {
-    margin: 0;
-    padding: 0.2rem 1rem ;
-  }
-
-  .tab__close {
-    justify-content: flex-end;
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-  }
-
-  .accordion--radio {
-    --theme: var(--secondary);
-  }
-
-  /* Arrow animation */
-  .tab input:not(:checked)+.tab__label:hover::after {
-    animation: bounce .5s infinite;
-  }
-
-  @keyframes bounce {
-    25% {
-      transform: rotate(90deg) translate(.25rem);
-    }
-
-    75% {
-      transform: rotate(90deg) translate(-.25rem);
-    }
-  }
+}
 
 /** HR rainbow */
 hr {
   border: none;
   height: 2px;
-  background: linear-gradient(90deg, 
-    hsl(0, 100%, 50%), 
-    hsl(180, 100%, 50%)
-  );
+  background: linear-gradient(90deg,
+      hsl(0, 100%, 50%),
+      hsl(180, 100%, 50%));
   animation: hue-rotate 10s linear infinite;
 }
 
@@ -567,9 +587,24 @@ hr {
   0% {
     filter: hue-rotate(0deg);
   }
+
   100% {
     filter: hue-rotate(360deg);
   }
+}
+
+/*   _      _              _         */
+/*  | |__  | |  ___   __  | |__  ___ */
+/*  | '_ \ | | / _ \ / _| | / / (_-< */
+/*  |_.__/ |_| \___/ \__| |_\_\ /__/ */
+.definition-block .card {
+  border: 0px;
+  border-left: 0.2em solid;
+  border-color: var(--hi2);
+  background-color: var(--bg2);
+}
+.definition-block .card header{
+  color: var(--hi2);
 }
 
 /*                                             _                       _                      */
@@ -617,4 +652,3 @@ hr {
     display: none;
   }
 }
-

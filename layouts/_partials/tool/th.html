@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/* Hugo partial that wraps content in HTML th element */}}
+{{partial "hw-tk/dbg-template" .}}{{/* Hugo partial that wraps content in HTML th element */}}
 <th
 {{with .class}}class="{{.|safeHTMLAttr}}"{{end}}
 >{{.text | markdownify}}{{.inner | markdownify}}</th>

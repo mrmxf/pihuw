@@ -1,5 +1,5 @@
 
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
 Debug utility to return page hierarchy information - used for development debugging
 */}}
   {{ $pageList := "❓"}}
@@ -9,7 +9,7 @@ Debug utility to return page hierarchy information - used for development debugg
       $pList := partial "hw-tk/pList" .
 
   */}}
-  {{partial "tmpl/dbg-template-comment" . }}
+  {{partial "hw-tk/dbg-template" . }}
   {{$page := false}}
   {{if .Page}}{{$page = .Page}}{{end}}
   {{if .page}}{{$page = .page}}{{end}}

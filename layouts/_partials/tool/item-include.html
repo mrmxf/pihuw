@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
 Include another page as an item in a list
 
 from = filepath e.g. /assets/doc/banana.md
@@ -45,6 +45,8 @@ src = /path/to/image  ... if not specified use partial get-feature-resource to f
   {{ partial "tool/item" $d}}
 {{- else -}}
 
-{{ partial "tool/dbg-err.html" (dict "p" "tool/include" "a" "from" "m" (printf "cannot include unknown project file: %s" $from) "d" .) }}
-
+{{- partial "hw-tk/dbg" dict (
+  "err" (printf "cannot include unknown project file: %s" $from)
+  "kv" (dict  "template" templates.Current.Parent.Name))
+-}}
 {{- end -}}{{/* end of if file exists */}}

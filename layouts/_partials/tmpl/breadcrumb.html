@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "hw-tk/dbg-template" .}}
 {{- if not .Site.Params.ui.breadcrumb_disable }}
 {{ $homeUrl := .RelRef (dict "path" "/")}}
 {{ $home :=  printf "<a href='%s'><i class='%s'></i></a>" $homeUrl "fa-solid fa-house"}}

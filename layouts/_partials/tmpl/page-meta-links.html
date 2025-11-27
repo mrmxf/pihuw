@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}
+{{partial "hw-tk/dbg-template" .}}
 {{ if .File }}
 {{ $pathFormatted := replace .File.Path "\\" "/" -}}
 {{ $gh_repo := ($.Param "github_repo") -}}

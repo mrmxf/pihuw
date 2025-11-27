@@ -1,4 +1,4 @@
-{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
+{{partial "hw-tk/dbg-template" .}}{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
 {{- $s := "."}}{{$p := ""}}{{$x := ""}}
 {{/* Override with Site settings if available */}}
 {{- if isset site.Params.heading "separator"}}{{$s = site.Params.heading.separator}}{{end}}
@@ -12,9 +12,9 @@
 {{/* sanitize errors */}}
 {{- $level := int (.level | default 0) -}}
 {{- if or (lt $level 1) (gt $level 6) -}}
-{{ $msg := printf "must be an int between 1 & 6. got (%d), using (1)" $level }}
-{{ partial "tool/dbg-err.html" (dict "a" "heading level" "m" $msg "d" .) }}
-{{ warnf "partial: %s: %s  %s" "tool/numbered-header" "heading level" $msg -}}
+{{ $msg := printf "%s level must be an int between 1 & 6. got (%d), using (1)" templates.Current.Name $level }}
+{{ partial "hw-tk/dbg" (dict "err" $msg) }}
+{{ warnf "partial: %s: %s  %s" templates.Current.Name "heading level" $msg -}}
 {{ $level = 1 }}
 {{end -}}
 

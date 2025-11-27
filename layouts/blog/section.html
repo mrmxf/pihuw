@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="{{site.Language.Lang}}"
+  dir="{{ or site.Language.LanguageDirection `ltr` }}">
+
+<head>
+  {{ partial "tmpl/head.html" . }}
+</head>
+{{- $bodyClass := ""}}
+{{- if isset .Page.Params.ui "bodyClass" }}{{ $bodyClass = printf "class=\"%s\"" .Page.Params.ui.bodyClass }}{{ end }}
+
+{{- $showSidebar := true}}
+{{- if .Page.Params.ui.hide.sidebar}}{{$showSidebar = false}}{{- end -}}
+{{- if site.Params.ui.hide.sidebar}}{{$showSidebar = false}}{{- end -}}
+
+<body >
+  {{partial "hw-tk/dbg-template" .}}
+  <header>
+    {{partial "tmpl/navbar" .}}
+    {{if not site.Params.ui.hide.breadcrumbs}}{{partial "tmpl/breadcrumb" .}}{{end}}
+    {{partial "tmpl/childbar-horizontal.html" .}}
+  </header>
+  <!-- outer div is for gutter control-->
+  <div class="flex one six-{{site.Params.resp.m}} six-{{site.Params.resp.w}} pi-nav-pad">
+    <div class="none sixth-{{site.Params.resp.w}}"></div>
+    
+    <!-- inner div turns component on and off -->
+    {{- if $showSidebar }}
+    <div class="none third-{{site.Params.resp.m}} sixth-{{site.Params.resp.w}} " style="align-content: stretch;">
+      <sidebar class="four-fifth">
+        {{ partial "tmpl/sidebar.html" . }}
+      </sidebar>
+    </div>
+    {{- end -}}{{/* --- end of if show sidebar ------------------------------------------------------------------------ */}}
+
+    {{- if $showSidebar }}
+    <div class="full half-{{site.Params.resp.w}}"  style="align-content: stretch;">
+    {{- else -}}
+    <div class="full two-third-{{site.Params.resp.w}} "  style="align-content: stretch;">
+    {{partial "tmpl/childbar-horizontal.html" .}}
+    {{- end -}}
+      <main>
+        {{ block "main" . }}{{ end }}
+      </main>
+    </div>
+
+    <!-- final outer div gutter -->
+    <div class="none sixth-{{site.Params.resp.w}}"></div>
+  </div>
+
+  <!-- footer is 3 columns + gutters -->
+  <footer class="flex six">
+    <div class="none sixth-{{site.Params.resp.w}}"></div>
+    <div class="full two-third-{{site.Params.resp.w}} footer">
+      {{ partial "tmpl/footer" . }}
+    </div>
+  </footer>
+  {{ partial "tmpl/body-scripts" . }}
+</body>
+
+</html>
+
+{{ define "main" }}
+{{partial "hw-tk/dbg-template" .}}
+{{partial "tmpl/page-title.html" .}}
+{{/* childbar on any single with params.ui.childbar.opts: "parent" */}}
+{{ .Content }}
+
+{{- $blogPosts := partial "tmpl/get-blogs-date.html" . -}}
+<ul>
+  {{- range $blogPosts -}}
+  <li>
+    <code class="date">{{ .Date.Format "2006-01-02" }}</code>
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  </li>
+  {{- end -}}
+</ul>
+
+{{ partial "tmpl/taxonomy-tags-logic" . }}
+{{ end }}

@@ -1,4 +1,4 @@
-{{partial "tmpl/dbg-template-comment" .}}{{/*
+{{partial "hw-tk/dbg-template" .}}{{/*
 Debug rendering utility - displays and logs error messages during development (Hugo server only)
 */}}
 {{if hugo.IsServer }}{{/*
@@ -11,7 +11,7 @@ Debug rendering utility - displays and logs error messages during development (H
       like slogger, all key:value pairs in the kvList will be shown
       help: optional HTML string containing help modal and trigger button
   */}}
-  {{partial "tmpl/dbg-template-comment" . }}
+  {{partial "hw-tk/dbg-template" . }}
   <div class="ui fluid {{.color}} message">
     <span class="ui {{.color}} text">{{.msg|safeHTML}}</span>:
     <span class="ui black text">page</span>(<span class="ui blue text">{{.pList|safeHTML}}</span>)
