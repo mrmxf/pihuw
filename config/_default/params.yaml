@@ -84,6 +84,9 @@ ui:
     title:     this section   # can be overridden on a page
     separator: "|"            # any unicode character to separate the links
     opts:      false          # any of ascending|descending|parent for sorting or show the parent childbar
+  section:
+    blog:
+      icon:    <i class="fa-solid fa-blog"></i>  #HTML icon for all blog posts
   sidebar:
     maxItems: 20
     maxDepth: 2
