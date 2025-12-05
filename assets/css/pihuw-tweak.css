@@ -161,15 +161,25 @@ main footer.caption {
   text-align: center;
 }
 
+/* Things in Blocks */
 section>div.block {
   align-items: stretch;
 }
 
-div img.src.block {
+/* the div containing a src */
+div .src.block {
   display: flex;
-  width: 100%;
 }
-
+/* the image in the block */
+div .src.block img{
+  align-self: center;
+  justify-self: center;
+  width:100%;
+  object-fit: contain;
+}
+.image{
+  padding: 1em;
+}
 .txt.block .card {
   height: 100%;
   padding: 0.3em;
@@ -186,7 +196,12 @@ section footer {
   size: 80%;
   color: var(--hi3)
 }
-
+.block-hr {
+  height:3px;
+  border:none;
+  color:rgb(60,90,180);
+  background-color:rgb(255,90,180);
+}
 /*                                _                     */
 /*   _ _    __ _  __ __  ___   __| |  _ _   ___   _ __  */
 /*  | ' \  / _` | \ V / |___| / _` | | '_| / _ \ | '_ \ */

@@ -1,0 +1,29 @@
+#default classes and other data - override the entirety of this file in your
+# website to change the look / feel of the default widget settings.
+slice:
+  aud_ext:
+  - .mp3
+  img_ext:
+  - .jpg
+  - .jpeg
+  - .png
+  - .webp
+  - .gif
+  - .svg
+  vid_ext:
+  - .mp4
+  - .mkv
+class:
+  block:
+    divClass: flex one
+    srcGrid:  none
+    txtGrid:  full txt block
+    srcClass: src block %s
+    hrClass:  block-hr
+    imgClass: image
+    vidClass: video
+  block_m:
+    divClass: flex one four-%d grow
+    srcGrid: full fourth-%d src block
+    txtGrid: full three-fourth-%d txt block
+  

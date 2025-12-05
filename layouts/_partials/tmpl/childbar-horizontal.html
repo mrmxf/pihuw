@@ -44,7 +44,9 @@ childbar can be hidden with .Params.hide.childbar
         {{$sep}} <strong><a href="{{ .Parent.RelPermalink }}">⬆️</a></strong>
       {{- end -}}
       {{ range  $childbarPages}}
-        {{$sep}} <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
+        {{if .LinkTitle}}
+          {{$sep}} <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
+        {{end}}
       {{end}}
       {{$sep}}
     </div>

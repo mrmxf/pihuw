@@ -21,37 +21,40 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 +-----------------------------------------------------+----------+
 
 */}}
+{{$default := partial "hw-tk/get-defaults"}}
 {{- $DBG := false -}}
+
 {{with $DBG}}<p>
   <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(60,255,180);">start tool/block
 </p>{{end}}
 {{/* ---handle src grid  ------------------------------------------------------------------------------------------ */}}
-{{- $divClass := "flex one" -}}
-{{- $srcGrid :=  "none"     -}}
-{{- $txtGrid :=  "full"     -}}
+{{- $divClass := $default.class.block.divClass -}}
+{{- $srcGrid :=  $default.class.block.srcGrid     -}}
+{{- $txtGrid :=  $default.class.block.txtGrid     -}}
 {{if .src}}
-{{- $divClass = printf "flex one four-%d grow"  site.Params.resp.m -}}
-{{- $srcGrid =  printf "full fourth-%d"         site.Params.resp.m -}}
-{{- $txtGrid =  printf "full three-fourth-%d"   site.Params.resp.m -}}
+{{- $divClass = printf $default.class.block_m.divClass  site.Params.resp.m -}}
+{{- $srcGrid =  printf $default.class.block_m.srcGrid   site.Params.resp.m -}}
+{{- $txtGrid =  printf $default.class.block_m.txtGrid   site.Params.resp.m -}}
 {{end}}
 {{- with .class}}{{$divClass = .}}{{end}}
 {{- with .srcGrid}}{{$srcGrid = .}}{{end}}
 {{- with .txtGrid}}{{$txtGrid = .}}{{end}}
 {{/* ---handle src type ------------------------------------------------------------------------------------------- */}}
 {{- $ext := strings.ToLower (path.Ext .src) -}}
-{{- $imgExt := slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".svg" -}}
-{{- $vidExt := slice ".mp4" ".mkv" -}}
-{{- $srcClass := printf "src block %s" .srcClass -}}
-{{- $srcIsVideo := in $vidExt $ext -}}
-{{- $srcIsImage := in $imgExt $ext -}}
-{{- $mediaDot := merge . (dict "srcClass" $srcClass "text" nil) }}
+{{- $srcClass := printf $default.class.block.srcClass .srcClass -}}
+{{- $srcIsVideo := in $default.slice.vid_ext $ext -}}
+{{- $srcIsImage := in $default.slice.img_ext $ext -}}
+{{- $mediaSrcClass := $default.class.block.imgClass -}}
+{{with $srcIsVideo}}{{- $mediaSrcClass := $default.class.block.vidClass -}}{{end}}
+{{/* squash any caption and identify media class */}}
+{{- $mediaDot := merge . (dict "srcClass" $mediaSrcClass "text" nil) }}
 {{/* --------------------------------------------------------------------- */}}
 <div class = "{{$divClass}}">
 {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}}){{end}}
 {{- if and .src (eq .srcOn "left") -}}
 <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
 {{- end -}}
-<div class="{{$txtGrid}} txt block">
+<div class="{{$txtGrid}}">
   <div class="card">
     {{- if .header -}}
     <header>
@@ -71,6 +74,6 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
 {{end}}
 {{with $DBG}}<p>END pihuw-block
-  <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(255,90,180);">
+  <hr class="block-hr">
 </p>{{end}}
 </div>

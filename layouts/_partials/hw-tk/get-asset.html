@@ -1,0 +1,41 @@
+{{/*
+  search for a .asset in the following place
+  1. page resource - e.g. diagram.png
+  2. assets        - e.g. assets/brand/logo.svg
+  3. static        - e.g. static/brand/mrx-logo.svg
+  for jpg & png assets
+  .process is a valid process https://gohugo.io/methods/resource/process/
+*/}}
+{{$DBG := false}}
+{{ $path := .asset }}
+{{ $res := 0 }}
+{{if $DBG}}<pre>search ({{$path}})</pre>{{end}}
+{{/*  try a page resource first - assuming an `hw` page was passed */}}
+{{with .page}}
+{{if ne (printf "%T" .) "string"}}{{ $res = .Resources.Get $path }}{{end}}
+{{end}}
+{{/*  try a global resource second */}}
+{{if not $res}}
+  {{/*  trim and assets/ prefix */}}
+  {{ if strings.HasPrefix $path "assets/" }}
+    {{ $path = strings.TrimPrefix "assets/" $path }}
+    {{if $DBG}}<pre>trim to ({{$path}})</pre>{{end}}
+  {{ end }}
+  {{if $DBG}}<pre>no Page resource, try site resource assets/({{$path}})</pre>{{end}}
+  {{ $res = resources.Get $path }}
+  {{if $DBG}}<pre>got ({{$res}})</pre>{{end}}
+{{end}}
+{{if $res}}
+  {{/* $res is not nil if we get a valid image resource i.e. .png or .jpg - NOT .svg */}}
+  {{if .process }}
+    {{if $DBG}}<pre>processing image ({{.process}})</pre>{{end}}
+    {{/* apply image process if requested */}}
+    {{$res = $res.Process .process}}
+  {{end}}
+  {{if $DBG}}<pre>global resource path:({{$res.RelPermalink}})</pre>{{end}}
+{{else}}
+  {{/* $res is probably something in static */}}
+  {{if $DBG}}<pre>static ({{$path}})?</pre>{{end}}
+  {{$res = $path}}
+{{end}}
+{{return $res}}

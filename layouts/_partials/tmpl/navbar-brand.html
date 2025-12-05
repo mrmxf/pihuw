@@ -1,33 +1,23 @@
 {{partial "hw-tk/dbg-template" .}}
-{{/* to support SVG files, all logos must be in static/brands */}}
+{{/* from hugo 149 all logos must be in assets/brands */}}
 {{- if not (and site.Params.ui.hide.navbar.logo site.Params.ui.hide.navbar.title) }}
 
-{{- $logoTypes := slice ".svg" ".jpg" ".gif" ".png" }}
-{{- $searchingForLogo := true}}
-{{/* logo is the path to the logo without extension */}}
-{{- $logo := site.Params.ui.logo | default "logo"}}
-{{- $img := ""}}
-{{- range $k, $v := $logoTypes}}
-{{- $imgPath := printf "%s%s" $logo $v}}
-{{- if $searchingForLogo}}
-{{- if fileExists (printf "static/%s" $imgPath) }}
-<div class="pi-nav-brand">
-  {{- if not site.Params.ui.hide.navbar.logo }}
+  {{- $img := partial "hw-tk/get-logo-path-string" .}}
+
+  <div class="pi-nav-brand">
+  {{- if and $img (not site.Params.ui.hide.navbar.logo) }}
   <div class="logo">
     <a href="{{ site.Home.RelPermalink }}">
-      {{ printf "<img src=\"%s\" alt=\"logo\">" $imgPath | safeHTML}}
+      {{ printf "<img src=\"%s\" alt=\"logo\">" $img | safeHTML}}
     </a>
   </div>
-  {{end}}
+  {{end}}{{/* logo */}}
   {{- if not site.Params.ui.hide.navbar.title}}
   <div class="title">
     <a href="{{ site.Home.RelPermalink }}">
-      <span id="siteTitleMenu">{{site.Title}}</span>{{end}}
+      <span id="siteTitleMenu">{{site.Title}}</span>
     </a>
   </div>
-  {{ end }}{{/* title */}}
+  {{end}}{{/* title */}}
 </div>
-{{$searchingForLogo = false}}
-{{ end }}{{/* searching */}}
-{{end}}{{/* end of range - file types */}}
-{{- end -}}
+{{- end -}}{{/* outer if - any brand content */}}

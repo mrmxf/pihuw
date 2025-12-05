@@ -70,8 +70,11 @@ github:
 #  | || | | |
 #   \_,_| |_|
 ui:
-  # look for logo.svg or logo.png or logo.jpg, set baseURL for this to work right
-  logo: /brand/logo
+  # look for logo.svg
+  logo: /brand/logo.svg
+  # if you use png or jpg then you might want to specify the processed size of
+  # the logo for the navbar https://gohugo.io/content-management/image-processing/#dimensions
+  logo-navbar-process: x90  # 90 high logo
   # some elements of the ui can be hidden
   hide:
     breadcrumbs: false

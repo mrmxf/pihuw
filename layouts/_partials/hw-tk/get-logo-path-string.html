@@ -1,0 +1,15 @@
+{{/* logo is the path to the logo in assets/ or static/  */}}
+{{- $logo := site.Params.ui.logo | default "brand/logo.svg"}}
+{{- $img := ""}}
+
+{{/* Use default algorithm to find img resource */}}
+{{- $res := partial "hw-tk/get-asset" (dict "page" . "asset" $logo) }}
+{{/* svg files are returned as strings, not resource objects */}}
+{{with $res}}
+  {{if eq (printf "%T" $res) "string"}}
+    {{$img = $res}}
+  {{else}}
+    {{$img = $res.RelPermalink}}
+  {{end}}
+{{end}}
+{{return $img}}

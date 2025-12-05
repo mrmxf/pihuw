@@ -1,0 +1,15 @@
+{{/*
+  return the parsed defaults yaml as a map
+*/}}
+{{$DBG := false}}
+{{ $data := dict }}
+{{ $path := "data/defaults.yaml" }}
+{{ with resources.Get $path }}
+  {{ with . | transform.Unmarshal }}
+    {{ $data = . }}
+  {{ end }}
+{{ else }}
+  {{ errorf "Unable to get global resource %q" $path }}
+{{ end }}
+
+{{return $data}}

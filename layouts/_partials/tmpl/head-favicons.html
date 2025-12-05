@@ -1,4 +1,7 @@
 {{partial "hw-tk/dbg-template" .}}
+{{- $img := partial "hw-tk/get-logo-path-string" .}}
 <!-- Favicons from svg -->
-<link rel="icon" type="image/svg" href="/logo.png">
-<link rel="shortcut icon"         href="/favicon.ico" >
+{{with $img}}
+<link rel="icon" type="image/svg" href="{{$img}}">
+<link rel="shortcut icon"         href="{{$img}}" >
+{{end -}}
