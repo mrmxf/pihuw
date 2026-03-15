@@ -67,6 +67,7 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
     <div class="description">
       {{- .description | markdownify -}}
       {{- .inner | markdownify -}}
+      {{- with .html -}}{{- . -}}{{- end -}}
     </div>
   </div>
 </div>

@@ -3,12 +3,12 @@ markdownify a page parameter and insert into the <body class="from=<param name>"
   
 </body>
 */}}{{- if site.Params.ui.readingtime.enable -}}
-<p class="pi-reading-time">
+<span class="pi-reading-time">
   <i class="fa-regular fa-hourglass"></i>
   {{ if gt .ReadingTime 1 }}
     ~{{ .ReadingTime }} m
   {{ else }}
     less than a minute
   {{ end }}
-</p>
+</span>
 {{- end -}}

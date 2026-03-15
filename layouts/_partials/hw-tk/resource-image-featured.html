@@ -1,0 +1,26 @@
+{{- /*
+  hw-tk/resource-image-featured - returns the scaled featured image resource, or nil.
+
+  Calls path-image-featured to locate the first matching page resource, then
+  loads and scales it with .Fit to preserve aspect ratio.
+
+  Expects a dict with:
+    .page  - Hugo page object
+  Reads page frontmatter:
+    FeaturedGlob  - glob for page resources (default "featured*.*")
+    FeaturedWxH   - fit bounding box as "WxH" string (default "200x200")
+
+  Returns the fitted resource object so callers can use .RelPermalink,
+  .Width, .Height, etc. Returns nil if no matching resource is found.
+*/ -}}
+{{- $img  := "" -}}
+{{- $path := partial "hw-tk/path-image-featured" . -}}
+{{- if $path -}}
+  {{- $wxh := "200x200" -}}
+  {{- with .page.Params.FeaturedWxH -}}{{- $wxh = . -}}{{- end -}}
+  {{- $res := .page.Resources.Get (path.Base $path) -}}
+  {{- if $res -}}
+    {{- $img = $res.Fit $wxh -}}
+  {{- end -}}
+{{- end -}}
+{{- return $img -}}

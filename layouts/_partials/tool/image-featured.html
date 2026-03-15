@@ -1,0 +1,28 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+  image-featured - renders the page's featured image, resized, with optional centered caption.
+
+  Page frontmatter params:
+    FeaturedGlob    - glob pattern for page resources (default "featured*.*")
+    FeaturedWxH     - fit size as "WxH" string, preserves aspect ratio (default "200x200")
+    FeaturedCaption - caption text rendered centered below the image (optional)
+*/}}
+{{- $caption := .page.Params.FeaturedCaption -}}
+{{- $path    := partial "hw-tk/path-image-featured" . -}}
+{{- if $path -}}
+  {{- $wxh := "200x200" -}}
+  {{- with .page.Params.FeaturedWxH -}}{{- $wxh = . -}}{{- end -}}
+  {{- $img := .page.Resources.Get (path.Base $path) -}}
+  {{- if $img -}}
+    {{- $img = $img.Fit $wxh -}}
+    <div style="text-align:center;">
+      <img class="ui image" src="{{$img.RelPermalink}}"
+           width="{{$img.Width}}" height="{{$img.Height}}"
+           alt="{{$caption | default .page.Title}}" />
+      {{- with $caption -}}
+      <p style="text-align:center;">{{. | markdownify}}</p>
+      {{- end -}}
+    </div>
+  {{- end -}}
+{{- else -}}
+  {{partial "tool/dbg" (dict "wrn" "image-featured: no resource matched glob" "kv" (dict "page" .page.RelPermalink))}}
+{{- end -}}

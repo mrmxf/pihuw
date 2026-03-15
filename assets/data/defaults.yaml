@@ -26,4 +26,16 @@ class:
     divClass: flex one four-%d grow
     srcGrid: full fourth-%d src block
     txtGrid: full three-fourth-%d txt block
+  item:
+    divClass: flex one
+    srcGrid:  none
+    txtGrid:  full txt block
+    srcClass: src block %s
+    hrClass:  block-hr
+    imgClass: image
+    vidClass: video
+  item_m:
+    divClass: flex one four-%d grow
+    srcGrid: full fourth-%d src block
+    txtGrid: full three-fourth-%d txt block
   

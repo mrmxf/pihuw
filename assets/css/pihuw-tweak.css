@@ -90,6 +90,15 @@ code {
   text-align: center;
 }
 
+/* Label styling */
+.label-blog {
+  background-color: var(--mm-green);
+  color: var(--mm-white);
+  font-weight: bold;
+  padding: 0.2em 1em;
+  border-radius: 0.2em;
+}
+
 /*                      */
 /*  _ _    __ _  __ __  */
 /* | ' \  / _` | \ V /  */
@@ -541,22 +550,19 @@ th {
 }
 
 .tab__label {
-  justify-content: space-between;
-  padding: 0.2rem 1rem;
+  justify-content: flex-start;
+  gap: 0.35em;
+  padding: 0.2rem 0.1rem;
 }
 
-.tab__label::after {
-  content: "\276F";
-  width: 1em;
-  height: 1em;
-  text-align: center;
-  transform: rotate(90deg);
-  transition: all 0.35s;
-}
+.tab__label::after        { content: none; }
+.tab__label:hover::after  { animation: none; }
 
-.tab input:checked+.tab__label::after {
-  transform: rotate(270deg);
-}
+/* FA disclosure icons — right-chevron when closed, down-chevron when open */
+.pi-tog-o { display: none;   color: var(--hi1); }
+.pi-tog-c { display: inline; color: var(--hi2); }
+.tab input:checked + .tab__label .pi-tog-o { display: inline; }
+.tab input:checked + .tab__label .pi-tog-c { display: none;   }
 
 .tab__content p {
   margin: 0;
@@ -573,19 +579,14 @@ th {
   --theme: var(--secondary);
 }
 
-/* Arrow animation */
-.tab input:not(:checked)+.tab__label:hover::after {
+/* Arrow animation on FA icon */
+.tab input:not(:checked)+.tab__label:hover .pi-tog-c {
   animation: bounce .5s infinite;
 }
 
 @keyframes bounce {
-  25% {
-    transform: rotate(90deg) translate(.25rem);
-  }
-
-  75% {
-    transform: rotate(90deg) translate(-.25rem);
-  }
+  25% { transform: translateX( .2rem); }
+  75% { transform: translateX(-.2rem); }
 }
 
 /** HR rainbow */

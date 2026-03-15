@@ -21,7 +21,7 @@ This is a helper to print out the {{<pihuw>}} name in pretty colors
 You can print the {{</*pihuw*/>}} name in pretty colors.
 ```
 
-## {{&lt; pi `t = "thingy"` >}} -  `layouts/_shortcodes/fo.html`
+## {{&lt; pi `t = "thingy"` >}} -  `layouts/_shortcodes/pi.html`
 
 This is the main dispatcher for {{<pihuw>}}. When a shortcode like this is found:
 
@@ -32,8 +32,8 @@ This is some markdown with an image below.
 {{</* pi t = "image" text = "Caption text" /*/>}}
 ```
 
-the `fo` shortcode handler will parse the params into a standard set of keys and values before
-running [`layouts/_partials/fo.html`]({{% relref "/doc-partials" %}}).
+the `pi` shortcode handler will parse the params into a standard set of keys and values before
+running [`layouts/_partials/pi.html`]({{% relref "/doc-partials" %}}).
 
 ### Params help
 

@@ -1,0 +1,16 @@
+{{partial "hw-tk/dbg-template" .}}
+{{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+{{ $dateHuman := .Date | time.Format "2006-01-02" }}
+<div class="flex one page-title">
+  <h1 class="full">📆{{ .Title }}</h1>
+  <div>
+    <p>
+      <span class="label label-blog">blog</span>
+      <small>
+        <i class="fa-regular fa-calendar-days"></i>
+        <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+        {{partial "tmpl/reading-time" .}}
+      </small>
+    </p>
+  </div>
+</div>

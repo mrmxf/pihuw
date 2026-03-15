@@ -1,9 +1,31 @@
 {{ define "main" }}
 {{partial "hw-tk/dbg-template" .}}
-{{partial "tmpl/page-title.html" .}}
+{{partial "tmpl/page-title-blog.html" .}}
 {{/* childbar on any single with params.ui.childbar.opts: "parent" */}}
 {{partial "tmpl/childbar-horizontal.html" .}}
-{{ .Content }}
+{{- $src := partial "hw-tk/path-image-featured" (dict "page" .) -}}
+{{- $alt := .Params.FeaturedAlt | default "featured" -}}
+{{- if $src -}}
+{{- $modalId := printf "modzl-%s" (.RelPermalink | md5) -}}
+<style>
+  #{{$modalId}}-box { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.75); justify-content:center; align-items:center; }
+  #{{$modalId}}:checked ~ #{{$modalId}}-box { display:flex; }
+  #{{$modalId}}-box figure { position:relative; margin:0; }
+  #{{$modalId}}-close { position:absolute; top:-.6em; right:-.6em; width:1.4em; height:1.4em; line-height:1.4em; text-align:center; border-radius:50%; background:#fff; color:#000; font-weight:bold; cursor:pointer; font-size:1.1em; }
+</style>
+<input id="{{$modalId}}" type="checkbox" autocomplete="off" style="display:none">
+<div id="{{$modalId}}-box">
+  <figure>
+    <label for="{{$modalId}}" id="{{$modalId}}-close">&times;</label>
+    <img src="{{$src}}" alt="{{$alt}}" style="max-width:90vw;max-height:85vh;object-fit:contain;display:block;">
+  </figure>
+  <label for="{{$modalId}}" style="position:fixed;inset:0;z-index:-1;cursor:zoom-out;"></label>
+</div>
+<label for="{{$modalId}}" style="cursor:zoom-in;display:block;">
+{{partial "tool/block" (dict "page" . "html" (partial "tool/image-featured" (dict "page" .)))}}
+</label>
+{{- end -}}
+{{partial "tool/block" (dict "page" . "html" .Content)}}
 {{partial "tmpl/childbar-horizontal.html" .}}
 {{ partial "tmpl/taxonomy-tags-logic" . }}
 {{ end }}

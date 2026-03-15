@@ -58,17 +58,18 @@ sidebar can be hidden with Params.ui.hide.sidebar
 {{- $target := "" -}}
 {{- if $s.Param "manualLinkTarget" -}}{{- $target = fmt.Print "target=\"%s\"" $s.Params.manuallinktitle -}}{{- end -}}
 
+{{- if $withChild -}}
 {{$accordionStart | safeHTML}}
 <div class="{{$isActive}} tab">
-  <input id="{{$depth}}-{{$id}}" type="checkbox" name="{{$depth}}-{{$id}}">
+  <input id="{{$depth}}-{{$id}}" type="checkbox" name="{{$depth}}-{{$id}}" {{if eq $isActive "active"}}checked{{end}}>
   <label for="{{$depth}}-{{$id}}" class="tab__label">
+    <span class="pi-tog"><i class="fa-solid fa-chevron-right pi-tog-c"></i><i class="fa-solid fa-chevron-down pi-tog-o"></i></span>
     {{$iconHtml | safeHTML}}
     <a href="{{ $link }}" title="{{ $title }}" {{$target}}="{{ . }}" id="{{ $mid }}">
-      {{ $s.LinkTitle }}
+      <small>{{ $s.LinkTitle }}</small>
     </a>
   </label>
   <div class="tab__content">
-    {{- if $withChild }}
     <div class="list" style="padding-left: 0.2em;">
       {{- $depth := add $depth 1 }}
       {{ range $pages -}}
@@ -81,10 +82,17 @@ sidebar can be hidden with Params.ui.hide.sidebar
       {{- end }}{{/* if */}}
       {{- end }}{{/* end range $pages */}}
     </div>
-    {{- end -}}{{/* end $withChild */}}
   </div>
 </div>
 {{$accordionEnd | safeHTML}}
+{{- else -}}
+<div class="pi-sidebar-leaf" id="{{ $mid }}">
+  {{$iconHtml | safeHTML}}
+  <a href="{{ $link }}" title="{{ $title }}" id="{{ $mid }}">
+    <small>{{ $s.LinkTitle }}</small>
+  </a>
+</div>
+{{- end -}}
 
 {{- end -}}{{/* end with linktitle */}}
 {{- end -}}{{/* end definition */}}

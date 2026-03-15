@@ -1,4 +1,11 @@
-{{- /* Get all pages from the blog section sorted by date (newest first) */ -}}
-{{- $blogPages := where site.RegularPages "Section" "blog" -}}
+{{- /* Get all pages from the blog section sorted by date (newest first).
+     Returns a slice of dicts: { page, featuredPath }
+*/ -}}
+{{- $blogPages  := where site.RegularPages "Section" "blog" -}}
 {{- $sortedPages := sort $blogPages "Date" "desc" -}}
-{{- return $sortedPages -}}
+{{- $result := slice -}}
+{{- range $sortedPages -}}
+  {{- $featuredPath := partial "hw-tk/path-image-featured" (dict "page" .) -}}
+  {{- $result = $result | append (dict "page" . "featuredPath" $featuredPath) -}}
+{{- end -}}
+{{- return $result -}}
