@@ -239,10 +239,10 @@ features:
       description: Renders a single Fomantic UI list item.
     - name: tool/item-help.html
       description: Inline docs for item.
-    - name: tool/item-blog-group.html
+    - name: tool/item-group-blog.html
       description: Renders a group of blog item cards.
-    - name: tool/item-blog-group-help.html
-      description: Inline docs for item-blog-group.
+    - name: tool/item-group-blog-help.html
+      description: Inline docs for item-group-blog.
     - name: tool/item-group.html
       description: Wraps items in a Fomantic UI divided items container. No -help peer.
     - name: tool/item-include.html

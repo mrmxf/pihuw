@@ -2,11 +2,10 @@
   The .src property may be a string or a resource - do the right thing!
 */}}
 {{$DBG := false}}
-{{$color := "purple"}}
 {{$type := (printf "%T" .src) }}
 {{$err := printf "is nil for %s" .src}}
 {{$alt := .alt}}
-{{$srcClass := .srcClass | default "ui fluid image"}}
+{{$srcClass := .srcClass | default ""}}
 {{if not $alt}}{{ $alt = .text }}{{end}}
 {{if not .src}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "src" .src))}}{{end}}
 {{if not $alt}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "alt" .alt))}}{{end}}

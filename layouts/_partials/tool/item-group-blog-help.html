@@ -3,13 +3,13 @@ Item blog group partial help using modular help system */ -}}
 {{ partial "hw-tk/help-tk.html" . }}
 
 {{- $cardData := dict
-  "title" "{{&lt; hw t=\"item-blog-group\" &gt;}}"
+  "title" "{{&lt; hw t=\"item-group-blog\" &gt;}}"
   "color" "teal"
   "Inner" ""
 -}}
 
 {{- $headerData := dict
-  "shortcode" "item-blog-group"
+  "shortcode" "item-group-blog"
   "type" "partial"
   "params" (slice
     (dict "name" "count" "required" false "example" "3")
@@ -66,32 +66,32 @@ Item blog group partial help using modular help system */ -}}
   "examples" (slice
     (dict
       "description" "Blog post list using hw shortcode"
-      "code" "{{&lt;hw t=\"item-blog-group\"&gt;}}"
+      "code" "{{&lt;hw t=\"item-group-blog\"&gt;}}"
       "note" "Use **hw shortcode** to show the most recent blog post in item format"
     )
     (dict
       "description" "Recent articles sidebar"
-      "code" "## Recent Articles\n\n{{&lt;hw t=\"item-blog-group\" count=\"4\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
+      "code" "## Recent Articles\n\n{{&lt;hw t=\"item-group-blog\" count=\"4\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
       "note" "**Perfect for sidebars** showing recent blog posts with automatic item formatting"
     )
     (dict
       "description" "Blog archive with skip functionality"
-      "code" "# Blog Archive\n\n## Featured Post\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Recent Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"5\" skip=\"1\"&gt;}}\n\n## Older Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"10\" skip=\"6\"&gt;}}"
+      "code" "# Blog Archive\n\n## Featured Post\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Recent Posts\n\n{{&lt;hw t=\"item-group-blog\" count=\"5\" skip=\"1\"&gt;}}\n\n## Older Posts\n\n{{&lt;hw t=\"item-group-blog\" count=\"10\" skip=\"6\"&gt;}}"
       "note" "**Combine with blog partial** to create comprehensive blog layouts"
     )
     (dict
       "description" "Categorized blog content in accordion"
-      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"📝 Latest Updates\"&gt;}}\n    {{&lt;hw t=\"item-blog-group\" count=\"3\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"📚 Popular Articles\"&gt;}}\n    {{&lt;hw t=\"item-blog-group\" count=\"5\" skip=\"3\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" text=\"These articles have been most helpful to our community\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🗂️ All Categories\"&gt;}}\n    {{&lt;hw t=\"children\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
+      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"📝 Latest Updates\"&gt;}}\n    {{&lt;hw t=\"item-group-blog\" count=\"3\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"📚 Popular Articles\"&gt;}}\n    {{&lt;hw t=\"item-group-blog\" count=\"5\" skip=\"3\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" text=\"These articles have been most helpful to our community\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🗂️ All Categories\"&gt;}}\n    {{&lt;hw t=\"children\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
       "note" "**Organize blog lists** within accordions for better content management"
     )
     (dict
       "description" "Blog showcase with custom image styling"
-      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Latest Blog Posts{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item-blog-group\" count=\"3\" scrClass=\"ui small image\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Subscribe to our newsletter for weekly blog updates and exclusive content\"&gt;}}"
+      "code" "{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Latest Blog Posts{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"item-group-blog\" count=\"3\" scrClass=\"ui small image\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Subscribe to our newsletter for weekly blog updates and exclusive content\"&gt;}}"
       "note" "**Embed in tables** and **customize image styling** for structured blog displays"
     )
     (dict
       "description" "Mixed content page with blog integration"
-      "code" "# Welcome to Our Platform\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Latest Features\" \n    text=\"Stay updated with our newest platform capabilities and improvements.\" \n    src=\"/images/icons/features.png\" \n    link=\"/features\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Community\" \n    text=\"Join our growing community of developers and creators.\" \n    src=\"/images/icons/community.png\" \n    link=\"/community\"&gt;}}\n{{&lt;/hw&gt;}}\n\n## Latest Blog Posts\n\n{{&lt;hw t=\"item-blog-group\" count=\"4\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"docs/getting-started\"&gt;}}"
+      "code" "# Welcome to Our Platform\n\n{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"Latest Features\" \n    text=\"Stay updated with our newest platform capabilities and improvements.\" \n    src=\"/images/icons/features.png\" \n    link=\"/features\"&gt;}}\n  \n  {{&lt;hw t=\"feature\" \n    header=\"Community\" \n    text=\"Join our growing community of developers and creators.\" \n    src=\"/images/icons/community.png\" \n    link=\"/community\"&gt;}}\n{{&lt;/hw&gt;}}\n\n## Latest Blog Posts\n\n{{&lt;hw t=\"item-group-blog\" count=\"4\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"docs/getting-started\"&gt;}}"
       "note" "**Mix with other partials** to create comprehensive landing pages"
     )
   )

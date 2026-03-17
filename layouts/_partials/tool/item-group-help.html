@@ -1,0 +1,124 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+Item group partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"item-group\" &gt;}}"
+  "color" "teal"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "item-group"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "group" "required" true "example" ".page.Pages.ByDate.Reverse")
+    (dict "name" "groupTags" "required" true "example" "blog learn")
+    (dict "name" "count" "required" false "example" "3")
+    (dict "name" "skip" "required" false "example" "1")
+    (dict "name" "scrClass" "required" false "example" "ui image")
+  )
+  "note" "Generic partial for rendering a list of page items from any pre-built group. Called by higher-level wrappers such as item-group-blog and item-group-by-type."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Renders a paginated list of items from a caller-supplied page group. Each item displays a title, summary, reading-time estimate, and optional featured image. Tags are de-duplicated and sorted before being attached to each item. This partial is not usually called directly — use a wrapper partial that builds the group and tags first."
+  "notes" (slice
+    "**Caller supplies the group** — any Hugo page collection can be passed in"
+    "**Tags are deduplicated and sorted** from the space-separated groupTags string"
+    "**Reading time** is calculated at 220 words per minute"
+    "**Featured image** is detected automatically per page and overrides src"
+    "**count/skip** window into the group using Hugo's first/last pipeline"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "group"
+      "type" "collection"
+      "required" true
+      "description" "Hugo page collection to iterate over (e.g. .page.Pages.ByDate.Reverse)"
+      "default" ""
+    )
+    (dict
+      "name" "groupTags"
+      "type" "string"
+      "required" true
+      "description" "Space-separated tags applied to every item (duplicates are removed and sorted)"
+      "default" ""
+    )
+    (dict
+      "name" "count"
+      "type" "number"
+      "required" false
+      "description" "Number of items to display"
+      "default" "1"
+    )
+    (dict
+      "name" "skip"
+      "type" "number"
+      "required" false
+      "description" "Number of items to skip from the front of the group before displaying"
+      "default" "0"
+    )
+    (dict
+      "name" "scrClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes applied to item images (note: parameter is scrClass, not srcClass)"
+      "default" ""
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided by the calling partial)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "item-group-blog — site-wide blog listing"
+      "code" "{{- $group := (where .page.Site.RegularPages \"Type\" \"blog\").ByDate.Reverse -}}\n{{- $groupTags := \"blog\" -}}\n{{ $dot := merge . (dict \"group\" $group \"groupTags\" $groupTags) }}\n{{partial \"tool/item-group\" $dot}}"
+      "note" "**item-group-blog** hard-codes the type filter to 'blog' and passes a fixed tag string"
+    )
+    (dict
+      "description" "item-group-by-type — section children listing"
+      "code" "{{- $group := .page.Pages.ByDate.Reverse -}}\n{{- $groupTags := printf \"%s\" .page.Type | lower -}}\n{{ $dot := merge . (dict \"group\" $group \"groupTags\" $groupTags) }}\n{{partial \"tool/item-group\" $dot}}"
+      "note" "**item-group-by-type** uses direct children only (1 level deep) and derives the tag from the section type"
+    )
+    (dict
+      "description" "Show 3 items, skipping the most recent"
+      "code" "{{&lt;hw t=\"item-group-blog\" count=\"3\" skip=\"1\"&gt;}}"
+      "note" "**skip=1** omits the featured/hero post so it can be shown separately above"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Not a shortcode** — always called via a wrapper partial, never directly from markdown"
+    "**Tag deduplication** — groupTags like 'blog blog learn' become ['blog','learn'] automatically"
+    "**Wrapper pattern** — create a new wrapper partial (like item-group-blog or item-group-by-type) to target a different content type"
+    "**Featured image** — looked up per page via hw-tk/resource-image-featured; filenames containing 'feature' are preferred"
+  )
+  "warnings" (slice
+    "**group is required** — passing an empty or nil group produces no output silently"
+    "**scrClass typo** — the image class parameter is named scrClass (not srcClass) for historical reasons"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

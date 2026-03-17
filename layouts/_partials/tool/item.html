@@ -52,7 +52,7 @@ default item is 33%:66% that becomes full width at {{site.Params.resp.s}}
 {{- $mediaSrcClass := $default.class.block.imgClass -}}
 {{with $srcIsVideo}}{{- $mediaSrcClass := $default.class.block.vidClass -}}{{end}}
 {{/* squash any caption and identify media class */}}
-{{- $mediaDot := merge . (dict "srcClass" $mediaSrcClass "text" nil) }}
+{{- $mediaDot := merge . (dict "srcClass" $mediaSrcClass "text" nil "header" nil) }}
 {{/* --------------------------------------------------------------------- */}}
 <div class = "{{$divClass}}">
 {{if $DBG}}<pre>Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}})</pre>{{end}}
@@ -63,12 +63,16 @@ default item is 33%:66% that becomes full width at {{site.Params.resp.s}}
   <div class="card">
     {{- if .header -}}
     <header>
+      {{range .tags}}{{partial "tool/label" (dict "text" .) }}{{end}}
       {{if .headerLink}}<a href="{{.headerLink}}">{{.header}}</a>
       {{else}}{{ .header }}{{end}}
+      {{- with .meta -}}
+      <div class="meta">
+        <span class="date">{{ page.Date.Format "2 Jan 2006" }}</span>
+        <span class="category">{{ . }}</span>
+      </div>
+      {{- end -}}
     </header>{{- end -}}
-    {{- with .meta -}}
-    <div class="meta"><span class="category">{{ . }}</span></div>
-    {{- end -}}
     <div class="description">
       {{- .description | markdownify -}}
       {{- .inner | markdownify -}}

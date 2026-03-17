@@ -34,14 +34,15 @@
 
   /* pihuw named colors & highlights */
   --text: var(--mm-dark);
+  --meta: hsl(from var(--mm-text) h s 99%);
   --bg-dark: var(--mm-purple);
   --code: : var(--mm-blue);
 
   /* highlight & background colors */
-  --hi1: var(--mrx-amber);
-  --hi2: var(--mrx-purple);
-  --hi3: var(--mrx-green);
-  --hi4: var(--mrx-blue);
+  --hi1: var(--mm-yellow);
+  --hi2: var(--mm-purple);
+  --hi3: var(--mm-green);
+  --hi4: var(--mm-blue);
 
   --bg1: hsl(from var(--hi1) h s 95%);
   --bg2: hsl(from var(--hi2) h s 95%);
@@ -620,6 +621,19 @@ hr {
   background-color: var(--bg2);
 }
 .definition-block .card header{
+  color: var(--hi2);
+}
+.meta {
+  font-size: 80%;
+  font-weight: lighter;
+  font-style: italic;
+  color: var(--meta);
+  display: inline
+}
+.meta .date {
+  color: var(--hi1);
+}
+.meta .category {
   color: var(--hi2);
 }
 

@@ -23,7 +23,7 @@ class:
     imgClass: image
     vidClass: video
   block_m:
-    divClass: flex one four-%d grow
+    divClass: flex one four-%d
     srcGrid: full fourth-%d src block
     txtGrid: full three-fourth-%d txt block
   item:

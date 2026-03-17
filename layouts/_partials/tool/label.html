@@ -1,0 +1,5 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+   print a picniccss label
+name = the label name (used as class suffix and label text)
+*/}}
+{{with .text}}<span class="label label-{{.}}">{{.}}</span>{{end}}

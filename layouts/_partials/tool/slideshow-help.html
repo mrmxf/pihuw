@@ -1,0 +1,109 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+Slideshow partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"slideshow\" from=\"https://example.com/slide01.jpg\" count=\"5\" &gt;}}"
+  "color" "blue"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "slideshow"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "from" "required" true "example" "https://example.com/slide01.jpg")
+    (dict "name" "count" "required" true "example" "5")
+    (dict "name" "inner" "required" false "example" "Click to view slides")
+  )
+  "note" "Opens a fullscreen modal slideshow from a zero-padded numbered image sequence. Click the thumbnail (or custom trigger) to open; navigate with arrows or keyboard."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Renders a clickable thumbnail that opens a fullscreen modal slideshow. Slides are fetched from a numbered image sequence derived from the first image URL — the digit count and padding are detected automatically from the filename (1–5 digits). Keyboard navigation and click-outside-to-close are supported."
+  "notes" (slice
+    "**Digit width auto-detected** from the first filename e.g. `slide01.jpg` → 2-digit padding"
+    "**Sequence start** is inferred from the first slide number, not always zero"
+    "**Custom trigger** via `.inner` — any HTML/markdown replaces the default thumbnail"
+    "**Loading spinner** shown while each image fetches; hides immediately if cached"
+    "**Keyboard support** — ← → to navigate, Esc to close"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" true
+      "description" "Full URL of the first slide image, including the zero-padded sequence number"
+      "default" ""
+    )
+    (dict
+      "name" "count"
+      "type" "number"
+      "required" true
+      "description" "Total number of slides to show"
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "HTML"
+      "required" false
+      "description" "Custom trigger content rendered instead of the first-slide thumbnail"
+      "default" "first slide image"
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided)"
+      "default" "current page"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic slideshow from a remote image sequence"
+      "code" "{{&lt;hw t=\"slideshow\" from=\"https://example.com/slides/img001.jpg\" count=\"12\"&gt;}}"
+      "note" "**3-digit padding** detected from `001` — generates `img001.jpg` through `img012.jpg`"
+    )
+    (dict
+      "description" "Two-digit sequence starting at 01"
+      "code" "{{&lt;hw t=\"slideshow\" from=\"https://mrmxf.com/get/deck/slide01.jpg\" count=\"17\"&gt;}}"
+      "note" "Sequence runs `slide01.jpg` → `slide17.jpg`"
+    )
+    (dict
+      "description" "Custom trigger instead of thumbnail"
+      "code" "{{&lt;hw t=\"slideshow\" from=\"https://example.com/frame0001.jpg\" count=\"24\"&gt;}}View the presentation{{&lt;/hw&gt;}}"
+      "note" "**inner content** replaces the thumbnail; the modal loads on first click"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**URL construction** — only the numeric suffix is replaced; the path, prefix, and extension are preserved exactly"
+    "**Sequence start** — `slide03.jpg` with `count=4` generates `slide03` through `slide06`"
+    "**Cache-aware** — spinner hides immediately when the browser already has the image cached"
+    "**Single instance per page** — uid is derived from the `from` URL; two slideshows with the same URL share an id"
+  )
+  "warnings" (slice
+    "**CORS** — images must allow cross-origin loading if served from a different domain"
+    "**Exact naming** — all slides must follow the same prefix/digits/extension pattern as the first image"
+    "**count is required** — there is no automatic discovery of how many slides exist"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

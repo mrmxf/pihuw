@@ -1,0 +1,8 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+   partial to create a list of latest blogs. Reading rate in site config
+*/}}
+{{- $group := (where .page.Site.RegularPages "Type" "blog").ByDate.Reverse -}}
+{{- $groupTags := "blog" -}}
+{{ $dot := merge . (dict "group" $group "groupTags" $groupTags) }}
+{{/*  <pre>{{ debug.Dump $dot}}</pre>  */}}
+{{partial "tool/item-group"  $dot}}

@@ -1,5 +1,6 @@
 # flow:"stage",   build:"dev"  = auto-add to staging server
 # flow:"release", build:"prod" = to flag as a production release
+- {version: "v0.4.1",  date: 2026-03-16, build: prod, flow: dev,  note: blog styling, slideshow}
 - {version: "v0.4.0",  date: 2026-03-15, build: prod, flow: main, note: blog sorting, display & sidebar}
 - {version: "v0.3.23", date: 2025-12-05, build: prod, flow: main, note: class data+childbar fix+brand svg fix}
 - {version: "v0.3.22", date: 2025-09-25, build: prod, flow: main, note: blog}

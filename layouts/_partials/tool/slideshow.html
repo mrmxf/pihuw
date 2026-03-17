@@ -1,0 +1,185 @@
+{{- /* markdownlint-disable */ -}}
+{{partial "hw-tk/dbg-template" .}}{{/* Hugo partial that creates a modal slideshow from a numbered image sequence */}}
+{{- $from  := .from -}}
+{{- $count := .count | int -}}
+{{- $inner := .inner -}}{{/* optional trigger content; if absent the first slide is used as thumbnail */}}
+{{- $ext      := path.Ext $from -}}
+{{- $filename := path.Base $from -}}
+{{- $dir      := strings.TrimSuffix (printf "/%s" $filename) $from -}}{{/* path.Dir mangles https:// → https:/ */}}
+{{- $stem     := strings.TrimSuffix $ext $filename -}}
+{{- $prefix   := replaceRE `\d+$` "" $stem -}}
+{{- $digits   := replaceRE `^\D+` "" $stem -}}{{/* e.g. "000" from "slide000" */}}
+{{- $padWidth := len $digits -}}{{/* 1–5 digits, preserved from the source name */}}
+{{- $fmt      := printf "%%s/%%s%%0%dd%%s" $padWidth -}}{{/* e.g. "%s/%s%03d%s" */}}
+{{- $uid      := substr (sha1 $from) 0 8 -}}
+
+{{/* build slide URL list from the numbered sequence starting at the first slide index */}}
+{{- $start  := $digits | int -}}
+{{- $slides := slice -}}
+{{- range seq $start (sub (add $start $count) 1) -}}
+  {{- $slides = $slides | append (printf $fmt $dir $prefix . $ext) -}}
+{{- end -}}
+
+<style>
+.sf-thumb {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.sf-thumb img {
+  max-width: 100%;
+  display: block;
+}
+
+.sf-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-overlay.sf-open {
+  display: flex;
+}
+
+.sf-modal-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+}
+
+.sf-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+}
+
+.sf-prev,
+.sf-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0 1rem;
+  opacity: 0.7;
+}
+
+.sf-prev:hover,
+.sf-next:hover {
+  opacity: 1;
+}
+
+.sf-prev { left:  0; }
+.sf-next { right: 0; }
+
+.sf-counter {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.9rem;
+}
+
+.sf-spinner {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sf-spin 0.8s linear infinite;
+}
+
+@keyframes sf-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+</style>
+
+{{- if $inner -}}
+<div class="sf-thumb" id="sf-thumb-{{ $uid }}">{{ $inner | safeHTML }}</div>
+{{- else -}}
+<div class="sf-thumb" id="sf-thumb-{{ $uid }}">
+  <img src="{{ index $slides 0 }}" alt="slide 1 of {{ $count }}" />
+</div>
+{{- end }}
+
+<div class="sf-overlay" id="sf-overlay-{{ $uid }}">
+  <button class="sf-close">&#x2715;</button>
+  <button class="sf-prev">&#x2039;</button>
+  <span class="sf-spinner loading" aria-label="loading"></span>
+  <img class="sf-modal-img" src="" alt="" style="display:none" />
+  <button class="sf-next">&#x203a;</button>
+  <div class="sf-counter"></div>
+</div>
+
+<script>
+(function() {
+  const slides = [{{ range $i, $url := $slides }}{{ if $i }},{{ end }}"{{ $url }}"{{ end }}];
+  const hasInner = {{ if $inner }}true{{ else }}false{{ end }};
+  const overlay  = document.getElementById('sf-overlay-{{ $uid }}');
+  const thumb    = document.getElementById('sf-thumb-{{ $uid }}');
+  const modalImg = overlay.querySelector('.sf-modal-img');
+  const spinner  = overlay.querySelector('.sf-spinner');
+  const counter  = overlay.querySelector('.sf-counter');
+  let current    = 0;
+
+  function show(n) {
+    current = (n + slides.length) % slides.length;
+    const src = slides[current];
+    spinner.style.display  = 'block';
+    modalImg.style.display = 'none';
+    counter.textContent    = (current + 1) + ' / ' + slides.length;
+
+    function reveal() {
+      spinner.style.display  = 'none';
+      modalImg.style.display = 'block';
+    }
+
+    modalImg.onload = reveal;
+    modalImg.src    = src;
+    modalImg.alt    = 'slide ' + (current + 1) + ' of ' + slides.length;
+
+    // cached images don't re-fire onload — reveal immediately if already loaded
+    if (modalImg.complete && modalImg.naturalWidth) {
+      modalImg.onload = null;
+      reveal();
+    }
+  }
+
+  function open()  { overlay.classList.add('sf-open');    show(0); }
+  function close() { overlay.classList.remove('sf-open'); }
+
+  thumb.addEventListener('click', open);
+  overlay.querySelector('.sf-close').addEventListener('click', close);
+  overlay.querySelector('.sf-prev').addEventListener('click', function() { show(current - 1); });
+  overlay.querySelector('.sf-next').addEventListener('click', function() { show(current + 1); });
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+
+  document.addEventListener('keydown', function(e) {
+    if (!overlay.classList.contains('sf-open')) return;
+    if (e.key === 'Escape')     close();
+    if (e.key === 'ArrowLeft')  show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+})();
+</script>

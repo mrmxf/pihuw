@@ -1,8 +1,68 @@
 {{partial "hw-tk/dbg-template" .}}{{/*
-  an item-group must surround items for them to work properly
-  
-   class = "ui items"     - turn off the dividers
-  */}}
-  <div class="ui divided items">
-    {{.inner}}
-  </div>
+  an item-group is called from a higher level partial that provides additional tagging
+*/}}
+{{ $group := .group}}{{/* group that is ranged over */}}
+{{ $groupTags := .groupTags}}{{/* group tags added to each item e.g. "blog" */}}
+{{ $count := 1 }}{{/* how many items we show */}}
+{{ $skip := 0 }}{{/* how many items to skip */}}
+
+{{ $header := "None" }}{{/* title of an item */}}
+{{ $srcClass := .scrClass | default "" }}{{/* image class */}}
+{{ $srcLink := "" }}{{/* image link */}}
+{{ $src := "" }}{{/* image path or resource */}}
+{{ $description := "" }}{{/* body text of the item */}}
+{{ $link := "" }}{{/* link for clicking the header */}}
+{{ $meta := "" }}{{/* metadata for this item e.g. reading time */}}
+{{ $featured := "" }}{{/* featured image - per page - overrides src  */}}
+{{/*
+---------------------------------------------------------------------
+--- sanitize inputs -------------------------------------------------
+---------------------------------------------------------------------
+*/}}
+{{- if (isset . "count") }}{{ $count = .count }}{{ end -}}
+{{- if (isset . "skip") }}{{ $skip = index . "skip" }}{{ end -}}
+{{ $groupCount := add $count $skip }}
+{{ $dot := . }}
+{{/*
+---------------------------------------------------------------------
+--- DEBUG - change to if true for debug listings --------------------
+---------------------------------------------------------------------
+*/}}
+{{ if false}}{{ range $group | first $groupCount | last $count }}
+<pre>
+  count:        {{ $count }}
+  skip:         {{ $skip }}
+  Title:        {{.Page.Title}}
+  Date:         {{.Date}}
+  LinkTitle:    {{.LinkTitle}}
+  RelPermalink: {{.RelPermalink}}
+  Featured:     {{$featured}}
+</pre><hr>{{end}}{{end}}
+{{/* --- find latest blog ------------------------------------------------ */}}
+{{ range $group | first $groupCount | last $count }}
+  {{ $srcLink = .RelPermalink }}
+  {{ $header = .Title }}
+  {{ $description = .Summary }}
+  {{with .Param "summary"}}{{ $description = . }}{{end}}
+  {{ $minutes := add ( div ( countwords .Plain ) 220 ) 1 }}
+  {{ $meta = printf "~%v min read" $minutes }}
+  {{ $link = .RelPermalink }}
+  {{ $featured = partial "hw-tk/resource-image-featured" (dict "page" .Page) }}
+
+  {{/* --- update the dict for the block -----------------------------------*/}}
+  {{- $d := merge $dot (dict "src" "") -}}
+  {{if $featured}}
+    {{- $d = merge $d (dict "alt" "$header") -}}
+    {{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
+    {{- $d = merge $d (dict "srcClass" $srcClass) -}}
+    {{- $d = merge $d (dict "srcLink" $srcLink) -}}
+    {{- $d = merge $d (dict "headerLink" $srcLink) -}}
+  {{end}}
+  {{- $d = merge $d (dict "tags" (sort (uniq (split $groupTags " ")))) -}}{{/* dedupe and sort the tags */}}
+  {{- $d = merge $d (dict "header" $header) -}}
+  {{- $d = merge $d (dict "description" $description) -}}
+  {{- $min := add ( div ( countwords $description ) 220 ) 1 -}}
+  {{- $d = merge $d (dict "meta" (printf "~%v min read" $min)) -}}
+
+  {{ partial "tool/item" $d }}
+{{ end }}{{/* end of range*/}}
