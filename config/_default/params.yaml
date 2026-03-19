@@ -11,6 +11,22 @@ markmap:
   enable: false
 katex:
   enable: false
+graph:
+  enable: true          # load Chart.js CDN on pages that use {{< graph >}}
+  type: line            # line | bar | scatter | area
+  showAxis: "xy"        # xy | x | y | none
+  showLabels: "xy"      # xy | x | y | none
+  showGrid: "xy"        # xy | x | y | none
+  showLegend: true
+  height: "300px"
+  smooth: 0             # bezier tension 0.0–1.0 (line only)
+  fill: false           # fill under line (area effect)
+  stacked: false
+  xType: "auto"         # auto | time | linear | category
+  dateFormat: "YYYY-MM-DD"
+  colors: ""            # empty = built-in palette; or comma-separated CSS colors
+  yMin: ""
+  yMax: ""
 
 # This file contains all the sites.Params.xxx properties
 # These values here are used to build the documentation site.

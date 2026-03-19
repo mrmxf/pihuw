@@ -1,0 +1,195 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+Graph partial help using modular help system */ -}}
+{{ partial "hw-tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"graph\" from=\"data/releases.yaml\" x=\"date\" y=\"version\" &gt;}}"
+  "color" "blue"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "hw t=\"graph\""
+  "type" "partial"
+  "params" (slice
+    (dict "name" "from"        "required" true  "example" "data/releases.yaml")
+    (dict "name" "x"           "required" false "example" "date")
+    (dict "name" "y"           "required" false "example" "version,build")
+    (dict "name" "class"       "required" false "example" "line")
+    (dict "name" "header"      "required" false "example" "Release Timeline")
+    (dict "name" "description" "required" false "example" "Date")
+    (dict "name" "meta"        "required" false "example" "Version")
+    (dict "name" "text"        "required" false "example" "Source: releases.yaml")
+    (dict "name" "id"          "required" false "example" "my-graph")
+    (dict "name" "blockClass"  "required" false "example" "hw-graph")
+  )
+  "note" "XY chart from yaml/json/csv or front-matter data. Param cascade: site.Params.graph → page.Params.graphs.{id} → shortcode param."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Renders a responsive Chart.js XY chart sized to its parent container. Data is loaded at build time from assets/ using Hugo transform.Unmarshal (no runtime fetch), or supplied inline in front matter. Multiple traces are defined by comma-separating field names in the y param. Styling cascades from site.Params.graph through named graph blocks in page front matter to per-shortcode overrides."
+  "notes" (slice
+    "**Uses hw params**: `from` = data path, `class` = chart type, `header` = title, `description` = x-axis label, `meta` = y-axis label, `text` = caption below chart"
+    "**Data formats**: yaml, json, csv (from assets/), or inline front-matter data"
+    "**Multiple traces**: `y=\"field1,field2,field3\"` creates separate datasets"
+    "**Auto x/y**: omit `x`/`y` to use the first field as x and all remaining fields as traces"
+    "**Chart types**: `line`, `bar`, `scatter`, `area` (area = line with fill forced on)"
+    "**CDN lazy-load**: Chart.js injected only on pages that render a graph"
+    "**Height required**: canvas has no intrinsic height — set via `blockClass` CSS or front-matter `height:`"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "from"
+      "type" "string"
+      "required" true
+      "description" "Path to data file relative to `assets/` (yaml/json/csv), OR `frontmatter:dot.path` to walk page.Params, OR omit and supply `data:` in the `graphs.{id}` front-matter block."
+      "default" ""
+    )
+    (dict
+      "name" "x"
+      "type" "string"
+      "required" false
+      "description" "Field name for the x-axis (labels). Defaults to the first field in the data."
+      "default" "first field"
+    )
+    (dict
+      "name" "y"
+      "type" "string"
+      "required" false
+      "description" "Comma-separated field names to plot as separate traces. Defaults to all fields except x."
+      "default" "all non-x fields"
+    )
+    (dict
+      "name" "class"
+      "type" "string"
+      "required" false
+      "description" "Chart type: `line` | `bar` | `scatter` | `area`"
+      "default" "site.Params.graph.type (line)"
+    )
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Chart title displayed above the plot area"
+      "default" "empty"
+    )
+    (dict
+      "name" "description"
+      "type" "string"
+      "required" false
+      "description" "X-axis label"
+      "default" "empty"
+    )
+    (dict
+      "name" "meta"
+      "type" "string"
+      "required" false
+      "description" "Y-axis label"
+      "default" "empty"
+    )
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Caption rendered below the chart (markdownified)"
+      "default" "empty"
+    )
+    (dict
+      "name" "id"
+      "type" "string"
+      "required" false
+      "description" "Identifies this graph instance. Also used as a lookup key into `page.Params.graphs.{id}` so all config can live in front matter."
+      "default" "auto (block ordinal)"
+    )
+    (dict
+      "name" "blockClass"
+      "type" "string"
+      "required" false
+      "description" "CSS class on the outer wrapper div (applied by the hw dispatcher). Use to set height via CSS rather than inline style."
+      "default" "empty"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Minimal — file data, auto-detected fields"
+      "code" "{{&lt;hw t=\"graph\" from=\"data/releases.yaml\"&gt;}}"
+      "note" "x = first field, all remaining fields become traces"
+    )
+    (dict
+      "description" "Explicit axes and chart type"
+      "code" "{{&lt;hw t=\"graph\" from=\"data/releases.yaml\" x=\"date\" y=\"version,build\" class=\"bar\" header=\"Release History\"&gt;}}"
+      "note" "Two bar traces; header shown as chart title"
+    )
+    (dict
+      "description" "Inline front-matter data (Form B) — self-contained page"
+      "code" "{{&lt;hw t=\"graph\" id=\"banana-chart\"&gt;}}"
+      "note" (printf "%s\n%s"
+        "Front matter contains the full graph definition — shortcode stays minimal."
+        "See **Front-matter data (Form B)** section below."
+      )
+    )
+    (dict
+      "description" "Two graphs on one page via front-matter blocks"
+      "code" "{{&lt;hw t=\"graph\" id=\"prices\"&gt;}}\n\n{{&lt;hw t=\"graph\" id=\"volumes\"&gt;}}"
+      "note" "Each id resolves to its own `graphs.{id}` block in front matter"
+    )
+    (dict
+      "description" "Named front-matter data, standalone shortcode (Form A)"
+      "code" "{{&lt;hw t=\"graph\" from=\"frontmatter:data.banana-prices\" x=\"month\" y=\"price\"&gt;}}"
+      "note" "Walks `page.Params.data[\"banana-prices\"]` — data lives in front matter, config stays in shortcode"
+    )
+    (dict
+      "description" "Sparkline — no chrome, fixed height"
+      "code" "{{&lt;hw t=\"graph\" from=\"data/temps.json\" x=\"time\" y=\"celsius\" showAxis=\"none\" showLabels=\"none\" showGrid=\"none\" showLegend=\"false\" height=\"80px\"&gt;}}"
+      "note" "All display controls suppressed; height set inline"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Front-matter data (Form B)** — put config AND data in a named block, then use `id` to reference it:"
+    "```yaml"
+    "graphs:"
+    "  banana-chart:"
+    "    data:"
+    "      - {month: Jan, price: 1.20}"
+    "      - {month: Feb, price: 1.35}"
+    "      - {month: Mar, price: 1.18}"
+    "      - {month: Apr, price: 1.42}"
+    "    x: month"
+    "    y: price"
+    "    class: line"
+    "    header: Banana Prices 2026"
+    "    smooth: 0.4"
+    "    height: 280px"
+    "```"
+    "Then in content: `{{< hw t=\"graph\" id=\"banana-chart\" >}}`"
+    "**Param cascade** — `site.Params.graph.*` → `page.Params.graphs.{id}.*` → shortcode param"
+    "**Date x-axis** — YAML dates become Go `time.Time`; Chart.js receives ISO-8601 strings. Set `xType=time` for the time scale."
+    "**CSV headers** — first row of the CSV is treated as field names"
+    "**colors** — comma-separated CSS values; wraps when traces outnumber colors"
+  )
+  "warnings" (slice
+    "**height is required** — a `<canvas>` has no intrinsic height; the chart collapses to 0px if not set"
+    "**y auto-detection** — when `y` is omitted ALL non-x fields become traces, including string/boolean fields"
+    "**Form B data size** — front-matter data is fine for < ~20 rows; larger sets belong in `assets/data/`"
+    "**time scale** — requires the chartjs-adapter-date-fns CDN addon (not included by default)"
+  )
+-}}
+
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html"      $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html"      $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html"    $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html"       $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "hw-tk/help-card.html" $cardData -}}

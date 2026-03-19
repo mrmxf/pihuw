@@ -1,0 +1,214 @@
+{{partial "hw-tk/dbg-template" .}}{{/*
+tool/graph — XY chart rendered via Chart.js from yaml | json | csv | front-matter data.
+Called as: {{< hw t="graph" from="data/releases.yaml" x="date" y="version" >}}
+
+Param mapping from the hw.html normalized dict:
+  .from        → data file path (assets/-relative) OR "frontmatter:dot.path"
+  .class       → chart type: line | bar | scatter | area
+  .header      → chart title
+  .description → x-axis label
+  .meta        → y-axis label
+  .text        → caption rendered below the chart
+  .x           → x-axis field name (defaults to first field)
+  .y           → comma-separated y-axis field names (defaults to all non-x fields)
+  .id          → graph identifier; also used as key into page.Params.graphs.{id}
+
+Param resolution order (lowest → highest):
+  site.Params.graph.*  →  page.Params.graphs.{id}.*  →  hw shortcode param
+*/}}
+
+{{/* ---- site defaults ---- */}}
+{{- $sP := site.Params.graph | default dict -}}
+
+{{/* ---- front-matter block lookup by id ---- */}}
+{{- $fm := dict -}}
+{{- if .id -}}
+  {{- $fm = index (.page.Params.graphs | default dict) .id | default dict -}}
+{{- end -}}
+
+{{/* ---- resolve string params: shortcode > front-matter block > site default ---- */}}
+{{- $from       := .from        | default ($fm.from        | default "") -}}
+{{- $chartType  := .class       | default ($fm.class       | default ($sP.type       | default "line")) -}}
+{{- $title      := .header      | default ($fm.header      | default ($sP.title      | default "")) -}}
+{{- $xLabel     := .description | default ($fm.description | default ($sP.xLabel     | default "")) -}}
+{{- $yLabel     := .meta        | default ($fm.meta        | default ($sP.yLabel     | default "")) -}}
+{{- $caption    := .text        | default ($fm.text        | default "") -}}
+{{- $xField     := .x           | default ($fm.x           | default ($sP.x          | default "")) -}}
+{{- $yFields    := .y           | default ($fm.y           | default ($sP.y          | default "")) -}}
+{{- $showAxis   := .showAxis    | default ($fm.showAxis    | default ($sP.showAxis   | default "xy")) -}}
+{{- $showLabels := .showLabels  | default ($fm.showLabels  | default ($sP.showLabels | default "xy")) -}}
+{{- $showGrid   := .showGrid    | default ($fm.showGrid    | default ($sP.showGrid   | default "xy")) -}}
+{{- $colors     := .colors      | default ($fm.colors      | default ($sP.colors     | default "")) -}}
+{{- $xType      := .xType       | default ($fm.xType       | default ($sP.xType      | default "auto")) -}}
+{{- $dateFormat := .dateFormat  | default ($fm.dateFormat  | default ($sP.dateFormat | default "YYYY-MM-DD")) -}}
+{{- $yMin       := .yMin        | default ($fm.yMin        | default ($sP.yMin       | default "")) -}}
+{{- $yMax       := .yMax        | default ($fm.yMax        | default ($sP.yMax       | default "")) -}}
+{{- $height     := .height      | default ($fm.height      | default ($sP.height     | default "300px")) -}}
+
+{{/* ---- boolean params: normalise to "true"/"false" string ---- */}}
+{{- $showLegend := printf "%v" ($fm.showLegend | default ($sP.showLegend | default true)) -}}
+{{- if .showLegend }}{{- $showLegend = .showLegend -}}{{- end -}}
+
+{{- $fill := printf "%v" ($fm.fill | default ($sP.fill | default false)) -}}
+{{- if .fill }}{{- $fill = .fill -}}{{- end -}}
+
+{{- $stacked := printf "%v" ($fm.stacked | default ($sP.stacked | default false)) -}}
+{{- if .stacked }}{{- $stacked = .stacked -}}{{- end -}}
+
+{{/* ---- numeric param: smooth ---- */}}
+{{- $smooth := printf "%v" ($fm.smooth | default ($sP.smooth | default 0)) -}}
+{{- if .smooth }}{{- $smooth = .smooth -}}{{- end -}}
+
+{{/* ---- load data rows ---- */}}
+{{- $rows    := slice -}}
+{{- $headers := slice -}}
+
+{{- if hasPrefix $from "frontmatter:" -}}
+  {{/* Form A: walk page.Params via dot-path e.g. "frontmatter:data.banana-prices" */}}
+  {{- $node := .page.Params -}}
+  {{- range split (strings.TrimPrefix "frontmatter:" $from) "." -}}
+    {{- $node = index $node . -}}
+  {{- end -}}
+  {{- $rows = $node -}}
+
+{{- else if $from -}}
+  {{/* standard file in assets/ — yaml, json, or csv */}}
+  {{- with resources.Get $from -}}
+    {{- $ext := strings.ToLower (path.Ext $from) -}}
+    {{- if or (eq $ext ".yaml") (eq $ext ".yml") (eq $ext ".json") -}}
+      {{- $rows = . | transform.Unmarshal -}}
+    {{- else if eq $ext ".csv" -}}
+      {{- $raw := . | transform.Unmarshal (dict "delimiter" ",") -}}
+      {{- if gt (len $raw) 1 -}}
+        {{- $headers = index $raw 0 -}}
+        {{- range $raw | after 1 -}}
+          {{- $row := dict -}}
+          {{- range $i, $v := . -}}{{- $row = merge $row (dict (index $headers $i) $v) -}}{{- end -}}
+          {{- $rows = $rows | append $row -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    <p class="hw-graph-error">graph: cannot load <code>assets/{{ $from }}</code></p>
+  {{- end -}}
+
+{{- else if $fm.data -}}
+  {{/* Form B: inline data: key in the graphs.{id} front-matter block */}}
+  {{- $rows = $fm.data -}}
+
+{{- else -}}
+  <p class="hw-graph-error">graph: no data source — set <code>from</code> or provide inline <code>data:</code> in front matter</p>
+{{- end -}}
+
+{{/* ---- collect headers from first row (yaml/json/front-matter) ---- */}}
+{{- if and (gt (len $rows) 0) (eq (len $headers) 0) -}}
+  {{- range $k, $v := index $rows 0 -}}{{- $headers = $headers | append $k -}}{{- end -}}
+{{- end -}}
+
+{{/* ---- determine x and y keys ---- */}}
+{{- $xKey := $xField -}}
+{{- if and (not $xKey) (gt (len $headers) 0) -}}
+  {{- $xKey = index $headers 0 -}}
+{{- end -}}
+
+{{- $yKeys := slice -}}
+{{- if $yFields -}}
+  {{- range split $yFields "," -}}{{- $yKeys = $yKeys | append (strings.TrimSpace .) -}}{{- end -}}
+{{- else -}}
+  {{- range $headers -}}{{- if ne . $xKey -}}{{- $yKeys = $yKeys | append . -}}{{- end -}}{{- end -}}
+{{- end -}}
+
+{{/* ---- unique canvas id ---- */}}
+{{- $uid := substr (sha1 (printf "%s%s" $from .id)) 0 8 -}}
+
+{{/* ---- color list ---- */}}
+{{- $colorList := slice -}}
+{{- if $colors -}}
+  {{- range split $colors "," -}}{{- $colorList = $colorList | append (strings.TrimSpace .) -}}{{- end -}}
+{{- end -}}
+
+{{/* ---- x scale type ---- */}}
+{{- $jsXType := "category" -}}
+{{- if eq $xType "time"    -}}{{- $jsXType = "time"    -}}{{- end -}}
+{{- if eq $xType "linear"  -}}{{- $jsXType = "linear"  -}}{{- end -}}
+
+{{/* ---- chart.js type (area → line with forced fill) ---- */}}
+{{- $jsType := $chartType -}}
+{{- if eq $chartType "area" -}}{{- $jsType = "line" -}}{{- end -}}
+
+{{/* ---- signal CDN loader in body-scripts.html ---- */}}
+{{- .page.Store.Set "hasGraph" true -}}
+
+{{/* ---- HTML ---- */}}
+<div class="hw-graph" style="position:relative;height:{{ $height }};width:100%">
+  <canvas id="hw-graph-{{ $uid }}"></canvas>
+</div>
+{{- with $caption }}<p class="hw-graph-caption">{{ . | markdownify }}</p>{{- end }}
+
+<script>
+(function() {
+  var labels = [
+    {{- range $rows -}}{{ index . $xKey | jsonify }},{{- end -}}
+  ];
+
+  var palette = ["#b5892a","#8a3d72","#5f8c2e","#3a3a82","#c0392b","#16a085","#8e44ad"];
+
+  var datasets = [
+    {{- range $i, $yk := $yKeys }}
+    {
+      label: {{ $yk | jsonify }},
+      data: [{{- range $rows -}}{{ index . $yk | jsonify }},{{- end -}}],
+      {{- if $colorList }}
+      borderColor:     {{ index $colorList (mod $i (len $colorList)) | jsonify }},
+      backgroundColor: {{ index $colorList (mod $i (len $colorList)) | jsonify }},
+      {{- else }}
+      borderColor:     palette[{{ $i }} % palette.length],
+      backgroundColor: palette[{{ $i }} % palette.length],
+      {{- end }}
+      tension:     {{ $smooth }},
+      fill:        {{ if eq $chartType "area" }}true{{ else }}{{ eq $fill "true" }}{{ end }},
+      borderWidth: 2,
+      pointRadius: 3,
+    },
+    {{- end }}
+  ];
+
+  function _hwg() {
+    new Chart(document.getElementById("hw-graph-{{ $uid }}"), {
+      type: {{ $jsType | jsonify }},
+      data: { labels: labels, datasets: datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: {{ eq $showLegend "true" }} },
+          title:  { display: {{ ne $title "" }}, text: {{ $title | jsonify }} },
+        },
+        scales: {
+          x: {
+            type:    {{ $jsXType | jsonify }},
+            display: {{ or (eq $showAxis "xy") (eq $showAxis "x") }},
+            stacked: {{ eq $stacked "true" }},
+            grid:    { display: {{ or (eq $showGrid "xy") (eq $showGrid "x") }} },
+            ticks:   { display: {{ or (eq $showLabels "xy") (eq $showLabels "x") }} },
+            {{ if $xLabel -}}title: { display: true, text: {{ $xLabel | jsonify }} },{{- end }}
+            {{ if eq $xType "time" -}}time: { displayFormats: { day: {{ $dateFormat | jsonify }} } },{{- end }}
+          },
+          y: {
+            display: {{ or (eq $showAxis "xy") (eq $showAxis "y") }},
+            stacked: {{ eq $stacked "true" }},
+            grid:    { display: {{ or (eq $showGrid "xy") (eq $showGrid "y") }} },
+            ticks:   { display: {{ or (eq $showLabels "xy") (eq $showLabels "y") }} },
+            {{ if $yLabel -}}title: { display: true, text: {{ $yLabel | jsonify }} },{{- end }}
+            {{ if $yMin   -}}min: {{ $yMin }},{{- end }}
+            {{ if $yMax   -}}max: {{ $yMax }},{{- end }}
+          },
+        },
+      },
+    });
+  }
+
+  if (typeof Chart !== "undefined") { _hwg(); }
+  else { window._hwGraphQ = window._hwGraphQ || []; window._hwGraphQ.push(_hwg); }
+}());
+</script>

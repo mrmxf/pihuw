@@ -1,2 +1,6 @@
 {{partial "hw-tk/dbg-template" .}}
 <!-- --- load all body scripts here ---------- -->
+{{- if .Store.Get "hasGraph" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+<script>(function(){var q=window._hwGraphQ;if(q){q.forEach(function(f){f();});}}());</script>
+{{- end }}

@@ -64,6 +64,8 @@ Props(see tool/help partial or insert `hw t="help"` in your code):
 {{- $srcWidth := .Get "srcWidth" -}}
 {{- $text := .Get "text" -}}
 {{- $txtGrid := .Get "txtGrid" -}}
+{{- $x := .Get "x" -}}
+{{- $y := .Get "y" -}}
 {{/* --- src logic ------------------------------------------------------*/}}
 {{- if not $src -}}{{ $srcWidth = 0.0 }}{{- end -}}
 {{- $srcIsVideo := false -}}
@@ -112,6 +114,8 @@ Props(see tool/help partial or insert `hw t="help"` in your code):
 {{- $d = merge $d (dict "srcPoster" $srcPoster) -}}
 {{- $d = merge $d (dict "text" $text) -}}
 {{- $d = merge $d (dict "txtGrid" $txtGrid) -}}
+{{- $d = merge $d (dict "x" $x) -}}
+{{- $d = merge $d (dict "y" $y) -}}
 
 {{- if $dbg -}}
 <details class="" open="">

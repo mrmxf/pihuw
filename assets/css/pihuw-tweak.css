@@ -682,3 +682,23 @@ hr {
     display: none;
   }
 }
+
+/* ---- hw-graph: Chart.js container ---------------------------------------- */
+.hw-graph {
+  /* site palette colours available for inline color override via JS getComputedStyle */
+  --graph-c1: var(--hi1);
+  --graph-c2: var(--hi2);
+  --graph-c3: var(--hi3);
+  --graph-c4: var(--hi4);
+  display: block;
+  width: 100%;
+  min-height: 80px;   /* fallback; real height set inline by the partial */
+}
+
+.hw-graph-error {
+  color: var(--hi2);
+  border: 1px solid var(--hi2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
