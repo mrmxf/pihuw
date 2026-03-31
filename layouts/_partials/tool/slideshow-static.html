@@ -1,0 +1,40 @@
+{{- /* markdownlint-disable */ -}}
+{{partial "tk/dbg-template" .}}{{/*
+  tool/slideshow-static - build-time slideshow from page-bundle, assets, or static resources.
+
+  Resolves each slide via tk/get-asset at build time, supporting mixed SVG/PNG/JPG sequences.
+  For remote or numbered-sequence slideshows use tool/slideshow instead.
+
+  Params:
+    images       - glob string (matched against page resources) or explicit slice of asset paths
+    page         - Hugo page context (required)
+    inner        - optional custom trigger HTML; absent = first slide used as thumbnail
+    thumbProcess - optional img-process string applied to first slide for the thumbnail
+                   e.g. "fit 400x300" — omit to use the raw first image
+*/}}
+{{- $page         := .page -}}
+{{- $thumbProcess := .thumbProcess -}}
+{{- $inner        := .inner -}}
+{{- $slides       := slice -}}
+{{- $thumb        := 0 -}}
+{{- $imgPaths     := .images -}}
+
+{{- if reflect.IsString .images -}}
+  {{/* glob string → resolve matching page-bundle resources, collect their names */}}
+  {{- $matched  := $page.Resources.Match .images -}}
+  {{- $imgPaths  = apply $matched "Name" "." -}}
+{{- end -}}
+
+{{- range $imgPaths -}}
+  {{- $img    := partial "tk/get-asset" (dict "asset" . "page" $page) -}}
+  {{- $slides  = $slides | append $img.src -}}
+  {{- if not $thumb -}}
+    {{- $thumb = $img -}}
+    {{- with $thumbProcess -}}
+      {{- $thumb = partial "tk/img-process" (dict "img" $thumb "processing" .) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $uid := substr (sha1 (index $imgPaths 0 | default "slideshow-static")) 0 8 -}}
+{{- partial "tool/slideshow-core" (dict "slides" $slides "uid" $uid "inner" $inner "thumb" $thumb) -}}

@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
 markdownify a page parameter and insert into the <body class="from=<param name>">
   
 </body>
@@ -6,10 +6,8 @@ markdownify a page parameter and insert into the <body class="from=<param name>"
 {{if .from}}
   {{printf "%s" (.page.Param .from)|markdownify}}
 {{else}}
-  {{- partial "hw-tk/dbg" dict (
-  "err" (printf ".from is not set")
-  "kv" (dict
-  "template" templates.Current.Parent.Name
-  ))
--}}
+  {{- partial "tk/dbg" (dict
+    "err" (printf ".from is not set")
+    "kv" (dict "template" templates.Current.Parent.Name)
+  ) -}}
 {{- end -}}

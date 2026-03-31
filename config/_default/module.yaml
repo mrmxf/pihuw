@@ -4,55 +4,52 @@
 # CLI upgrade to the latest theme:   hugo mod get github.com/mrmxf/pihuw@latest
 hugoVersion:
   extended: true
-  min: v0.148.1
+  min: v0.159.0
+
+# These mounts define what consumers receive when pihuw is used as a Hugo module
+# or submodule.  Deliberately omits:
+#   content/              — doc-site pages; consumers supply their own content
+#   static/favicon.ico    — doc-site favicon
+#   static/logo.png       — doc-site logo
+#   static/rc/            — doc-site SVG icons
+# Only static/webfonts is exported — required by assets/css/fa6.min.css.
+mounts:
+- source: layouts
+  target: layouts
+- source: assets
+  target: assets
+- source: archetypes
+  target: archetypes
+- source: data
+  target: data
+- source: i18n
+  target: i18n
+- source: static/webfonts
+  target: static/webfonts
 
 imports:
 - path: github.com/mrmxf/pihuw
   disable: false
 
-# uncomment line below for temporary local development of module
-# replacements: "github.com/mrmxf/pihuw->../path/to/pihuw"
-
+  # Local-dev mounts: self-import so `hugo server` from the repo root renders
+  # the documentation site.  Differences from the consumer mounts above:
+  #   documentation/content -> content   (serves the docs pages)
+  #   documentation/static  -> static    (serves favicon, logo, rc/)
+  #   static                -> static    (serves webfonts alongside the above)
   mounts:
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: content
+  - source: documentation/content
     target: content
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: data
-    target: data
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: layouts
-    target: layouts
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: i18n
-    target: i18n
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: archetypes
-    target: archetypes
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: assets
-    target: assets
-  - disableWatch: false
-    excludeFiles: null
-    includeFiles: null
-    lang: ""
-    source: static
+  - source: documentation/static
     target: static
+  - source: static
+    target: static
+  - source: data
+    target: data
+  - source: layouts
+    target: layouts
+  - source: i18n
+    target: i18n
+  - source: archetypes
+    target: archetypes
+  - source: assets
+    target: assets

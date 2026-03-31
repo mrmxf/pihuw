@@ -1,8 +1,8 @@
-{{partial "hw-tk/dbg-template" .}}
+{{partial "tk/dbg-template" .}}
 {{/* from hugo 149 all logos must be in assets/brands */}}
 {{- if not (and site.Params.ui.hide.navbar.logo site.Params.ui.hide.navbar.title) }}
 
-  {{- $img := partial "hw-tk/get-logo-path-string" .}}
+  {{- $img := partial "tk/get-logo-path-string" .}}
 
   <div class="pi-nav-brand">
   {{- if and $img (not site.Params.ui.hide.navbar.logo) }}

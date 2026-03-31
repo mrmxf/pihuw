@@ -1,19 +1,21 @@
 {{- /*
-  hw-tk/path-image-featured - returns the RelPermalink of the first page resource
+  tk/path-image-featured - returns the RelPermalink of the first page resource
   matching the glob, or "" if none found. No image processing is applied.
 
   Expects a dict with:
     .page  - Hugo page object
   Reads page frontmatter:
     FeaturedGlob  - glob for page resources (default "featured*.*")
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
 */ -}}
 {{- $glob := "featured*.*" -}}
 {{- $page := . -}}
-{{- if .Page}}
-  {{ $page = . }}
-{{else}}
-  {{- with .page}}{{ $page = . }}{{end -}}
-{{end -}}
+{{- if .Page -}}
+  {{- $page = . -}}
+{{- else -}}
+  {{- with .page -}}{{- $page = . -}}{{- end -}}
+{{- end -}}
 {{- with $page.Params.FeaturedGlob -}}{{- $glob = . -}}{{- end -}}
 {{- $path := "" -}}
 {{- $imgs := $page.Resources.Match $glob -}}

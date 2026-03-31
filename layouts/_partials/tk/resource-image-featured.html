@@ -1,0 +1,27 @@
+{{- /*
+  tk/resource-image-featured
+  Returns a pattern-2 $img dict for the page's featured image, or 0 (falsy).
+
+  Locates the first page resource matching FeaturedGlob, resolves it via
+  get-asset, then applies a fit process via img-process to constrain to FeaturedWxH.
+
+  .page — Hugo page object (required)
+
+  Reads (in priority order: page params → site params → built-in default):
+    FeaturedGlob — glob for page resources (default "featured*.*")
+    FeaturedWxH  — fit bounding box as "WxH" string (default "200x200")
+
+  returns ($img dict) or 0 if no matching resource found.
+  Callers use $img.src, $img.width, $img.height, $img.alt.
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/ -}}
+{{- $ret  := 0 -}}
+{{- $glob := .page.Params.FeaturedGlob | default (site.Params.FeaturedGlob | default "featured*.*") -}}
+{{- $res  := index (.page.Resources.Match $glob) 0 -}}
+{{- if $res -}}
+  {{- $wxh := .page.Params.FeaturedWxH | default (site.Params.FeaturedWxH | default "200x200") -}}
+  {{- $img  := partial "tk/get-asset"   (dict "asset" $res.Name "page" .page) -}}
+  {{- $ret   = partial "tk/img-process" (dict "img" $img "processing" (printf "fit %s" $wxh)) -}}
+{{- end -}}
+{{- return $ret -}}

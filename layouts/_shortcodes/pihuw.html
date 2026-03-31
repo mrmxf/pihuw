@@ -1,13 +1,18 @@
-{{/*
-Display stylized Theme name text:
-- {{% pihuw %}} ---------- PiHuW
-- {{% pihuw "-v" %}} ----- PiHuW v1.3.5
-- {{% pihuw "--version" %}} ---- v1.3.5
-*/}}
-{{$arg := ""}}
-{{ if .IsNamedParams }}
-  {{ $args = .Get "args"}}
-{{ else }}
-{{ $arg = .Get 0}}
-{{ end }}
-{{partial "tool/pretty-theme-name" (dict "args" $arg )}}
+{{- /*
+  pihuw shortcode
+  Displays the stylized PiHuW theme name, optionally with version.
+
+  Usage:
+    {{% pihuw %}}           → PiHuW
+    {{% pihuw "-v" %}}      → PiHuW v1.3.5
+    {{% pihuw "--version" %}} → v1.3.5
+
+  Positional param 0 / named param "args": flag string ("-v" or "--version")
+*/ -}}
+{{- $arg := "" -}}
+{{- if .IsNamedParams -}}
+  {{- $arg = .Get "args" -}}
+{{- else -}}
+  {{- $arg = .Get 0 -}}
+{{- end -}}
+{{- partial "tool/pretty-theme-name" (dict "args" $arg) -}}

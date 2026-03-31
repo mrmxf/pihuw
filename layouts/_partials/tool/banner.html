@@ -1,15 +1,19 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
    print a full width banner
 header = "Figure 1" etc
 text = the caption content
 */}}
-{{if or .text .header  .src}}
+{{- $img := 0 -}}
+{{- if .src -}}
+  {{- $img = partial "tk/get-asset" (dict "asset" .src "page" .page "alt" (.alt | default .header)) -}}
+{{- end -}}
+{{if or .text .header $img}}
 {{$imgClass := .srcClass | default ""}}
 {{$class := .class | default ""}}
 <div class="banner {{$class}}">
-  {{if .src}}
+  {{if $img}}
   {{with .srcLink}}<a href="{{.}}">{{end}}
-    <div class="{{$imgClass}}"><img src="{{.src}}" {{with .alt }}alt="{{.}}" {{end}} /></div>
+    <div class="{{$imgClass}}"><img src="{{$img.src}}" alt="{{$img.alt}}" /></div>
     {{with .srcLink}}</a>{{end}}
   {{end}}
   {{with .header}}<div class="header">{{printf "%s" . | safeHTML}}</div>{{end}}

@@ -1,5 +1,9 @@
-{{partial "hw-tk/dbg-template" .}}
-{{- $pihuw := resources.Get "css/pihuw-tweak.css" }}
+{{partial "tk/dbg-template" .}}
+{{- /* Inline theme-init.js before any CSS to prevent flash of wrong theme */ -}}
+{{- with resources.Get "js/theme-init.js" -}}
+  <script>{{ ( . | minify).Content | safeJS }}</script>
+{{- end -}}
+{{- $pihuw := resources.Get "css/pihuw.css" }}
 {{- with resources.Get "css/picnic.min.css" }}
  {{- if eq hugo.Environment "development" }}
   <link rel="stylesheet" href="{{ .RelPermalink }}">
@@ -16,3 +20,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{- end }}
 {{- if fileExists "static/site.css" }}<link rel="stylesheet" href="/site.css">{{end -}}
+{{- with resources.Get "js/theme-toggle.js" }}
+  <script defer src="{{ .RelPermalink }}"></script>
+{{- end -}}

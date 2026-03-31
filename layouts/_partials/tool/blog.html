@@ -1,49 +1,18 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
    partial to create a latest blog block. Wordcount assumes 220 w/min */}}
-{{ $header := "None" }}
-{{ $srcLink := "" }}
-{{ $src := "" }}
-{{ $description := "" }}
-{{ $link := "" }}
-{{ $meta := "" }}
-{{ $featured := "" }}
-{{ $count := 1 }}{{ if . }}{{ if (isset . "count") }}{{ $count = .count }}{{ end }}{{ end }}
-{{ $skip := 0 }}{{ if . }}{{ if (isset . "skip") }}{{ $skip = index . "skip" }}{{ end }}{{ end }}
-{{ $blogCount := add $count $skip }}
-{{ $dot := . }}
-{{/* --- debug the blog  filtering --------------------------------------- */}}
-{{ if false }}{{ range first $blogCount ( where .page.Site.Pages "Type" "blog" )  | last $count }}
-<pre>
-  count:        {{ $count }}
-  skip:         {{ $skip }}
-  Title:        {{.Title}}
-  Date:         {{.Date}}
-  LinkTitle:    {{.LinkTitle}}
-  RelPermalink: {{.RelPermalink}}
-</pre><hr>{{end}}{{end}}
+{{- $count     := 1 -}}{{- if and . (isset . "count") -}}{{- $count = .count -}}{{- end -}}
+{{- $skip      := 0 -}}{{- if and . (isset . "skip")  -}}{{- $skip  = index . "skip" -}}{{- end -}}
+{{- $blogCount := add $count $skip -}}
+{{- $dot       := . -}}
 {{/* --- find latest blog ------------------------------------------------ */}}
-{{ range first $blogCount ( where .page.Site.Pages "Type" "blog" )  | last $count }}
-{{ $srcLink = .RelPermalink }}
-{{ $header = .LinkTitle }}
-{{ $featured = (.Resources.ByType "image").GetMatch "*feature*" }}
-{{ $description = .Plain | safeHTML | truncate 300 }}
-{{ $minutes := add ( div ( countwords .Plain ) 220 ) 1 }}
-{{ $meta = printf "~%v min read" $minutes }}
-{{ $link = .RelPermalink }}
-
-{{/* --- update the dict for the block -----------------------------------*/}}
-{{- $d := merge $dot (dict "src" "") -}}
-{{if $featured}}
-{{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
-{{- $d = merge $d (dict "srcClass" "ui fluid image") -}}
-{{- $d = merge $d (dict "srcLink" $srcLink) -}}
-{{- $d = merge $d (dict "headerLink" $srcLink) -}}
-{{- $d = merge $d (dict "srcWidth" 0.25) -}}
-{{end}}
-{{- $d = merge $d (dict "header" $header) -}}
-{{- $d = merge $d (dict "description" $description) -}}
-{{- $min := add ( div ( countwords $description ) 220 ) 1 -}}
-{{- $d = merge $d (dict "meta" (printf "~%v min read" $min)) -}}
-
-{{ partial "tool/block" $d }}
+{{ range first $blogCount ( where .page.Site.Pages "Type" "blog" ) | last $count }}
+  {{- $srcLink     := .RelPermalink -}}
+  {{- $description := .Plain | safeHTML | truncate 300 -}}
+  {{- $min         := add (div (countwords $description) 220) 1 -}}
+  {{- $img         := partial "tk/resource-image-featured" (dict "page" .) -}}
+  {{- $d           := merge $dot (dict "src" "" "header" .LinkTitle "date" .Date "description" $description "meta" (printf "~%v min read" $min)) -}}
+  {{- if $img -}}
+    {{- $d = merge $d (dict "src" $img.src "srcClass" "ui fluid image" "srcLink" $srcLink "headerLink" $srcLink "srcWidth" 0.25) -}}
+  {{- end -}}
+  {{ partial "tool/block" $d }}
 {{ end }}{{/* end of range*/}}

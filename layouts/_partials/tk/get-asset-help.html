@@ -1,0 +1,239 @@
+{{partial "tk/dbg-template" .}}{{/*
+get-asset partial help using modular help system */ -}}
+{{ partial "tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "tk/get-asset"
+  "color" "blue"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "tk/get-asset"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "asset" "required" true  "example" "assets/brand/logo.svg")
+    (dict "name" "page"  "required" true  "example" ".Page")
+    (dict "name" "process" "required" false "example" "resize x400")
+  )
+  "note" "The standard image handler for the theme. Always use this instead of resources.Get or resource.Get directly."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Resolves any image asset — SVG, PNG, JPG, GIF, or static file — into a normalised **$img dict**. This dict is the single, consistent representation of an image throughout the theme. All image-aware partials (tool/thumb, tool/img, tool/srcset, etc.) accept and return this same shape, so SVG and raster images can flow through identical rendering pipelines. The caller defers any SVG-vs-raster rendering decision to the final template, where semantic intent (isAnimation, is3d) can be layered on via `merge`."
+  "notes" (slice
+    "**Always returns a dict** — never a raw resource or string — so downstream code never type-guards"
+    "**Searches in order**: page resource → global assets/ → static/ fallback"
+    "**isSvg / isRaster / isGif / isStatic** flags let render templates branch without inspecting mediaType"
+    "**width / height** reflect native pixel dimensions for raster; 0 for SVG and static fallbacks"
+    "**Caller-supplied hints** such as `isAnimation` or `is3d` are added via `merge` after the call — get-asset does not set them"
+    "**process** is applied only to raster resources; it is silently ignored for SVG and static files"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "asset"
+      "type" "string"
+      "required" true
+      "description" "Path to the image. May be a page-relative filename (e.g. photo.jpg), an assets/-rooted path (e.g. assets/brand/logo.svg), or a static path (e.g. /brand/logo.svg)."
+      "default" ""
+    )
+    (dict
+      "name" "page"
+      "type" "page"
+      "required" true
+      "description" "The Hugo Page object. Required so page-bundle resources are searched first before falling back to global assets."
+      "default" ""
+    )
+    (dict
+      "name" "process"
+      "type" "string"
+      "required" false
+      "description" "Hugo image process string applied to raster resources only. Ignored for SVG, GIF, video, and static files. See https://gohugo.io/methods/resource/process/"
+      "default" ""
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt text for the image. Defaults to the basename of .asset when not supplied, so callers never need to build their own fallback."
+      "default" "basename of .asset"
+    )
+    (dict
+      "name" "caption"
+      "type" "string"
+      "required" false
+      "description" "Caption text to carry through the dict. Falsy when not supplied."
+      "default" ""
+    )
+    (dict
+      "name" "dbg"
+      "type" "string"
+      "required" false
+      "description" "Accumulated debug string from the caller. get-asset appends its own search steps and returns the combined string in .dbg. Pass $img.dbg downstream to chain debug traces across partials."
+      "default" ""
+    )
+  )
+-}}
+
+{{- $returnData := dict
+  "params" (slice
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" false
+      "description" "Relative permalink suitable for use in any src= attribute. Always a string."
+      "default" ""
+    )
+    (dict
+      "name" "res"
+      "type" "resource"
+      "required" false
+      "description" "Hugo resource object. nil for static fallbacks. Use for further processing (.Process, .Resize, .Width, .Height, .Content for SVG inline)."
+      "default" "nil"
+    )
+    (dict
+      "name" "mediaType"
+      "type" "string"
+      "required" false
+      "description" "Full MIME type string e.g. image/svg+xml, image/png, image/jpeg, image/gif."
+      "default" ""
+    )
+    (dict
+      "name" "isSvg"
+      "type" "bool"
+      "required" false
+      "description" "True when the asset is an SVG. SVGs are scalable and may be inlined; they cannot be processed via Hugo's image pipeline."
+      "default" "false"
+    )
+    (dict
+      "name" "isRaster"
+      "type" "bool"
+      "required" false
+      "description" "True when the asset is a processable raster image (PNG, JPG, WEBP, TIFF). Hugo image pipeline methods are safe to call on .res."
+      "default" "false"
+    )
+    (dict
+      "name" "isGif"
+      "type" "bool"
+      "required" false
+      "description" "True when the asset is a GIF. May be animated — apply image processing with care as it will strip animation."
+      "default" "false"
+    )
+    (dict
+      "name" "isVideo"
+      "type" "bool"
+      "required" false
+      "description" "True when the file extension matches site.Params.extensions.video. Detection is extension-based so it works for both resource and static files. .res may still be a valid resource if the file is in assets/."
+      "default" "false"
+    )
+    (dict
+      "name" "isImage"
+      "type" "bool"
+      "required" false
+      "description" "Convenience flag: true when isSvg, isRaster, or isGif is true. Use as a single guard for any image type without chaining three checks."
+      "default" "false"
+    )
+    (dict
+      "name" "isStatic"
+      "type" "bool"
+      "required" false
+      "description" "True when the file was found in static/ only. No resource object is available; .res is nil and image processing is not possible."
+      "default" "false"
+    )
+    (dict
+      "name" "width"
+      "type" "int"
+      "required" false
+      "description" "Native pixel width of the image after any process is applied. 0 for SVG and static fallbacks where Hugo cannot introspect dimensions."
+      "default" "0"
+    )
+    (dict
+      "name" "height"
+      "type" "int"
+      "required" false
+      "description" "Native pixel height of the image after any process is applied. 0 for SVG and static fallbacks."
+      "default" "0"
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt text. Always a non-empty string — defaults to the basename of .asset when .alt input is not supplied."
+      "default" "basename of .asset"
+    )
+    (dict
+      "name" "caption"
+      "type" "string"
+      "required" false
+      "description" "Caption text carried from the .caption input. Empty string (falsy) when not supplied."
+      "default" ""
+    )
+    (dict
+      "name" "dbg"
+      "type" "string"
+      "required" false
+      "description" "Accumulated debug trace. Contains the caller's .dbg prepended to get-asset's own search log. Pass downstream to chain traces across partials."
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Basic usage — resolve a page-bundle photo"
+      "code" "{{- $img := partial \"tk/get-asset\" (dict \"asset\" \"photo.jpg\" \"page\" .Page) -}}"
+      "note" "Returns a full $img dict. Use `$img.src` in any src= attribute immediately."
+    )
+    (dict
+      "description" "Resolve with initial process — full-resolution asset"
+      "code" "{{- $img := partial \"tk/get-asset\" (dict \"asset\" $photo \"process\" $process \"page\" .Page) -}}"
+      "note" "process is applied to raster only. SVG and static assets ignore it without error."
+    )
+    (dict
+      "description" "Generate a thumbnail via tool/thumb"
+      "code" "{{- $thumb := partial \"tool/thumb\" (dict \"img\" $img \"dim\" \"x100\") -}}\n<img src=\"{{$thumb.src}}\" width=\"{{$thumb.thumbWidth}}\" height=\"{{$thumb.thumbHeight}}\">"
+      "note" "tool/thumb accepts and returns the same $img dict shape. SVGs are returned with thumbWidth/thumbHeight set; raster resources are processed."
+    )
+    (dict
+      "description" "Layer caller-supplied semantic hints with merge"
+      "code" "{{- $img = merge $img (dict \"isAnimation\" true) -}}\n{{if $img.isAnimation}}\n  <div class=\"animation\" data-src=\"{{$img.src}}\"></div>\n{{else}}\n  <img src=\"{{$img.src}}\">\n{{end}}"
+      "note" "get-asset never sets isAnimation, is3d, or other editorial hints — those are caller concerns added after resolution."
+    )
+    (dict
+      "description" "Inline an SVG using .res.Content"
+      "code" "{{if $img.isSvg}}{{with $img.res}}{{.Content | safeHTML}}{{end}}{{end}}"
+      "note" "Inlined SVGs can be styled and animated via CSS. Only use this pattern when the SVG is not being used as a layout image."
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Use everywhere**: get-asset is the theme default for all image resolution. Do not call resources.Get or resource.Get directly in templates."
+    "**Dict is the contract**: all image-aware partials in this theme accept the $img dict. Passing raw strings or resources directly is an anti-pattern."
+    "**SVG sizing**: SVGs have no thumbWidth/thumbHeight until passed through tool/thumb. Use CSS or explicit width= attrs to constrain display size."
+    "**Static fallback**: isStatic assets have a valid .src for use in src= but .res is nil. Do not call .Process or .Width on them."
+    "**Extending the dict**: use `merge $img (dict \"key\" value)` to add editorial properties. Never modify the dict returned by get-asset directly."
+  )
+  "warnings" (slice
+    "**Do not process GIFs without intent** — Hugo image processing strips animation frames. Check isGif before calling tool/thumb on animated images."
+    "**Static files cannot be resized** — isStatic assets must be served at their original dimensions. Provide pre-sized static files if needed."
+    "**page is required** — omitting page means page-bundle resources are never searched. Pass .Page or the page variable explicitly."
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" (dict "title" "Input parameters" "params" $paramsData.params)) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" (dict "title" "Returned $img dict fields" "params" $returnData.params)) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "tk/help-card.html" $cardData -}}

@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/* Hugo partial for typewriter animation effect
+{{partial "tk/dbg-template" .}}{{/* Hugo partial for typewriter animation effect
   Parameters:
   - .page: Hugo page object
   - .text: Text string with newlines as "\n"
@@ -54,10 +54,10 @@
 .typist-container {
   position: relative;
   display: block;
-  background-color: white;
+  background-color: var(--pi-bg);
   padding: 0.4rem;
   border-radius: 8px;
-  border: 1px solid #aaaaaa;
+  border: 1px solid var(--meta);
   font-family: 'Special Elite', monospace;
   font-size: 1rem;
   min-height: 1.5rem;
@@ -82,27 +82,27 @@
   width: 1rem;
   height: 1rem;
   padding: 0;
-  border: 1px solid #ccc;
+  border: 1px solid var(--meta);
   border-radius: 2px;
-  background-color: #dee2e6;
+  background-color: var(--bg4);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  color: white;
+  color: var(--hi4);
   transition: all 0.2s ease;
   z-index: 10;
 }
 
 .typist-reset-button:hover {
-  background-color: #28a74671;
-  border-color: #999;
-  color: #333;
+  background-color: var(--bg3);
+  border-color: var(--meta);
+  color: var(--pi-body);
 }
 
 .typist-reset-button:active {
-  background-color: #28a745;
+  background-color: var(--hi3);
   transform: scale(0.95);
 }
 

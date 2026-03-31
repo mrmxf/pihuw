@@ -1,6 +1,6 @@
 # Site styling
 
-## style overrides pihuw-tweak
+## style overrides pihuw.css
 
 ## site.css
 

@@ -1,0 +1,36 @@
+{{/*
+  tk/get-width-height
+  Parses a Hugo image process string and extracts width and height.
+
+  .process — string e.g. "resize x100", "fill 200x150 smart", "resize 300x webp"
+
+  Searches the process string token by token for the dimension word:
+    "x100"    → w:0   h:100
+    "200x"    → w:200 h:0
+    "200x150" → w:200 h:150
+
+  returns (dict "w" int "h" int)
+  w and h are 0 (falsy in Hugo with/if) when not specified in the process string.
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/}}
+{{- $w := 0 -}}
+{{- $h := 0 -}}
+{{- with .process -}}
+  {{- range (split . " ") -}}
+    {{- if strings.Contains . "x" -}}
+      {{- $parts := split . "x" -}}
+      {{- if eq (len $parts) 2 -}}
+        {{- $left  := index $parts 0 -}}
+        {{- $right := index $parts 1 -}}
+        {{- $leftOk  := or (not $left)  (findRE "^[0-9]+$" $left)  -}}
+        {{- $rightOk := or (not $right) (findRE "^[0-9]+$" $right) -}}
+        {{- if and $leftOk $rightOk -}}
+          {{- with $left  -}}{{- $w = int . -}}{{- end -}}
+          {{- with $right -}}{{- $h = int . -}}{{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "w" $w "h" $h) -}}

@@ -1,0 +1,14 @@
+{{/*
+Debug utility to return key-value collection without page elements - used for development debugging
+
+DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/}}
+{{- $kvList := dict -}}
+{{- if hugo.IsServer -}}
+  {{- range $k, $v := . -}}
+    {{- if not (or (eq $k "page") (eq $k "Page")) -}}
+      {{- $kvList = merge $kvList (dict $k $v) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $kvList -}}

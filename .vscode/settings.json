@@ -12,10 +12,11 @@
   "cSpell.dictionaries": [
     "cspell-pihuw"
   ],
-    "workbench.colorTheme": "Bearded Theme Milkshake Mango",
-    "editor.wordWrap": "on",
-    "markdown.preview.fontSize": 12,
-    "markdown.preview.lineHeight": 1.5,
+  "cSpell.language": "en-GB",
+  "workbench.colorTheme": "Bearded Theme Milkshake Mango",
+  "editor.wordWrap": "on",
+  "markdown.preview.fontSize": 12,
+  "markdown.preview.lineHeight": 1.5,
   // Default number of spaces a tab is equal to.
   "editor.tabSize": 2,
   // Insert spaces when pressing Tab.

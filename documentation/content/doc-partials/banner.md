@@ -18,5 +18,5 @@ name
 ## Examples
 
 ```hugo
-{{ % pi t = "banner" header = "header" text = "This is a default banner" /%}}
+{{ % hw t = "banner" header = "header" text = "This is a default banner" /%}}
 ```

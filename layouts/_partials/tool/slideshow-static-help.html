@@ -1,0 +1,109 @@
+{{partial "tk/dbg-template" .}}{{/*
+Slideshow-static partial help using modular help system */ -}}
+{{ partial "tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"slideshow-static\" images=\"slides/*\" &gt;}}"
+  "color" "blue"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "slideshow-static"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "images" "required" true "example" "slides/*")
+    (dict "name" "page" "required" true "example" ".Page")
+    (dict "name" "thumbProcess" "required" false "example" "fit 400x300")
+    (dict "name" "inner" "required" false "example" "Click to view slides")
+  )
+  "note" "Build-time slideshow from page-bundle, assets, or static resources. Supports mixed SVG/PNG/JPG. For remote or numbered-sequence slideshows use tool/slideshow instead."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Resolves slide images via tk/get-asset at build time, producing validated URLs for all slide types. Accepts a glob string matched against page-bundle resources, or an explicit slice of asset paths. Delegates rendering to tool/slideshow-core, sharing the same modal UX as tool/slideshow."
+  "notes" (slice
+    "**Mixed types** — SVG, PNG, JPG, and GIF slides are all supported in the same sequence"
+    "**Thumbnail** — first resolved slide used as click trigger; apply `thumbProcess` for raster thumbnail processing"
+    "**Custom trigger** via `.inner` — any HTML/markdown replaces the default thumbnail"
+    "**Glob input** — string value is matched against page-bundle resources via `.Resources.Match`"
+    "**Slice input** — explicit list of asset paths resolved independently via get-asset (page-bundle, assets/, or static/)"
+    "**Keyboard support** — ← → to navigate, Esc to close"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "images"
+      "type" "string | slice"
+      "required" true
+      "description" "Glob string matched against page-bundle resources (e.g. `slides/*`), or an explicit slice of asset paths"
+      "default" ""
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided)"
+      "default" "current page"
+    )
+    (dict
+      "name" "thumbProcess"
+      "type" "string"
+      "required" false
+      "description" "img-process string applied to the first slide to produce the thumbnail (e.g. `fit 400x300`). Omit to use the raw first image."
+      "default" "none (raw first slide)"
+    )
+    (dict
+      "name" "inner"
+      "type" "HTML"
+      "required" false
+      "description" "Custom trigger content rendered instead of the first-slide thumbnail"
+      "default" "first slide image"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Glob from page-bundle resources"
+      "code" "{{&lt;hw t=\"slideshow-static\" images=\"slides/*\"&gt;}}"
+      "note" "Resolves all resources matching `slides/*` in the page bundle, in resource order"
+    )
+    (dict
+      "description" "Glob with processed thumbnail"
+      "code" "{{&lt;hw t=\"slideshow-static\" images=\"slides/*\" thumbProcess=\"fit 400x300\"&gt;}}"
+      "note" "First slide is fitted to 400×300 for the thumbnail; full images shown in modal"
+    )
+    (dict
+      "description" "Explicit asset path slice (frontmatter)"
+      "code" "{{&lt;hw t=\"slideshow-static\" images=.Page.Params.slides&gt;}}"
+      "note" "Pass a frontmatter slice of asset paths; each resolved via get-asset"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Order** — glob results follow Hugo resource ordering (alphabetical by name); use consistent filenames to control sequence"
+    "**SVG thumbnails** — SVGs display at their native viewBox size unless `thumbProcess` is supplied (which will be skipped for SVGs by img-process)"
+    "**Static assets** — paths starting with `/` are resolved from `/static/`; others are tried as page-bundle resources then `/assets/`"
+  )
+  "warnings" (slice
+    "**Page bundle required for glob** — the glob form only matches resources within the current page bundle"
+    "**No count parameter** — slide count is derived automatically from the resolved image list"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "tk/help-card.html" $cardData -}}

@@ -1,8 +1,6 @@
-{{partial "hw-tk/dbg-template" .}}
+{{partial "tk/dbg-template" .}}
 {{/*
  Hugo partial that renders responsive content blocks with media and text in configurable layouts
-*/}}
-{{/*
 
 default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 .srcWidth is ignored
@@ -21,7 +19,7 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 +-----------------------------------------------------+----------+
 
 */}}
-{{$default := partial "hw-tk/get-defaults"}}
+{{$default := partial "tk/get-defaults"}}
 {{- $DBG := false -}}
 
 {{with $DBG}}<p>
@@ -39,15 +37,17 @@ default block is 33%:66% that becomes full width at {{site.Params.resp.s}}
 {{- with .class}}{{$divClass = .}}{{end}}
 {{- with .srcGrid}}{{$srcGrid = .}}{{end}}
 {{- with .txtGrid}}{{$txtGrid = .}}{{end}}
-{{/* ---handle src type ------------------------------------------------------------------------------------------- */}}
-{{- $ext := strings.ToLower (path.Ext .src) -}}
-{{- $srcClass := printf $default.class.block.srcClass .srcClass -}}
-{{- $srcIsVideo := in $default.slice.vid_ext $ext -}}
-{{- $srcIsImage := in $default.slice.img_ext $ext -}}
+{{/* ---handle src type — resolve via get-asset for reliable type detection ---------------------------------------- */}}
+{{- $img := 0 -}}
+{{- if .src -}}
+  {{- $img = partial "tk/get-asset" (dict "asset" .src "page" .page) -}}
+{{- end -}}
+{{- $srcClass      := printf $default.class.block.srcClass .srcClass -}}
+{{- $srcIsVideo    := and $img $img.isVideo -}}
 {{- $mediaSrcClass := $default.class.block.imgClass -}}
-{{with $srcIsVideo}}{{- $mediaSrcClass := $default.class.block.vidClass -}}{{end}}
-{{/* squash any caption and identify media class */}}
-{{- $mediaDot := merge . (dict "srcClass" $mediaSrcClass "text" nil) }}
+{{- if $srcIsVideo -}}{{- $mediaSrcClass = $default.class.block.vidClass -}}{{- end -}}
+{{/* squash any caption and pass the pre-resolved $img dict */}}
+{{- $mediaDot := merge . (dict "srcClass" $mediaSrcClass "text" nil "img" $img) }}
 {{/* --------------------------------------------------------------------- */}}
 <div class = "{{$divClass}}">
 {{if $DBG}}Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}}){{end}}

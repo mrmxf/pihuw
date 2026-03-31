@@ -5,7 +5,7 @@
 {{- $sortedPages := sort $blogPages "Date" "desc" -}}
 {{- $result := slice -}}
 {{- range $sortedPages -}}
-  {{- $featuredPath := partial "hw-tk/path-image-featured" (dict "page" .) -}}
+  {{- $featuredPath := partial "tk/path-image-featured" (dict "page" .) -}}
   {{- $result = $result | append (dict "page" . "featuredPath" $featuredPath) -}}
 {{- end -}}
 {{- return $result -}}

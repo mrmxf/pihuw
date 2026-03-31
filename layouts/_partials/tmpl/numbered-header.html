@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
+{{partial "tk/dbg-template" .}}{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
 {{- $s := "."}}{{$p := ""}}{{$x := ""}}
 {{/* Override with Site settings if available */}}
 {{- if isset site.Params.heading "separator"}}{{$s = site.Params.heading.separator}}{{end}}
@@ -13,18 +13,18 @@
 {{- $level := int (.level | default 0) -}}
 {{- if or (lt $level 1) (gt $level 6) -}}
 {{ $msg := printf "%s level must be an int between 1 & 6. got (%d), using (1)" templates.Current.Name $level }}
-{{ partial "hw-tk/dbg" (dict "err" $msg) }}
+{{ partial "tk/dbg" (dict "err" $msg) }}
 {{ warnf "partial: %s: %s  %s" templates.Current.Name "heading level" $msg -}}
 {{ $level = 1 }}
 {{end -}}
 
 {{/* read the levels */}}
-{{- $1 := (.ctx.Page.Scratch.Get "H1") | int -}}
-{{- $2 := (.ctx.Page.Scratch.Get "H2") | int -}}
-{{- $3 := (.ctx.Page.Scratch.Get "H3") | int -}}
-{{- $4 := (.ctx.Page.Scratch.Get "H4") | int -}}
-{{- $5 := (.ctx.Page.Scratch.Get "H5") | int -}}
-{{- $6 := (.ctx.Page.Scratch.Get "H6") | int -}}
+{{- $1 := (.ctx.Page.Store.Get "H1") | int -}}
+{{- $2 := (.ctx.Page.Store.Get "H2") | int -}}
+{{- $3 := (.ctx.Page.Store.Get "H3") | int -}}
+{{- $4 := (.ctx.Page.Store.Get "H4") | int -}}
+{{- $5 := (.ctx.Page.Store.Get "H5") | int -}}
+{{- $6 := (.ctx.Page.Store.Get "H6") | int -}}
 
 {{/* start by resetting all the minor numerals to zero (for the next heading) */}}
 {{ if le $level 5 }}{{ $6 = 0 -}}{{end}}
@@ -50,9 +50,9 @@
 {{ if eq $level 1 }}{{- printf "%s%d%s" $p $1 $x -}}{{end}}
 
 {{/* store the new levels */}}
-{{- .ctx.Page.Scratch.Set "H1" $1 -}}
-{{- .ctx.Page.Scratch.Set "H2" $2 -}}
-{{- .ctx.Page.Scratch.Set "H3" $3 -}}
-{{- .ctx.Page.Scratch.Set "H4" $4 -}}
-{{- .ctx.Page.Scratch.Set "H5" $5 -}}
-{{- .ctx.Page.Scratch.Set "H6" $6 -}}
+{{- .ctx.Page.Store.Set "H1" $1 -}}
+{{- .ctx.Page.Store.Set "H2" $2 -}}
+{{- .ctx.Page.Store.Set "H3" $3 -}}
+{{- .ctx.Page.Store.Set "H4" $4 -}}
+{{- .ctx.Page.Store.Set "H5" $5 -}}
+{{- .ctx.Page.Store.Set "H6" $6 -}}

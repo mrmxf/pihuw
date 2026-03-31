@@ -12,10 +12,10 @@ Deprecated
 
 Usage:
 ```hugo
-{{&#x25; pi t = "image" src = "path/to/img" alt = "demo image" text = "optional caption" /%}}
+{{&#x25; hw t = "image" src = "path/to/img" alt = "demo image" text = "optional caption" /%}}
 ```
 
-{{< pi
+{{< hw
   t = "image"
   src = "rexy.svg"
   alt = "metarex logo"

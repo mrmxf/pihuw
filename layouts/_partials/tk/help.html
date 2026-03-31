@@ -1,0 +1,24 @@
+{{- /* tk/help.html
+  Entry point for {{< hw t="help" >}}.
+  Renders inline documentation for every tool that has a *-help.html peer.
+  Add new tools to the $tools slice below when they acquire a help file.
+*/ -}}
+{{- partial "tk/help-tk.html" . -}}
+{{- $tools := slice
+  "accordion"       "acc-tab"
+  "banner"          "block"           "blog"
+  "caption"         "children"        "cover"
+  "feature"         "feature-group"
+  "gallery"         "graph"
+  "image"           "include"
+  "item"            "item-group"      "item-group-blog"
+  "item-include"    "item-socials"
+  "md-param"        "media"
+  "slideshow"       "slideshow-static" "smschat"
+  "table"           "tbody"           "td"
+  "tfoot"           "th"              "thead"
+  "tr"              "trtd"            "trth"
+-}}
+{{- range $tools -}}
+  {{- partial (printf "tool/%s-help.html" .) $ -}}
+{{- end -}}

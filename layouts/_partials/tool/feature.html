@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
 Hugo partial that renders individual feature blocks with header, text, and media within feature groups
 */}}
 {{$h := slice "A feature is a block in a feature-group" }}
@@ -20,11 +20,14 @@ Hugo partial that renders individual feature blocks with header, text, and media
 {{ $link := .link}}
 {{$u := urls.Parse $link}}
 {{- if and $link (not $u.IsAbs) -}}
-  {{if not (fileExists $u.Path)}}
-    {{$err := printf "bad link(%s) for image" $link}}
-    {{- partial "hw-tk/dbg" (dict "wrn" $err "kv" (dict "link" .link "resolved-link" $link "page" .page) ) -}}
-  {{end}}
-{{end}}
+  {{- $aFile := fileExists $u.Path -}}
+  {{- $aBlog := strings.HasPrefix $link "/blog/" -}}
+  {{- $aPage := site.GetPage $link -}}
+  {{- if and (not $aFile) (not $aBlog) (not $aPage) -}}
+    {{- $err := printf "bad link(%s) for feature" $link -}}
+    {{- partial "tk/dbg" (dict "wrn" $err "kv" (dict "link" .link "resolved-link" $link "page" .page)) -}}
+  {{- end -}}
+{{- end -}}
 <div class="{{.class}}">
   {{- if $link -}}<a href="{{ $link }}">{{ end }}
 

@@ -1,6 +1,6 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
 Item group partial help using modular help system */ -}}
-{{ partial "hw-tk/help-tk.html" . }}
+{{ partial "tk/help-tk.html" . }}
 
 {{- $cardData := dict
   "title" "{{&lt; hw t=\"item-group\" &gt;}}"
@@ -104,7 +104,7 @@ Item group partial help using modular help system */ -}}
     "**Not a shortcode** — always called via a wrapper partial, never directly from markdown"
     "**Tag deduplication** — groupTags like 'blog blog learn' become ['blog','learn'] automatically"
     "**Wrapper pattern** — create a new wrapper partial (like item-group-blog or item-group-by-type) to target a different content type"
-    "**Featured image** — looked up per page via hw-tk/resource-image-featured; filenames containing 'feature' are preferred"
+    "**Featured image** — looked up per page via tk/resource-image-featured; filenames containing 'feature' are preferred"
   )
   "warnings" (slice
     "**group is required** — passing an empty or nil group produces no output silently"
@@ -114,11 +114,11 @@ Item group partial help using modular help system */ -}}
 
 {{- /* Build the complete help content */ -}}
 {{- $content := "" -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
 
 {{- $cardData = merge $cardData (dict "Inner" $content) -}}
-{{- partial "hw-tk/help-card.html" $cardData -}}
+{{- partial "tk/help-card.html" $cardData -}}

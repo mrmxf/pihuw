@@ -36,6 +36,18 @@ graph:
 # the releases file is in assets/data/releases.yaml
 releaseTracking: data/releases.yaml
 
+# --- extensions -----------------------------------
+extensions:
+   image: [
+     "jpg", "jpeg", "png", "gif", "svg"
+   ]
+   video: [
+     "mp4", "webm", "ogg", "mxf"
+   ]
+# --- defaults -----------------------------------
+default:
+  thumb:
+    height: 100
 #                                             _
 #   _ _   ___   ___  _ __   ___   _ _    ___ (_) __ __  ___
 #  | '_| / -_) (_-< | '_ \ / _ \ | ' \  (_-< | | \ V / / -_)

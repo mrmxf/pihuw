@@ -1,0 +1,30 @@
+{{/*
+Debug utility to return template hierarchy information - used for development debugging
+
+DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/}}
+{{- $tpl := templates.Current.Parent.Name -}}
+{{- if hugo.IsServer -}}
+  {{- with templates.Current.Parent.Parent -}}
+    {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+    {{- with .Parent -}}
+      {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+      {{- with .Parent -}}
+        {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+        {{- with .Parent -}}
+          {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+          {{- with .Parent -}}
+            {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+            {{- with .Parent -}}
+              {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+              {{- with .Parent -}}
+                {{- $tpl = printf "%s◀%s" $tpl .Name -}}
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (replace (replace $tpl ".html" "") "_partials/" "") -}}

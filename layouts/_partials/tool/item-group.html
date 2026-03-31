@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
   an item-group is called from a higher level partial that provides additional tagging
 */}}
 {{ $group := .group}}{{/* group that is ranged over */}}
@@ -47,13 +47,13 @@
   {{ $minutes := add ( div ( countwords .Plain ) 220 ) 1 }}
   {{ $meta = printf "~%v min read" $minutes }}
   {{ $link = .RelPermalink }}
-  {{ $featured = partial "hw-tk/resource-image-featured" (dict "page" .Page) }}
+  {{ $featured = partial "tk/resource-image-featured" (dict "page" .Page) }}
 
   {{/* --- update the dict for the block -----------------------------------*/}}
   {{- $d := merge $dot (dict "src" "") -}}
   {{if $featured}}
-    {{- $d = merge $d (dict "alt" "$header") -}}
-    {{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
+    {{- $d = merge $d (dict "alt" $header) -}}
+    {{- $d = merge $d (dict "src" $featured.src "img" $featured) -}}
     {{- $d = merge $d (dict "srcClass" $srcClass) -}}
     {{- $d = merge $d (dict "srcLink" $srcLink) -}}
     {{- $d = merge $d (dict "headerLink" $srcLink) -}}

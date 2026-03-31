@@ -1,0 +1,53 @@
+{{- /*
+  tk/img-process
+  Applies one or more Hugo image process strings to an $img dict in sequence,
+  returning an updated $img dict. Less restrictive than tool/thumb.
+
+  .img        — $img dict from tk/get-asset (required)
+  .alt        — alt text (optional; defaults to $img.alt)
+  .caption    — caption string (optional; defaults to falsy)
+  .processing — string or slice of strings applied to .res in sequence (optional)
+
+  For SVG and static images, processing is skipped; alt/caption are still updated.
+  Returns 0 (falsy) if .img is missing or has no .src.
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+
+  returns updated $img dict with:
+    "src"     — updated RelPermalink after processing
+    "res"     — final processed resource
+    "width"   — final width  (0 for SVG/static/unprocessed)
+    "height"  — final height (0 for SVG/static/unprocessed)
+    "alt"     — from .alt or inherited from $img.alt
+    "caption" — from .caption or "" (falsy)
+    all other $img fields are preserved unchanged
+*/ -}}
+{{- $ret     := 0 -}}
+{{- $img     := .img -}}
+{{- if and $img $img.src -}}
+  {{- $alt     := .alt     | default $img.alt -}}
+  {{- $caption := .caption | default "" -}}
+  {{- $procs   := slice -}}
+  {{- if reflect.IsSlice .processing -}}
+    {{- $procs = .processing -}}
+  {{- else if .processing -}}
+    {{- $procs = slice .processing -}}
+  {{- end -}}
+  {{- if and $img.res (not $img.isSvg) (not $img.isStatic) -}}
+    {{- $res := $img.res -}}
+    {{- range $procs -}}
+      {{- $res = $res.Process . -}}
+    {{- end -}}
+    {{- $ret = merge $img (dict
+      "src"     $res.RelPermalink
+      "res"     $res
+      "width"   $res.Width
+      "height"  $res.Height
+      "alt"     $alt
+      "caption" $caption
+    ) -}}
+  {{- else -}}
+    {{- $ret = merge $img (dict "alt" $alt "caption" $caption) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $ret -}}

@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
    Include another page as a block File path is relative to project root */}}
 {{- $f := .from -}}
 {{- if $f -}}
@@ -10,7 +10,8 @@
 
 {{ $featured := ($p.Resources.ByType "image").GetMatch "*feature*" }}
 {{if $featured}}
-{{- $d = merge $d (dict "src" $featured.RelPermalink) -}}
+{{- $featImg := partial "tk/get-asset" (dict "asset" $featured.Name "page" $p) -}}
+{{- $d = merge $d (dict "src" $featImg.src "img" $featImg) -}}
 {{end}}
 {{- $d = merge $d (dict "header" $p.Page.Title) -}}
 {{- $d = merge $d (dict "headerLink" $p.Page.RelPermalink) -}}

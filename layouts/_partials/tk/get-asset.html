@@ -1,0 +1,129 @@
+{{/*
+  tk/get-asset
+  Resolves any asset into a normalised pattern-2 $img dict.
+
+  Search order:
+    1. page resource  — e.g. photo.jpg (bundle-relative)
+    2. global assets/ — e.g. assets/brand/logo.svg
+    3. static/        — e.g. /brand/mrx-logo.svg (no resource object available)
+
+  .asset   — path string (required)
+  .page    — Hugo Page object (required; enables page-bundle resource lookup)
+  .process — Hugo process string e.g. "resize x400" (optional; raster only, ignored for SVG)
+  .alt     — alt text for the image (optional; defaults to basename of .asset)
+  .caption — caption string (optional; defaults to falsy)
+  .dbg     — accumulated debug string to prepend to this partial's log (optional)
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+
+  returns (dict
+    "src"       string   — relative permalink, always usable in src=
+    "res"       resource — Hugo resource or 0 for static fallback
+    "mediaType" string   — MIME type e.g. "image/svg+xml"; may be empty for static
+    "isSvg"     bool
+    "isRaster"  bool     — png/jpg/webp/tiff/bmp; excludes gif
+    "isGif"     bool     — gif; may be animated, process with care
+    "isVideo"   bool     — extension in site.Params.extensions.video
+    "isImage"   bool     — convenience: isSvg or isRaster or isGif (not video, not static-unknown)
+    "isStatic"  bool     — from static/, no resource object, no processing possible
+    "width"     int      — native px width after process; 0 for SVG, video, and static
+    "height"    int      — native px height after process; 0 for SVG, video, and static
+    "alt"       string   — alt text; caller-supplied or basename of .asset
+    "caption"   string   — caption text; falsy if not supplied
+  )
+
+Set DBG to templates.Current.Parent.Name to enable debug output of search steps and results.
+*/}}
+{{/*  {{- $DBG := templates.Current.Parent.Name -}}  */}}
+{{- $DBG     := .dbg | default false -}}
+{{- $alt     := .alt | default (path.Base .asset) -}}
+{{- $caption := .caption | default "" -}}
+{{- $path    := .asset -}}
+{{- $res  := 0 -}}
+
+{{- if $DBG }}{{- $DBG = printf "%s\nget-asset(%s)" $DBG $path -}}{{- end -}}
+
+{{/* 1. page resource */}}
+{{- with .page -}}
+  {{- if ne (printf "%T" .) "string" -}}{{- $res = .Resources.Get $path -}}{{- end -}}
+{{- end -}}
+
+{{/* 2. global asset — strip leading assets/ prefix if present */}}
+{{- if not $res -}}
+  {{- if strings.HasPrefix $path "/assets/" -}}
+    {{- $path = strings.TrimPrefix "/assets/" $path -}}
+    {{- if $DBG }}{{- $DBG = printf "%s\nget-asset trimmed to(%s)" $DBG $path -}}{{- end -}}
+  {{- end -}}
+  {{- $res = resources.Get $path -}}
+  {{- if $DBG }}{{- $DBG = printf "%s\nget-asset global resource(%s)" $DBG (debug.Dump $res) -}}{{- end -}}
+{{- end -}}
+
+{{/* build type flags, apply process, build src */}}
+{{- $isSvg    := false -}}
+{{- $isRaster := false -}}
+{{- $isGif    := false -}}
+{{- $isVideo  := false -}}
+{{- $isImage  := false -}}
+{{- $isStatic := false -}}
+{{- $mt       := "" -}}
+{{- $w        := 0 -}}
+{{- $h        := 0 -}}
+{{- $src      := "" -}}
+
+{{/* video extension check — runs for both resource and static paths */}}
+{{- $vidExts := site.Params.extensions.video | default (slice) -}}
+{{- $ext     := strings.ToLower (path.Ext $path) -}}
+{{- $isVideo  = in $vidExts $ext -}}
+
+{{- if $res -}}
+
+  {{- $mt      = $res.MediaType.Type -}}
+  {{- $isSvg   = eq $mt "image/svg+xml" -}}
+  {{- $isGif   = eq $mt "image/gif" -}}
+  {{- $isRaster = and (not $isSvg) (not $isGif) (not $isVideo) (strings.HasPrefix $mt "image/") -}}
+
+  {{/* apply process to raster and gif — SVG and video have no Process method */}}
+  {{- if and .process $isRaster -}}
+    {{- $res = $res.Process .process -}}
+    {{- if $DBG }}{{- $DBG = printf "%s\nget-asset processed (%s)" $DBG .process -}}{{- end -}}
+  {{- end -}}
+
+  {{- $src = $res.RelPermalink -}}
+  {{- if or $isRaster $isGif -}}
+    {{- $w = $res.Width -}}
+    {{- $h = $res.Height -}}
+  {{- end -}}
+
+{{- else -}}
+
+  {{/* 3. static fallback — infer type from extension */}}
+  {{- $isStatic = true -}}
+  {{- $isSvg    = eq $ext ".svg" -}}
+  {{- $isGif    = eq $ext ".gif" -}}
+  {{- $isRaster = and (not $isVideo) (in (slice ".png" ".jpg" ".jpeg" ".webp" ".tiff" ".tif" ".bmp") $ext) -}}
+  {{- if $isSvg    -}}{{- $mt = "image/svg+xml" -}}{{- end -}}
+  {{- if $isGif    -}}{{- $mt = "image/gif"     -}}{{- end -}}
+  {{- if $isRaster -}}{{- $mt = "image/unknown" -}}{{- end -}}
+  {{- $src = $path -}}
+  {{- if $DBG }}{{- $DBG = printf "%s\nget-asset static fallback (%s)" $DBG $path -}}{{- end -}}
+
+{{- end -}}
+
+{{- $isImage = or $isSvg $isRaster $isGif -}}
+
+{{- return (dict
+  "src"       $src
+  "res"       $res
+  "mediaType" $mt
+  "isSvg"     $isSvg
+  "isRaster"  $isRaster
+  "isGif"     $isGif
+  "isVideo"   $isVideo
+  "isImage"   $isImage
+  "isStatic"  $isStatic
+  "width"     $w
+  "height"    $h
+  "alt"       $alt
+  "caption"   $caption
+  "dbg"       $DBG
+) -}}

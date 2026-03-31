@@ -1,0 +1,8 @@
+{{/*
+  logo is the path to the logo in assets/ or static/
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/}}
+{{- $logo := site.Params.ui.logo | default "brand/logo.svg" -}}
+{{- $img  := partial "tk/get-asset" (dict "page" . "asset" $logo) -}}
+{{- return $img.src -}}

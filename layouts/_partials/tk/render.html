@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
 Debug rendering utility - displays and logs error messages during development (Hugo server only)
 */}}
 {{if hugo.IsServer }}{{/*
@@ -6,12 +6,12 @@ Debug rendering utility - displays and logs error messages during development (H
     Usage:
 
     Display and log an error message
-      partial "hw-tk/render" (dict "color" "red" "msg" "wrong bananas" "pList" "/index.html" "tList" "A>B>C>D" "kvList" . "help" $helpHTML)
+      partial "tk/render" (dict "color" "red" "msg" "wrong bananas" "pList" "/index.html" "tList" "A>B>C>D" "kvList" . "help" $helpHTML)
 
       like slogger, all key:value pairs in the kvList will be shown
       help: optional HTML string containing help modal and trigger button
   */}}
-  {{partial "hw-tk/dbg-template" . }}
+  {{partial "tk/dbg-template" . }}
   <div class="ui fluid {{.color}} message">
     <span class="ui {{.color}} text">{{.msg|safeHTML}}</span>:
     <span class="ui black text">page</span>(<span class="ui blue text">{{.pList|safeHTML}}</span>)

@@ -13,22 +13,22 @@
     
     like slogger, all key:value pairs in the ctx will be shown
   */}}
-  {{partial "hw-tk/dbg-template" . }}
+  {{partial "tk/dbg-template" . }}
   {{$theme := "pihuw"}}
-  {{$pList := partial "hw-tk/pageList" .kv}}
-  {{$tList := partial "hw-tk/templateList.html" .kv}}
-  {{$kvList := partial "hw-tk/kvListNoPage.html" .kv}}
-  {{$help := partial "hw-tk/help" .kv}}
+  {{$pList := partial "tk/pageList" .kv}}
+  {{$tList := partial "tk/templateList.html" .kv}}
+  {{$kvList := partial "tk/kvListNoPage.html" .kv}}
+  {{$help := partial "tk/help" .kv}}
   {{$d := dict "pList" $pList "tList" $tList "kvList" $kvList "help" $help}}
 
   {{- if .err  }}
     {{- erroridf $theme "err: %s @page(%s), partials[%s]" .err $pList $tList -}}
-    {{partial "hw-tk/render" (merge $d (dict "color" "red" "msg" .err))}}
+    {{partial "tk/render" (merge $d (dict "color" "red" "msg" .err))}}
   {{ end -}}
 
   {{- if .wrn  }}
     {{- warnidf $theme "err: %s @page(%s), partials[%s]" .wrn $pList $tList -}}
-    {{partial "hw-tk/render" (merge $d (dict "color" "orange" "msg" .wrn))}}
+    {{partial "tk/render" (merge $d (dict "color" "orange" "msg" .wrn))}}
   {{ end -}}
 
 {{end}}{{/* end of if server running */}}

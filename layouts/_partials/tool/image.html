@@ -1,50 +1,26 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
-  The .src property may be a string or a resource - do the right thing!
+{{partial "tk/dbg-template" .}}{{/*
+  Renders an <img> tag from any image asset path.
+  Uses tk/get-asset for resource resolution and type detection.
 */}}
-{{$DBG := false}}
-{{$type := (printf "%T" .src) }}
-{{$err := printf "is nil for %s" .src}}
-{{$alt := .alt}}
-{{$srcClass := .srcClass | default ""}}
-{{if not $alt}}{{ $alt = .text }}{{end}}
-{{if not .src}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "src" .src))}}{{end}}
-{{if not $alt}}{{partial "tool/dbg" (dict "wrn" $err "kv" (dict "alt" .alt))}}{{end}}
-{{/*  try a page resource first */}}
-{{ $path := .src }}
-{{ if strings.HasPrefix $path "assets/" }}
-  {{if $DBG}}<pre>search ({{$path}})</pre>{{end}}
-  {{ $path = strings.TrimPrefix "assets/" $path }}
-   {{if $DBG}}<pre>trim to ({{$path}})</pre>{{end}}
-{{ end }}
-{{ $img := .page.Resources.Get $path }}
-{{/*  try a global resource second */}}
-{{if not $img}}
-  {{if $DBG}}<pre>no Page resource, try site ({{$path}})</pre>{{end}}
-  {{ $img = resources.Get $path }}
-  {{if $DBG}}<pre>got ({{$img}})</pre>{{end}}
-{{end}}
-{{if $img}}
-  {{/* $img is not nil if we get a valid image resource i.e. .png or .jpg - NOT .svg */}}
-  {{if .process }}
-    {{if $DBG}}<pre>processing image ({{.process}})</pre>{{end}}
-    {{/* apply image process if requested */}}
-    {{$img = $img.Process .process}}
-  {{end}}
-  {{$path = $img.RelPermalink}}
-  {{if $DBG}}<pre>path:({{$path}})</pre>{{end}}
-{{end}}
-{{ $link := .srcLink}}
-{{$u := urls.Parse $link}}
+{{- $img      := partial "tk/get-asset" (dict "asset" .src "page" .page "process" .process "alt" (.alt | default .text)) -}}
+{{- $srcClass := .srcClass | default "" -}}
+{{- $link     := .srcLink -}}
+
+{{- if not .src -}}{{- partial "tool/dbg" (dict "wrn" "tool/image: .src is empty" "kv" (dict "page" .page)) -}}{{- end -}}
+
+{{- $u := urls.Parse $link -}}
 {{- if and $link (not $u.IsAbs) -}}
-  {{ $aFile := fileExists $u.Path}}
-  {{ $aBlog := strings.HasPrefix .srcLink "/blog/"}}
-  {{ $aPage := site.GetPage .srcLink }}
-  {{if and (not $aFile) (not $aBlog) (not $aPage)}}
-    {{$err := printf "bad srcLink(%s) for image" $link}}
-    {{- partial "tool/dbg" (dict "wrn" $err "kv" (dict "link" .srcLink "resolved-link" $link "page" .page) ) -}}
-  {{end}}
-{{end}}
+  {{- $aFile := fileExists $u.Path -}}
+  {{- $aBlog := strings.HasPrefix .srcLink "/blog/" -}}
+  {{- $aPage := site.GetPage .srcLink -}}
+  {{- if and (not $aFile) (not $aBlog) (not $aPage) -}}
+    {{- partial "tool/dbg" (dict "wrn" (printf "bad srcLink(%s) for image" $link) "kv" (dict "link" .srcLink "page" .page)) -}}
+  {{- end -}}
+{{- end -}}
+
 {{- if $link -}}<a href="{{$link}}">{{- end -}}
-<img class="{{$srcClass}}" src="{{$path}}" {{with $alt }}alt="{{.}}"{{end}} />
+<img class="{{$srcClass}}" src="{{$img.src}}" alt="{{$img.alt}}"
+  {{- with $img.width}} width="{{.}}"{{end -}}
+  {{- with $img.height}} height="{{.}}"{{end}} />
 {{- partial "tool/caption" . -}}
 {{- if $link -}}</a>{{- end -}}

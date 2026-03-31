@@ -4,3 +4,7 @@ MD013: false
 MD033: false
 # markdownlint whines about shortcode args that are URLs - turn nag off
 MD034: false
+# quite a bit of HTML tables so remove the align column nagging rule
+table-column-style:
+  aligned_delimiter: true
+  style: aligned

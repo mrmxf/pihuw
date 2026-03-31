@@ -1,13 +1,22 @@
-{{partial "hw-tk/dbg-template" .}}
-{{/* returns a dict of the first entry in assets/data/releases.yaml */}}
-{{ $file := site.Params.releaseTracking | default "data/releases.yaml" }}
-{{$v := ""}}{{$data := ""}}
-{{ with try (resources.Get $file) }}
-  {{ with .Err }}
-    {{ warnf "partial tmpl/get-version: %s" . }}
-  {{else}}
-    {{with .Value | transform.Unmarshal}}{{$data = .}}{{end}}
-    {{$v = (index $data 0)}}
-  {{ end }}
-{{ end }}
-{{return $v}}
+{{- /*
+  tmpl/get-version-data
+  Returns a dict of the first entry in the releases YAML file.
+
+  Reads: site.Params.releaseTracking — path to releases YAML (default "data/releases.yaml")
+
+  returns (dict) — first entry from the YAML list, or "" if file missing/empty
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/ -}}
+{{- $ret  := "" -}}
+{{- $file := site.Params.releaseTracking | default "data/releases.yaml" -}}
+{{- with try (resources.Get $file) -}}
+  {{- with .Err -}}
+    {{- warnf "partial tmpl/get-version-data: %s" . -}}
+  {{- else -}}
+    {{- with .Value | transform.Unmarshal -}}
+      {{- $ret = index . 0 -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $ret -}}

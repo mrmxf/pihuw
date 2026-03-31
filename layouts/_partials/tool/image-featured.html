@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
   image-featured - renders the page's featured image, resized, with optional centered caption.
 
   Page frontmatter params:
@@ -7,22 +7,17 @@
     FeaturedCaption - caption text rendered centered below the image (optional)
 */}}
 {{- $caption := .page.Params.FeaturedCaption -}}
-{{- $path    := partial "hw-tk/path-image-featured" . -}}
-{{- if $path -}}
-  {{- $wxh := "200x200" -}}
-  {{- with .page.Params.FeaturedWxH -}}{{- $wxh = . -}}{{- end -}}
-  {{- $img := .page.Resources.Get (path.Base $path) -}}
-  {{- if $img -}}
-    {{- $img = $img.Fit $wxh -}}
-    <div style="text-align:center;">
-      <img class="ui image" src="{{$img.RelPermalink}}"
-           width="{{$img.Width}}" height="{{$img.Height}}"
-           alt="{{$caption | default .page.Title}}" />
-      {{- with $caption -}}
-      <p style="text-align:center;">{{. | markdownify}}</p>
-      {{- end -}}
-    </div>
-  {{- end -}}
+{{- $img     := partial "tk/resource-image-featured" . -}}
+{{- if $img -}}
+  <div style="text-align:center;">
+    <img class="ui image" src="{{$img.src}}"
+         {{with $img.width}}width="{{.}}"{{end}}
+         {{with $img.height}}height="{{.}}"{{end}}
+         alt="{{$caption | default .page.Title}}" />
+    {{- with $caption -}}
+    <p style="text-align:center;">{{. | markdownify}}</p>
+    {{- end -}}
+  </div>
 {{- else -}}
   {{partial "tool/dbg" (dict "wrn" "image-featured: no resource matched glob" "kv" (dict "page" .page.RelPermalink))}}
 {{- end -}}

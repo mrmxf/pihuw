@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}
+{{partial "tk/dbg-template" .}}
 {{/*
  Hugo partial that renders responsive content blocks with media and text in configurable layouts
 */}}
@@ -21,42 +21,33 @@ default item is 33%:66% that becomes full width at {{site.Params.resp.s}}
 +-----------------------------------------------------+----------+
 
 */}}
-{{$default := partial "hw-tk/get-defaults"}}
-{{- $DBG := false -}}
-
-{{if $DBG}}
-  <hr style="height:3px; border:none; color:rgb(60,90,180); background-color:rgb(60,255,180);">
-  <pre>{{debug.Dump .}}</pre>
-{{end}}
-{{/* ---handle src image ----------------------------------------------------------------------------------------- */}}
-{{- $src := "" -}}
-{{- with .src -}}{{$src = . -}}{{end}}
+{{$default := partial "tk/get-defaults"}}
+{{/* ---handle img dict: accept pre-resolved $img or resolve from .src ------------------------------------------- */}}
+{{- $img := .img -}}
+{{- if and (not $img) .src -}}
+  {{- $img = partial "tk/get-asset" (dict "asset" .src "page" .page) -}}
+{{- end -}}
 
 {{/* ---handle src grid  ------------------------------------------------------------------------------------------ */}}
 {{- $divClass := $default.class.item.divClass -}}
-{{- $srcGrid :=  $default.class.item.srcGrid     -}}
-{{- $txtGrid :=  $default.class.item.txtGrid     -}}
-{{if .src}}
-  {{- $divClass = printf $default.class.item_m.divClass  site.Params.resp.m -}}
-  {{- $srcGrid =  printf $default.class.item_m.srcGrid   site.Params.resp.m -}}
-  {{- $txtGrid =  printf $default.class.item_m.txtGrid   site.Params.resp.m -}}
-{{end}}
+{{- $srcGrid :=  $default.class.item.srcGrid -}}
+{{- $txtGrid :=  $default.class.item.txtGrid -}}
+{{- if $img -}}
+  {{- $divClass = printf $default.class.item_m.divClass site.Params.resp.m -}}
+  {{- $srcGrid =  printf $default.class.item_m.srcGrid  site.Params.resp.m -}}
+  {{- $txtGrid =  printf $default.class.item_m.txtGrid  site.Params.resp.m -}}
+{{- end -}}
 {{- with .class}}{{$divClass = .}}{{end}}
 {{- with .srcGrid}}{{$srcGrid = .}}{{end}}
 {{- with .txtGrid}}{{$txtGrid = .}}{{end}}
-{{/* ---handle src type ------------------------------------------------------------------------------------------- */}}
-{{- $ext := strings.ToLower (path.Ext .src) -}}
-{{- $srcClass := printf $default.class.block.srcClass .srcClass -}}
-{{- $srcIsVideo := in $default.slice.vid_ext $ext -}}
-{{- $srcIsImage := in $default.slice.img_ext $ext -}}
+{{/* ---handle media class from $img dict ----------------------------------------------------------------------- */}}
 {{- $mediaSrcClass := $default.class.block.imgClass -}}
-{{with $srcIsVideo}}{{- $mediaSrcClass := $default.class.block.vidClass -}}{{end}}
+{{- if and $img $img.isVideo -}}{{- $mediaSrcClass = $default.class.block.vidClass -}}{{- end -}}
 {{/* squash any caption and identify media class */}}
-{{- $mediaDot := merge . (dict "srcClass" $mediaSrcClass "text" nil "header" nil) }}
+{{- $mediaDot := merge . (dict "img" $img "srcClass" $mediaSrcClass "text" nil "header" nil) }}
 {{/* --------------------------------------------------------------------- */}}
 <div class = "{{$divClass}}">
-{{if $DBG}}<pre>Source ({{.src}}) is on {{.srcOn}} @ srcGrid({{$srcGrid}}):txtGrid({{$txtGrid}})</pre>{{end}}
-{{- if and .src (eq .srcOn "left") -}}
+{{- if and $img (eq .srcOn "left") -}}
 <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
 {{- end -}}
 <div class="{{$txtGrid}}">
@@ -68,7 +59,7 @@ default item is 33%:66% that becomes full width at {{site.Params.resp.s}}
       {{else}}{{ .header }}{{end}}
       {{- with .meta -}}
       <div class="meta">
-        <span class="date">{{ page.Date.Format "2 Jan 2006" }}</span>
+        {{- with $.date -}}<span class="date">{{ .Format "2 Jan 2006" }}</span>{{- end -}}
         <span class="category">{{ . }}</span>
       </div>
       {{- end -}}
@@ -80,8 +71,7 @@ default item is 33%:66% that becomes full width at {{site.Params.resp.s}}
     </div>
   </div>
 </div>
-{{ if and .src (eq .srcOn "right") }}
+{{- if and $img (eq .srcOn "right") -}}
 <div class="{{$srcGrid}}">{{ partial "tool/media" $mediaDot }}</div>
-{{end}}
-{{with $DBG}}<p>END pihuw-block<hr class="block-hr"></p>{{end}}
+{{- end -}}
 </div>

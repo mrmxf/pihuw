@@ -1,19 +1,21 @@
-{{partial "hw-tk/dbg-template" .}}
-{{/*
-  map display classes to a taxonomy based on its position in the
-  range of taxonomies.
+{{- /*
+  tmpl/taxonomy-display-class
+  Maps a CSS display class to a taxonomy based on its ordinal position
+  in site.Taxonomies. Styles defined in pihuw.css or custom CSS.
 
-  Styles are defined in pihuw-tweak.css or your own custom css
-*/}}
-{{$i := 0}}
-{{$class := "fo-tax-default"}}
-{{ $matchTaxo := .taxo }}
+  .taxo — string — taxonomy name to match (required)
 
-{{range $name, $map := site.Taxonomies}}
-  {{$i = math.Add $i 1}}
-  {{if eq $name $matchTaxo}}
-    {{$class = printf "fo-tax-%d" $i}}
-  {{end}}
-  {{end}}
-{{/* choose a taxonomy class */}}
-{{return $class}}
+  returns (string) — CSS class e.g. "fo-tax-1", or "fo-tax-default" if not found
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/ -}}
+{{- $ret        := "fo-tax-default" -}}
+{{- $matchTaxo  := .taxo -}}
+{{- $i          := 0 -}}
+{{- range $name, $map := site.Taxonomies -}}
+  {{- $i = math.Add $i 1 -}}
+  {{- if eq $name $matchTaxo -}}
+    {{- $ret = printf "fo-tax-%d" $i -}}
+  {{- end -}}
+{{- end -}}
+{{- return $ret -}}

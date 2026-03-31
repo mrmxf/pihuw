@@ -1,4 +1,4 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
    Include another page as a block File path is relative to content/ */}}
 {{- $f := .from -}}
 {{ if $f}}
@@ -24,9 +24,9 @@
   {{- else -}}
     {{/* else if file doesn't exist */}}
     {{ $err := printf "%s from field does not point to a valid file:%s" templates.Current.Name $f }}
-    {{ partial "hw-tk/dbg" (dict "err" $err) }}
+    {{ partial "tk/dbg" (dict "err" $err) }}
   {{- end -}}{{/* end of if file exists */}}
 {{else}}
   {{ $err := printf "%s from field seems to be empty!" templates.Current.Name}}
-  {{ partial "hw-tk/dbg" (dict "err" $err) }}
+  {{ partial "tk/dbg" (dict "err" $err) }}
 {{end}}

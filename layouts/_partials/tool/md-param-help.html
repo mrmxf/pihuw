@@ -1,6 +1,6 @@
-{{partial "hw-tk/dbg-template" .}}{{/*
+{{partial "tk/dbg-template" .}}{{/*
 Markdown parameter partial help using modular help system */ -}}
-{{ partial "hw-tk/help-tk.html" . }}
+{{ partial "tk/help-tk.html" . }}
 
 {{- $cardData := dict
   "title" "{{&lt; hw t=\"md-param\" &gt;}}"
@@ -99,11 +99,11 @@ Markdown parameter partial help using modular help system */ -}}
 
 {{- /* Build the complete help content */ -}}
 {{- $content := "" -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-header.html" $headerData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-description.html" $descriptionData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-params.html" $paramsData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-examples.html" $examplesData) -}}
-{{- $content = printf "%s%s" $content (partial "hw-tk/help-notes.html" $notesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
 
 {{- $cardData = merge $cardData (dict "Inner" $content) -}}
-{{- partial "hw-tk/help-card.html" $cardData -}}
+{{- partial "tk/help-card.html" $cardData -}}

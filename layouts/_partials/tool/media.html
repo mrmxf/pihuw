@@ -1,5 +1,9 @@
-{{partial "hw-tk/dbg-template" .}}{{/* 
------------- insert a media element tool/image or tool/video ------------ */}}
-{{- if .srcIsVideo -}}{{- partial "tool/video" . -}}
+{{partial "tk/dbg-template" .}}{{/*
+  Routes to tool/video or tool/image.
+  Prefers $img.isVideo from a pre-resolved $img dict; falls back to .srcIsVideo for callers
+  that have not yet been migrated to pass an $img dict.
+*/}}
+{{- $isVideo := cond (and .img .img.isVideo) true .srcIsVideo -}}
+{{- if $isVideo -}}{{- partial "tool/video" . -}}
 {{- else -}}{{- partial "tool/image" . -}}
 {{- end -}}

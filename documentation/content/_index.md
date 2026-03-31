@@ -9,18 +9,18 @@ date:      2025-03-31
 It has a small footprint and is aimed at creating embedded webservers on Pi-PICO and ESP32 devices. All css is loaded
 locally and no CDNs are accessed. You can override this if it makes you happy.
 
-{{< pi t = "accordion" >}}
+{{< hw t = "accordion" >}}
 
-{{< pi t = "acc-tab" header = "**heading 1**" >}}
+{{< hw t = "acc-tab" header = "**heading 1**" >}}
 
 content 1
 
 content 2
 
-{{< /pi >}}
+{{< /hw >}}
 
-{{< pi t = "acc-tab" header = "**ywo**" >}}
+{{< hw t = "acc-tab" header = "**ywo**" >}}
 content two
-{{< /pi >}}
+{{< /hw >}}
 
-{{< /pi >}}
+{{< /hw >}}

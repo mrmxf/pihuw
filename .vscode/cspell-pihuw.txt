@@ -48,4 +48,5 @@ taxonomycloud
 taxonomypageheade
 tmpl
 Unmarshal
+vars
 warnf

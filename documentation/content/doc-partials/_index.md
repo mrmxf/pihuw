@@ -11,7 +11,7 @@ params:
 
 ---
 
-## `layouts/_partials/pi.html`
+## `layouts/_partials/hw.html`
 
 This is the main dispatcher for pihuw. When a shortcode like this is found:
 
@@ -19,12 +19,12 @@ This is the main dispatcher for pihuw. When a shortcode like this is found:
 # Some page title
 
 This is some markdown with an image below.
-{{</* pi t = "image" text = "Caption text" /*/>}}
+{{</* hw t = "image" text = "Caption text" /*/>}}
 ```
 
-the `pi` shortcode handler will [parse the params]( {{% relref "/doc-shortcodes" %}} ) into a standard set of keys and values before
-running `layouts/_partials/pi.html`.
+the `hw` shortcode handler will [parse the params]( {{% relref "/doc-shortcodes" %}} ) into a standard set of keys and values before
+running `layouts/_partials/hw.html`.
 
-Finally the dispatcher partial uses shortcode's `t = "thingy"` param to run a partial called `pihuw-thingy.html`. If you
+Finally the dispatcher partial uses shortcode's `t = "thingy"` param to run a partial called `tool/thingy.html`. If you
 want to extend the pihuw ecosystem, simply put a partial with the right name in your `layouts/_partials` folder. All the
 parsing, error checking, help and other functions will be done for you.

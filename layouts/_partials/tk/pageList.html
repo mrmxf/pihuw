@@ -1,0 +1,27 @@
+{{/*
+Debug utility to return page hierarchy information - used for development debugging
+
+DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/}}
+{{- $pageList := "❓" -}}
+{{- $page := false -}}
+{{- if .Page -}}{{- $page = .Page -}}{{- end -}}
+{{- if .page -}}{{- $page = .page -}}{{- end -}}
+{{- if hugo.IsServer -}}
+  {{- with $page -}}
+    {{- $pageList = .Path -}}
+    {{- with .Parent -}}
+      {{- $pageList = printf "%s◀%s" $pageList .Path -}}
+      {{- with .Parent -}}
+        {{- $pageList = printf "%s◀%s" $pageList .Path -}}
+        {{- with .Parent -}}
+          {{- $pageList = printf "%s◀%s" $pageList .Path -}}
+          {{- with .Parent -}}
+            {{- $pageList = printf "%s◀%s" $pageList .Path -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $pageList -}}

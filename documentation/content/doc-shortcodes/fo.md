@@ -8,7 +8,7 @@ usage: |
 examples: |
   Some examples
 ---
-# fomantic-ui block generic front end
+## pihuw block generic front end
 
 params:
 
@@ -25,7 +25,7 @@ params:
 - `srcOn` = `left` _`right`     _default_`left`
 - `srcWidth` = 0.3              _width for image (`0.0`-`1.0`)_
 - `srcLink` = `/some/page`      _href for media_
-- `srcClass` = `ui image`       _this can be overridden_
+- `srcClass` = `image`          _this can be overridden_
 - `srcPoster` = ``/some/url`    _poster for video asset_
 
 - don't use srcRatio & srcClass together - they sort of conflict

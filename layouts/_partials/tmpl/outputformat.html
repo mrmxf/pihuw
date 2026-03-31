@@ -1,13 +1,22 @@
-{{partial "hw-tk/dbg-template" .}}
-{{/* Return the current page outputformat */}}
-{{ $alts := newScratch }}
-{{ $format := "unknown" }}
-{{ range .AlternativeOutputFormats }}
-    {{ $alts.Set .Name true }}
-{{ end }}
-{{ range .OutputFormats }}
-    {{ if not ($alts.Get .Name) }}
-        {{ $format = .Name }}
-    {{ end }}
-{{ end }}
-{{ return $format }}
+{{- /*
+  tmpl/outputformat
+  Returns the current page's own output format name (the one that is in
+  .OutputFormats but NOT in .AlternativeOutputFormats).
+
+  Expects the Hugo Page object as dot (called from base templates, not via hw).
+
+  returns (string) — format name e.g. "HTML", "RSS", or "unknown"
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/ -}}
+{{- $ret  := "unknown" -}}
+{{- $alts := slice -}}
+{{- range .AlternativeOutputFormats -}}
+  {{- $alts = $alts | append .Name -}}
+{{- end -}}
+{{- range .OutputFormats -}}
+  {{- if not (in $alts .Name) -}}
+    {{- $ret = .Name -}}
+  {{- end -}}
+{{- end -}}
+{{- return $ret -}}
