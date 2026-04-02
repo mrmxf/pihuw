@@ -14,7 +14,7 @@ Image partial help using modular help system */ -}}
   "params" (slice
     (dict "name" "src" "required" true "example" "/images/photo.jpg")
     (dict "name" "alt" "required" false "example" "Photo description")
-    (dict "name" "srcClass" "required" false "example" "ui fluid image")
+    (dict "name" "srcClass" "required" false "example" "my-custom-class")
     (dict "name" "srcLink" "required" false "example" "/gallery")
     (dict "name" "process" "required" false "example" "fit 300x200")
   )
@@ -66,7 +66,7 @@ Image partial help using modular help system */ -}}
       "type" "string"
       "required" false
       "description" "CSS classes for the image container"
-      "default" "ui fluid image"
+      "default" ""
     )
     (dict
       "name" "srcLink"

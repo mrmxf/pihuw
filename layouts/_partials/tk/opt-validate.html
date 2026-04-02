@@ -1,0 +1,171 @@
+{{- /*
+  tk/opt-validate.html
+  Parses and validates an opt JSON string against a JSON schema string.
+
+  Schema syntax:
+    Key with trailing "!" → required field (e.g. "mode!": "compact")
+    Key without "!"       → optional field with default (e.g. "count": 0)
+    Value type            → encodes the expected type: "" or "x"=string, 0=number, false/true=bool
+
+  Reserved opt key "squash":
+    Space-separated error IDs → suppress those specific errors  e.g. "squash":"FK:foo MK:mode"
+    "*"                       → hero mode: suppress all but render a loud warning listing everything
+
+  Error IDs:
+    SCHEMA      — schema definition is not valid JSON (developer error)
+    JP          — opt is not valid JSON
+    FK:{key}    — foreign key in opt not present in schema
+    MK:{key}    — required key (!) missing from opt
+    TY:{key}    — type of opt value does not match schema value type
+
+  .schema — string — JSON schema definition e.g. '{"mode!":"compact","count":0}' (required)
+  .opt    — string — JSON opt string from shortcode (empty string is valid)
+  .tool   — string — tool name used in error messages (optional, defaults to "unknown")
+
+  returns dict:
+    "ok"       bool   — true if there are no active (unsquashed) errors
+    "opts"     dict   — schema defaults merged with validated opt values (only valid keys/types)
+    "errors"   slice  — active errors, each a dict "id" string "msg" string
+    "squashed" int    — count of suppressed errors
+    "errorMsg" string — pre-formatted server-only HTML banner; "" if no errors
+
+  DO NOT call partial "tk/dbg-template" — it prevents return from working.
+*/ -}}
+{{- $tool      := .tool | default "unknown" -}}
+{{- $typeAlias := dict "float64" "number" "int" "number" "int64" "number" -}}
+{{- $ret       := dict "ok" false "opts" (dict) "errors" (slice) "squashed" 0 "errorMsg" "" -}}
+
+{{- /* ── parse schema ─────────────────────────────────────────────────────── */}}
+{{- $schemaParsed := dict -}}
+{{- $schemaErr    := "" -}}
+{{- with .schema -}}
+  {{- with try (transform.Unmarshal .) -}}
+    {{- if .Err -}}
+      {{- $schemaErr = printf "SCHEMA — invalid JSON in schema: %s" .Err -}}
+    {{- else -}}
+      {{- $schemaParsed = .Value -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $schemaErr -}}
+  {{- $msg := printf "<div class=\"pihuw-opt-error\"><b>[%s]</b> %s</div>" $tool $schemaErr -}}
+  {{- $ret   = dict "ok" false "opts" (dict) "errors" (slice (dict "id" "SCHEMA" "msg" $schemaErr)) "squashed" 0 "errorMsg" $msg -}}
+{{- else -}}
+
+  {{- /* ── build clean schema (strip !) and collect required keys ─────────── */}}
+  {{- $cleanSchema  := dict -}}
+  {{- $requiredKeys := slice -}}
+  {{- range $k, $v := $schemaParsed -}}
+    {{- $ck := strings.TrimSuffix "!" $k -}}
+    {{- $cleanSchema = merge $cleanSchema (dict $ck $v) -}}
+    {{- if strings.HasSuffix $k "!" -}}
+      {{- $requiredKeys = $requiredKeys | append $ck -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── parse opt ────────────────────────────────────────────────────────── */}}
+  {{- $optParsed := dict -}}
+  {{- $allErrors := slice -}}
+  {{- with .opt -}}
+    {{- with try (transform.Unmarshal .) -}}
+      {{- if .Err -}}
+        {{- $allErrors = $allErrors | append (dict "id" "JP" "msg" (printf "JSON parse error — %s" .Err)) -}}
+      {{- else -}}
+        {{- $optParsed = .Value -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── extract squash meta-key ─────────────────────────────────────────── */}}
+  {{- $squashAll  := false -}}
+  {{- $squashList := slice -}}
+  {{- with index $optParsed "squash" -}}
+    {{- if eq . "*" -}}
+      {{- $squashAll = true -}}
+    {{- else -}}
+      {{- $squashList = split . " " -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── FK: foreign keys ───────────────────────────────────────────────── */}}
+  {{- range $k, $v := $optParsed -}}
+    {{- if and (ne $k "squash") (not (isset $cleanSchema $k)) -}}
+      {{- $id  := printf "FK:%s" $k -}}
+      {{- $msg := printf "unknown key %q" $k -}}
+      {{- $allErrors = $allErrors | append (dict "id" $id "msg" $msg) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── MK: missing required keys ──────────────────────────────────────── */}}
+  {{- range $requiredKeys -}}
+    {{- if not (isset $optParsed .) -}}
+      {{- $id  := printf "MK:%s" . -}}
+      {{- $msg := printf "required key %q missing" . -}}
+      {{- $allErrors = $allErrors | append (dict "id" $id "msg" $msg) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── TY: type mismatches ────────────────────────────────────────────── */}}
+  {{- range $k, $v := $optParsed -}}
+    {{- if and (ne $k "squash") (isset $cleanSchema $k) -}}
+      {{- $st  := printf "%T" (index $cleanSchema $k) -}}
+      {{- $ot  := printf "%T" $v -}}
+      {{- if ne $st $ot -}}
+        {{- $stf := index $typeAlias $st | default $st -}}
+        {{- $otf := index $typeAlias $ot | default $ot -}}
+        {{- $id  := printf "TY:%s" $k -}}
+        {{- $msg := printf "key %q expects %s, got %s" $k $stf $otf -}}
+        {{- $allErrors = $allErrors | append (dict "id" $id "msg" $msg) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── build $opts: schema defaults merged with type-valid opt values ─── */}}
+  {{- $opts := $cleanSchema -}}
+  {{- range $k, $v := $optParsed -}}
+    {{- if and (ne $k "squash") (isset $cleanSchema $k) -}}
+      {{- $st := printf "%T" (index $cleanSchema $k) -}}
+      {{- $ot := printf "%T" $v -}}
+      {{- if eq $st $ot -}}
+        {{- $opts = merge $opts (dict $k $v) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── partition errors: active vs squashed ─────────────────────────────── */}}
+  {{- $activeErrors  := slice -}}
+  {{- $squashedCount := 0 -}}
+  {{- range $allErrors -}}
+    {{- if or $squashAll (in $squashList .id) -}}
+      {{- $squashedCount = add $squashedCount 1 -}}
+    {{- else -}}
+      {{- $activeErrors = $activeErrors | append . -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* ── build errorMsg HTML ───────────────────────────────────────────────── */}}
+  {{- $errorMsg := "" -}}
+  {{- if $squashAll -}}
+    {{- $errorMsg = printf "<details class=\"pihuw-squash-hero\" open><summary>⚠ ALL OPT VALIDATION SUPPRESSED — %s — remove <code>\"squash\":\"*\"</code> before publishing</summary><ul>" $tool -}}
+    {{- range $allErrors -}}
+      {{- $errorMsg = printf "%s<li><code>%s</code> — %s</li>" $errorMsg .id .msg -}}
+    {{- end -}}
+    {{- if not $allErrors -}}
+      {{- $errorMsg = printf "%s<li>no errors found (safe to remove squash)</li>" $errorMsg -}}
+    {{- end -}}
+    {{- $errorMsg = printf "%s</ul></details>" $errorMsg -}}
+  {{- else -}}
+    {{- range $activeErrors -}}
+      {{- $errorMsg = printf "%s<div class=\"pihuw-opt-error\"><b>[%s]</b> <code>%s</code> — %s &nbsp;·&nbsp; suppress: <code>\"squash\":\"%s\"</code></div>" $errorMsg $tool .id .msg .id -}}
+    {{- end -}}
+    {{- if gt $squashedCount 0 -}}
+      {{- $errorMsg = printf "%s<div class=\"pihuw-opt-squashed\">[%s] %d opt warning(s) squashed</div>" $errorMsg $tool $squashedCount -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $ok  := eq (len $activeErrors) 0 -}}
+  {{- $ret  = dict "ok" $ok "opts" $opts "errors" $activeErrors "squashed" $squashedCount "errorMsg" $errorMsg -}}
+
+{{- end -}}
+{{- return $ret -}}

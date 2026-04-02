@@ -5,7 +5,7 @@ Hugo partial that renders HTML5 video elements with optional links and captions
 {{$type := (printf "%T" .src)}}
 {{$err := printf "is nil for %s" .src}}
 {{$alt := .alt}}
-{{$srcClass := .srcClass | default "ui fluid image"}}
+{{$srcClass := .srcClass | default ""}}
 {{- if not .src -}}
   {{- partial "tk/dbg" (dict "wrn" $err "kv" (dict "src" .src)) -}}
 {{- end -}}
@@ -23,8 +23,13 @@ Hugo partial that renders HTML5 video elements with optional links and captions
     {{- partial "tk/dbg" (dict "wrn" $err "kv" . ) -}}
   {{end}}
 {{end}}
+{{- $poster := "" -}}
+{{- with .srcPoster -}}
+  {{- $posterImg := partial "tk/get-asset" (dict "asset" . "page" $.page "process" $.thumb "alt" $.alt) -}}
+  {{- $poster = $posterImg.src -}}
+{{- end -}}
 {{- if $link -}}<a href="{{$link}}">{{- end -}}
-<video class="{{ $srcClass }}" autoplay loop>
+<video class="{{ $srcClass }}" autoplay loop{{with $poster}} poster="{{.}}"{{end}}>
   <source src="{{ .src }}" type="video/mp4"  {{with .alt }}alt="{{.}}"{{end}} />
   Your browser does not support the video tag.
 </video>

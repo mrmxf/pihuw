@@ -13,6 +13,8 @@ slice:
   vid_ext:
   - .mp4
   - .mkv
+# in the classes below _m is used for picnic_css break mode.
+# %d substitution occurs item and feature with site.Params.resp.m 
 class:
   block:
     divClass: flex one
@@ -37,5 +39,14 @@ class:
   item_m:
     divClass: flex one four-%d grow
     srcGrid: full fourth-%d src block
-    txtGrid: full three-fourth-%d txt block
-  
+    txtGrid: full three-fourth-%d txt 
+  feature-group:
+    divClass: flex four
+  feature:
+    divClass: flex one
+    srcGrid:  full
+    txtGrid:  full txt
+    srcClass: full
+    hrClass:  feature-hr
+    imgClass: feature
+    vidClass: feature

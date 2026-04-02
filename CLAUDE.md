@@ -239,6 +239,58 @@ named file in the consumer site's `layouts/` tree.
 
 ---
 
+## Documentation Content Structure
+
+The `documentation/content/` tree has a **one-to-one mapping** with `layouts/`:
+
+| Content section          | Mirrors                       | Audience            |
+|--------------------------|-------------------------------|---------------------|
+| `content/shortcodes/`    | `layouts/_shortcodes/`        | Authors             |
+| `content/tool/`          | `layouts/_partials/tool/`     | Authors             |
+| `content/tmpl/`          | `layouts/_partials/tmpl/`     | Developers          |
+| `content/tk/`            | `layouts/_partials/tk/`       | Developers          |
+| `content/kitchen_sink/`  | n/a                           | Authors (live examples)  |
+
+### Maintenance rules
+
+**Adding a new `tool/` partial:**
+
+1. Create `layouts/_partials/tool/X.html`
+2. Create `layouts/_partials/tool/X-help.html` (follow existing help pattern)
+3. Add `"X"` to the `$tools` slice in `layouts/_partials/tk/help.html`
+4. Create `documentation/content/tool/X.md` containing only frontmatter + `{{</* hw t="X" help="yes" */>}}`
+5. Create `documentation/content/kitchen_sink/X.md` with a live example
+
+**Adding a new `tmpl/` or `tk/` partial:**
+
+1. Create the partial
+2. Add a row to the relevant table in `documentation/content/tmpl/_index.md` or `documentation/content/tk/_index.md`
+
+**Deliberately excluded from author-facing docs (`t="help"` index):**
+
+- All `tk/` partials — developer use only
+- `tk/opt-validate` — documented in `content/tk/_index.md` only
+
+### tool/ dogfood pattern
+
+Each `content/tool/X.md` page renders its own help card inline:
+
+```markdown
+---
+title:     X
+linkTitle: X
+date:      2026-04-02
+summary:   One-line description shown in the tool/ index listing.
+---
+
+{{</* hw t="X" help="yes" */>}}
+```
+
+The `content/tool/_index.md` uses `{{</* hw t="item-group-by-type" count="100" */>}}`
+to auto-list all tool pages as item cards — no manual index maintenance needed.
+
+---
+
 ## Known issues backlog (from consistency review 2026-03-28)
 
 Severity key: B = blocking (incorrect output), M = moderate (debt), C = cosmetic

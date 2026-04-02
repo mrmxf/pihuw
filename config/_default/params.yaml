@@ -44,10 +44,21 @@ extensions:
    video: [
      "mp4", "webm", "ogg", "mxf"
    ]
-# --- defaults -----------------------------------
+
+# --- defaults - loaded to partials with tk/get-defaults ----------------------
 default:
   thumb:
     height: 100
+    process: x100         # default thumbnail process string — override e.g. "fit 200x200 q80"
+  feature:
+    # these settings control the resampling of PNGs and the constraints used
+    # for SVGs in the feature block. Keep params & process identical for sanity.
+    height: 300           # height of the feature image in the feature block. 
+    width:  300           # width of the feature image in the feature block. 
+    process: fit 300x300  # hardcoded in tool/feature.html — move wiring there in future
+  gallery:
+    thumbProcess: fit 300x300 q75      # hardcoded in tool/gallery.html line 98
+    fullProcess:  resize 1920x1920 q85 # hardcoded in tool/gallery.html line 99
 #                                             _
 #   _ _   ___   ___  _ __   ___   _ _    ___ (_) __ __  ___
 #  | '_| / -_) (_-< | '_ \ / _ \ | ' \  (_-< | | \ V / / -_)

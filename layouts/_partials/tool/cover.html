@@ -1,26 +1,36 @@
 {{partial "tk/dbg-template" .}}{{/*
-   Include another page as a block File path is relative to project root */}}
-{{- $f := .from -}}
-{{- if $f -}}
-{{/* --- create a page object for the included page ---------------------- */}}
-{{- $p := .page.GetPage $f }}
-{{- if eq $p nil -}}{{- $p = .page.Site.GetPage $f }}{{end -}}
-{{/* --- update the dict for the block -----------------------------------*/}}
-{{- $d := merge . (dict "from" $f) -}}
+   Make a cover image - or images - Work In Progress */}}
 
-{{ $featured := ($p.Resources.ByType "image").GetMatch "*feature*" }}
-{{if $featured}}
-{{- $featImg := partial "tk/get-asset" (dict "asset" $featured.Name "page" $p) -}}
-{{- $d = merge $d (dict "src" $featImg.src "img" $featImg) -}}
-{{end}}
-{{- $d = merge $d (dict "header" $p.Page.Title) -}}
-{{- $d = merge $d (dict "headerLink" $p.Page.RelPermalink) -}}
-{{- $d = merge $d (dict "srcClass"  "ui fluid image") -}}
-{{- $d = merge $d (dict "srcLink" $p.Page.RelPermalink) -}}
-{{- $d = merge $d (dict "description" ($p.Plain | safeHTML | truncate 300)) -}}
-{{- $min := add ( div ( countwords $p.Plain ) 220 ) 1 -}}
-{{- $d = merge $d (dict "meta" (printf "~%v min read" $min)) -}}
-{{- partial "tool/block" $d -}}
-{{- else -}}
-<p>partial <code style="color:blue;">o/include</code> needs parameter <code style="color:red;">from</code> as a path in {{.page.Path}}{{.page.File}}</p>
-{{- end -}}
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.paged {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
+
+.page {
+  height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.page .cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+<div class="paged">
+  <section class="page">
+    <img class="cover" src="{{.src}}" alt="{{.alt}}">
+  </section>
+
+  <section class="page">
+    <video class="cover" autoplay muted loop playsinline src="{{.src}}"></video>
+  </section>
+</div>

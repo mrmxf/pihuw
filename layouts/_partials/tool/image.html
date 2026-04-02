@@ -19,8 +19,10 @@
 {{- end -}}
 
 {{- if $link -}}<a href="{{$link}}">{{- end -}}
-<img class="{{$srcClass}}" src="{{$img.src}}" alt="{{$img.alt}}"
-  {{- with $img.width}} width="{{.}}"{{end -}}
-  {{- with $img.height}} height="{{.}}"{{end}} />
+<img class="{{$srcClass}}" src="{{$img.src}}" alt="{{$img.alt}}" />
+  {{/* forcing width and height is best done with pure css. You
+  can't make it work for feature, item, blog and covers simultaneously
+    {{- with $img.width}} width="{{.}}"{{end -}}
+  {{- with $img.height}} height="{{.}}"{{end}}   */}}
 {{- partial "tool/caption" . -}}
 {{- if $link -}}</a>{{- end -}}

@@ -1,0 +1,135 @@
+{{partial "tk/dbg-template" .}}{{/*
+Video partial help using modular help system */ -}}
+{{ partial "tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"video\" &gt;}}"
+  "color" "olive"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "video"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "src"       "required" true  "example" "/videos/demo.mp4")
+    (dict "name" "alt"       "required" false "example" "Demo video")
+    (dict "name" "srcPoster" "required" false "example" "/images/demo-poster.jpg")
+    (dict "name" "thumb"     "required" false "example" "x200")
+    (dict "name" "srcClass"  "required" false "example" "")
+    (dict "name" "srcLink"   "required" false "example" "/videos")
+  )
+  "note" "Renders an HTML5 video with optional poster image and caption"
+-}}
+
+{{- $descriptionData := dict
+  "description" "Renders an HTML5 `<video>` element with autoplay and loop. Supports an optional poster image shown before playback — the poster is resolved via `tk/get-asset` and processed using the `thumb` parameter so it is sized correctly for its context."
+  "notes" (slice
+    "**`thumb` drives poster sizing** — the same process string used for thumbnails site-wide"
+    "**Poster precedence**: shortcode `thumb` > page frontmatter `thumb` > `site.Params.default.thumb.process` > derived from `site.Params.default.thumb.height`"
+    "**`process` is separate** — applies to the full-res asset, not the poster"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name" "src"
+      "type" "string"
+      "required" true
+      "description" "Path to the video file (page resource or global asset)"
+      "default" ""
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt / accessibility text for the video"
+      "default" ""
+    )
+    (dict
+      "name" "srcPoster"
+      "type" "string"
+      "required" false
+      "description" "Path to a poster image shown before the video plays. Processed using the `thumb` parameter."
+      "default" ""
+    )
+    (dict
+      "name" "thumb"
+      "type" "string"
+      "required" false
+      "description" "Hugo image process string applied to srcPoster (e.g. `x200`, `fit 320x180`). Defaults via site params — see `site.Params.default.thumb.process`."
+      "default" "site.Params.default.thumb.process"
+    )
+    (dict
+      "name" "srcClass"
+      "type" "string"
+      "required" false
+      "description" "CSS classes for the video element"
+      "default" ""
+    )
+    (dict
+      "name" "srcLink"
+      "type" "string"
+      "required" false
+      "description" "URL to wrap around the video (makes video block clickable)"
+      "default" ""
+    )
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Caption text rendered below the video"
+      "default" ""
+    )
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Caption header (e.g., 'Video 1')"
+      "default" ""
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Simple autoplay video"
+      "code" "{{&lt;hw t=\"video\" src=\"/videos/demo.mp4\" alt=\"Product demo\"&gt;}}"
+      "note" "Video autoplays and loops. No poster shown."
+    )
+    (dict
+      "description" "Video with poster image"
+      "code" "{{&lt;hw t=\"video\"\n  src=\"/videos/demo.mp4\"\n  srcPoster=\"/images/demo-poster.jpg\"\n  alt=\"Product demo\"\n  text=\"Watch the product demo\"&gt;}}"
+      "note" "Poster image is processed at the site default thumb size (`x100`)."
+    )
+    (dict
+      "description" "Video with custom poster size"
+      "code" "{{&lt;hw t=\"video\"\n  src=\"/videos/demo.mp4\"\n  srcPoster=\"/images/demo-poster.jpg\"\n  thumb=\"fit 640x360\"\n  alt=\"Product demo\"\n  text=\"Watch the product demo\"&gt;}}"
+      "note" "Override the default thumb process string for this specific poster."
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "Videos autoplay and loop by default — suitable for background / hero use"
+    "`srcPoster` is resolved through `tk/get-asset` so page bundle resources work"
+    "Set `site.Params.default.thumb.process` in params.yaml to control the global poster size"
+  )
+  "warnings" (slice
+    "`src` is required — missing src produces a debug warning and empty output"
+    "Only `video/mp4` MIME type is declared; use standard H.264 MP4 for broadest browser support"
+  )
+-}}
+
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "tk/help-card.html" $cardData -}}

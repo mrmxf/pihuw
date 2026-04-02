@@ -12,7 +12,7 @@
   {{- $img         := partial "tk/resource-image-featured" (dict "page" .) -}}
   {{- $d           := merge $dot (dict "src" "" "header" .LinkTitle "date" .Date "description" $description "meta" (printf "~%v min read" $min)) -}}
   {{- if $img -}}
-    {{- $d = merge $d (dict "src" $img.src "srcClass" "ui fluid image" "srcLink" $srcLink "headerLink" $srcLink "srcWidth" 0.25) -}}
+    {{- $d = merge $d (dict "src" $img.src  "srcLink" $srcLink "headerLink" $srcLink "srcWidth" 0.25) -}}
   {{- end -}}
   {{ partial "tool/block" $d }}
 {{ end }}{{/* end of range*/}}

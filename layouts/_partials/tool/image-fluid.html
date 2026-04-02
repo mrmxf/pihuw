@@ -1,5 +1,5 @@
 {{partial "tk/dbg-template" .}}{{/*
      simple override of .srcClass
 */}}
-{{/* - .srcClass = "ui fluid image" -*/}}
-{{- partial "tool/image" . -}}
+{{- $srcClass := printf "%s fluid" .srcCLass -}}
+{{- partial "tool/image" (merge . (dict "srcClass" $srcClass)) -}}

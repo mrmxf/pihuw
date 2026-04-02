@@ -38,7 +38,7 @@
   RelPermalink: {{.RelPermalink}}
   Featured:     {{$featured}}
 </pre><hr>{{end}}{{end}}
-{{/* --- find latest blog ------------------------------------------------ */}}
+{{/* --- iterate over elements in group ------------------------------------------------ */}}
 {{ range $group | first $groupCount | last $count }}
   {{ $srcLink = .RelPermalink }}
   {{ $header = .Title }}

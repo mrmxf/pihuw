@@ -1,0 +1,115 @@
+{{partial "tk/dbg-template" .}}{{/*
+  tk/opt-validate-help — developer reference for the opt-validate toolkit partial
+*/ -}}
+{{ partial "tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "tk/opt-validate"
+  "color" "teal"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "tk/opt-validate"
+  "type" "toolkit (value-returning)"
+  "params" (slice
+    (dict "name" "schema" "required" true  "example" `{"mode!":"compact","count":0}`)
+    (dict "name" "opt"    "required" false "example" `{"mode":"full","count":5}`)
+    (dict "name" "tool"   "required" false "example" "item-group-by-tags")
+  )
+  "note" "Validates an opt JSON string against a schema JSON string. Called at the top of any tool partial that accepts an opt parameter."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Parses and validates a shortcode opt string against a developer-supplied JSON schema. Schema keys with a trailing ! are required; values encode the expected type and default. Returns a dict containing the merged opts (defaults overridden by valid values), a list of active errors, a squashed count, and a pre-formatted HTML error banner for server-mode display."
+  "notes" (slice
+    "**Schema syntax** — `!` suffix marks required keys; value type encodes expected type"
+    "**Three types** — `\"\"` or any string = string · `0` = number · `false`/`true` = bool"
+    "**squash meta-key** — reserved opt key to suppress specific error IDs or all errors"
+    "**hero mode** — `\"squash\":\"*\"` renders a loud open `<details>` listing every suppressed error"
+    "**$opts always returned** — invalid/unknown opt values fall back to schema defaults"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict
+      "name"        "schema"
+      "type"        "string"
+      "required"    true
+      "description" "JSON schema string. Keys ending in ! are required. Values set the type and default: `false`/`true` → bool, `0` → number, `\"\"` or any string → string."
+      "default"     ""
+    )
+    (dict
+      "name"        "opt"
+      "type"        "string"
+      "required"    false
+      "description" "JSON opt string from the shortcode. Empty string is valid and returns all schema defaults. The reserved key `squash` accepts a space-separated list of error IDs to suppress, or `\"*\"` to suppress all."
+      "default"     ""
+    )
+    (dict
+      "name"        "tool"
+      "type"        "string"
+      "required"    false
+      "description" "Tool name used as a prefix in all error messages. Should match the partial's own name for easy diagnosis."
+      "default"     "unknown"
+    )
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Minimal usage in a tool partial"
+      "code"        "{{- $v := partial \"tk/opt-validate\" (dict\n    \"schema\" `{\"no-auto-tag\": false, \"mode\": \"compact\"}`\n    \"opt\"    .opt\n    \"tool\"   \"item-group-by-tags\") -}}\n{{- if and (not $v.ok) hugo.IsServer -}}\n  <div>{{ $v.errorMsg | safeHTML }}</div>\n{{- end -}}\n{{- $opts := $v.opts -}}"
+      "note"        "Three lines of boilerplate. `$opts.no-auto-tag` and `$opts.mode` are ready to use, defaulted from the schema if not supplied or invalid."
+    )
+    (dict
+      "description" "Schema with required keys"
+      "code"        "`{\"mode!\": \"compact\", \"count\": 0, \"reverse\": false}`\n\n<!-- mode is required; count and reverse are optional -->"
+      "note"        "A missing `mode` key in opt produces **MK:mode**. An opt with `\"count\": \"five\"` produces **TY:count** (expected number, got string). Both appear in the server-mode banner with copy-paste squash instructions."
+    )
+    (dict
+      "description" "Squashing a known-safe foreign key"
+      "code"        "{{&lt;hw t=\"my-tool\" opt='{\"mode\":\"full\",\"debug\":true,\"squash\":\"FK:debug\"}' &gt;}}"
+      "note"        "`debug` is not in the schema so normally raises **FK:debug**. Adding `\"squash\":\"FK:debug\"` suppresses it. A faint `1 opt warning(s) squashed` note remains in the banner so the suppression is never invisible."
+    )
+    (dict
+      "description" "Hero mode during schema development"
+      "code"        "{{&lt;hw t=\"my-tool\" opt='{\"squash\":\"*\"}' &gt;}}"
+      "note"        "Suppresses every error and renders an open `<details>` panel listing them all. Use while iterating on a new schema. **Remove before publishing** — the banner explicitly warns if `squash:\"*\"` is still present."
+    )
+    (dict
+      "description" "Accessing returned opts in the tool partial"
+      "code"        "{{- $v    := partial \"tk/opt-validate\" (dict \"schema\" `{\"mode!\":\"compact\"}` \"opt\" .opt \"tool\" \"x\") -}}\n{{- $mode := $v.opts.mode -}}\n{{- if eq $mode \"compact\" -}}...{{- end -}}"
+      "note"        "`$v.opts` always contains every schema key — either the author's value (if valid) or the schema default. Safe to index without nil-checking."
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Value-returning partial** — produces zero text output; never call `tk/dbg-template` inside it"
+    "**JSON numbers are always float64** — schema and opt both go through `transform.Unmarshal`, so type comparison is consistent for numbers"
+    "**Schema must be a JSON string** — not a Hugo dict literal; the type-encoding relies on JSON unmarshal behaviour"
+    "**`squash` is stripped from `$opts`** — it never reaches the tool partial and never triggers FK:squash"
+    "**Error IDs** — `SCHEMA` developer error · `JP` parse failure · `FK:{key}` foreign key · `MK:{key}` missing required · `TY:{key}` type mismatch"
+    "**Production behaviour** — `errorMsg` is always returned but `hugo.IsServer` guards must be added by the caller; nothing is emitted in production builds"
+  )
+  "warnings" (slice
+    "**SCHEMA errors are developer errors** — an invalid schema JSON string means the partial cannot validate anything; fix the schema, not the opt"
+    "**`squash:\"*\"` must not ship** — the hero-mode banner is server-only but the squash itself is active in production too, hiding all validation failures silently"
+    "**One type per key** — schema values like `0.0` and `0` both become `float64` after JSON unmarshal; do not mix type intentions for the same key"
+  )
+-}}
+
+{{- /* Build the complete help content */}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "tk/help-card.html" $cardData -}}

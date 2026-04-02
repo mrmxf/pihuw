@@ -5,8 +5,8 @@ DO NOT call partial "tk/dbg-template" - it prevents return from working.
 */}}
 {{- $pageList := "❓" -}}
 {{- $page := false -}}
-{{- if .Page -}}{{- $page = .Page -}}{{- end -}}
-{{- if .page -}}{{- $page = .page -}}{{- end -}}
+{{- with .Page -}}{{- $page = . -}}{{- end -}}
+{{- with .page -}}{{- $page = . -}}{{- end -}}
 {{- if hugo.IsServer -}}
   {{- with $page -}}
     {{- $pageList = .Path -}}
