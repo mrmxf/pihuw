@@ -1,0 +1,103 @@
+{{- /*
+  tmpl/resp-classes.html
+  Emits an inline <style> block with PiHuW's responsive child fraction classes
+  derived from site.Params.default.responsive.s, .m, and .w.
+
+  PicnicCSS class families — two distinct roles:
+
+  CONTAINER classes (flex one, flex six, flex nine-1100, …):
+    Set the number of equal-width columns for children.
+    PicnicCSS handles these via an attribute selector already in picnic.min.css:
+      .flex[class*=nine]>*{flex-grow:0}
+    This prevents children from growing beyond their assigned width.
+    No extra CSS is generated here for container classes.
+
+  CHILD classes (half-{bp}, ninth-{bp}, twelfth-{bp}, …):
+    Applied to an individual child to set ITS OWN width at a breakpoint.
+    e.g. <child class="seventh-ninth"> → 7/9 = 77.78% wide
+    These are generated below for s, m, and w breakpoints.
+
+  PicnicCSS ships child classes up to sixth-{bp}. This partial adds seventh
+  through twelfth (and their numerator variants) which PicnicCSS omits.
+  The half through sixth classes are also emitted; if s/m/w match PicnicCSS
+  defaults (500/800/1100) they are harmless duplicates — browsers deduplicate.
+
+  Called from tmpl/head.html. Output-generating partial — not value-returning.
+*/ -}}
+{{- $s := site.Params.default.responsive.s -}}
+{{- $m := site.Params.default.responsive.m -}}
+{{- $w := site.Params.default.responsive.w -}}
+<style>
+{{- range (slice $s $m $w) }}
+@media (min-width: {{ . }}px) {
+  /* — child fraction classes — width applied to the element itself — */
+  .full-{{ . }}              { width: 100%;      display: block; }
+  .half-{{ . }}              { width: 50%;       display: block; }
+  .third-{{ . }}             { width: 33.33333%; display: block; }
+  .two-third-{{ . }}         { width: 66.66667%; display: block; }
+  .fourth-{{ . }}            { width: 25%;       display: block; }
+  .three-fourth-{{ . }}      { width: 75%;       display: block; }
+  .fifth-{{ . }}             { width: 20%;       display: block; }
+  .two-fifth-{{ . }}         { width: 40%;       display: block; }
+  .three-fifth-{{ . }}       { width: 60%;       display: block; }
+  .four-fifth-{{ . }}        { width: 80%;       display: block; }
+  .sixth-{{ . }}             { width: 16.66667%; display: block; }
+  .two-sixth-{{ . }}         { width: 33.33333%; display: block; }
+  .three-sixth-{{ . }}       { width: 50%;       display: block; }
+  .four-sixth-{{ . }}        { width: 66.66667%; display: block; }
+  .five-sixth-{{ . }}        { width: 83.33333%; display: block; }
+  .seventh-{{ . }}           { width: 14.28571%; display: block; }
+  .two-seventh-{{ . }}       { width: 28.57143%; display: block; }
+  .three-seventh-{{ . }}     { width: 42.85714%; display: block; }
+  .four-seventh-{{ . }}      { width: 57.14286%; display: block; }
+  .five-seventh-{{ . }}      { width: 71.42857%; display: block; }
+  .six-seventh-{{ . }}       { width: 85.71429%; display: block; }
+  .eighth-{{ . }}            { width: 12.5%;     display: block; }
+  .two-eighth-{{ . }}        { width: 25%;       display: block; }
+  .three-eighth-{{ . }}      { width: 37.5%;     display: block; }
+  .four-eighth-{{ . }}       { width: 50%;       display: block; }
+  .five-eighth-{{ . }}       { width: 62.5%;     display: block; }
+  .six-eighth-{{ . }}        { width: 75%;       display: block; }
+  .seven-eighth-{{ . }}      { width: 87.5%;     display: block; }
+  .ninth-{{ . }}             { width: 11.11111%; display: block; }
+  .two-ninth-{{ . }}         { width: 22.22222%; display: block; }
+  .three-ninth-{{ . }}       { width: 33.33333%; display: block; }
+  .four-ninth-{{ . }}        { width: 44.44444%; display: block; }
+  .five-ninth-{{ . }}        { width: 55.55556%; display: block; }
+  .six-ninth-{{ . }}         { width: 66.66667%; display: block; }
+  .seven-ninth-{{ . }}       { width: 77.77778%; display: block; }
+  .eight-ninth-{{ . }}       { width: 88.88889%; display: block; }
+  .tenth-{{ . }}             { width: 10%;       display: block; }
+  .two-tenth-{{ . }}         { width: 20%;       display: block; }
+  .three-tenth-{{ . }}       { width: 30%;       display: block; }
+  .four-tenth-{{ . }}        { width: 40%;       display: block; }
+  .five-tenth-{{ . }}        { width: 50%;       display: block; }
+  .six-tenth-{{ . }}         { width: 60%;       display: block; }
+  .seven-tenth-{{ . }}       { width: 70%;       display: block; }
+  .eight-tenth-{{ . }}       { width: 80%;       display: block; }
+  .nine-tenth-{{ . }}        { width: 90%;       display: block; }
+  .eleventh-{{ . }}          { width:  9.09091%; display: block; }
+  .two-eleventh-{{ . }}      { width: 18.18182%; display: block; }
+  .three-eleventh-{{ . }}    { width: 27.27273%; display: block; }
+  .four-eleventh-{{ . }}     { width: 36.36364%; display: block; }
+  .five-eleventh-{{ . }}     { width: 45.45455%; display: block; }
+  .six-eleventh-{{ . }}      { width: 54.54545%; display: block; }
+  .seven-eleventh-{{ . }}    { width: 63.63636%; display: block; }
+  .eight-eleventh-{{ . }}    { width: 72.72727%; display: block; }
+  .nine-eleventh-{{ . }}     { width: 81.81818%; display: block; }
+  .ten-eleventh-{{ . }}      { width: 90.90909%; display: block; }
+  .twelfth-{{ . }}           { width:  8.33333%; display: block; }
+  .two-twelfth-{{ . }}       { width: 16.66667%; display: block; }
+  .three-twelfth-{{ . }}     { width: 25%;       display: block; }
+  .four-twelfth-{{ . }}      { width: 33.33333%; display: block; }
+  .five-twelfth-{{ . }}      { width: 41.66667%; display: block; }
+  .six-twelfth-{{ . }}       { width: 50%;       display: block; }
+  .seven-twelfth-{{ . }}     { width: 58.33333%; display: block; }
+  .eight-twelfth-{{ . }}     { width: 66.66667%; display: block; }
+  .nine-twelfth-{{ . }}      { width: 75%;       display: block; }
+  .ten-twelfth-{{ . }}       { width: 83.33333%; display: block; }
+  .eleven-twelfth-{{ . }}    { width: 91.66667%; display: block; }
+  .none-{{ . }}              { display: none; }
+}
+{{ end -}}
+</style>

@@ -37,6 +37,70 @@ snippets:
     [ ! -d content ] && ln -s documentation/content content
     hugo server --port=1313 --logLevel debug --buildDrafts --buildFuture --buildExpired --cleanDestinationDir
     rm content
+  github-page: |
+    # Publish the pihuw documentation site to GitHub Pages.
+    # Works locally (requires gh CLI) or as a GitHub Actions workflow step.
+    # Safe to run repeatedly — creates the gh-pages branch if absent.
+
+    set -euo pipefail
+    REPO="mrmxf/pihuw"
+    BRANCH="gh-pages"
+    BUILD_DIR="public"
+
+    # --- always run from the repo root ---------------------------------------
+    ROOT="$(git rev-parse --show-toplevel)"
+    cd "$ROOT"
+
+    # --- install gh CLI if missing -------------------------------------------
+    if ! command -v gh &>/dev/null; then
+      echo "gh not found — running clog install gh"
+      clog install gh
+    fi
+
+    # --- pass token to gh automatically (gh reads GH_TOKEN, no login needed) -
+    export GH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+
+    # --- ensure gh-pages branch exists on remote (first-time setup) ----------
+    CURRENT_BRANCH="$(git branch --show-current)"
+    if ! git ls-remote --exit-code --heads origin "$BRANCH" &>/dev/null; then
+      echo "Creating orphan branch $BRANCH on remote"
+      git fetch origin || true
+      git checkout --orphan "$BRANCH"
+      git reset --hard
+      git commit --allow-empty -m "chore: initialise GitHub Pages branch"
+      git push origin "$BRANCH"
+      git checkout "$CURRENT_BRANCH"
+      gh api repos/"$REPO"/pages \
+        --method POST \
+        --field source[branch]="$BRANCH" \
+        --field source[path]="/" \
+        --silent || echo "Pages source already configured"
+    fi
+
+    # --- build the site ------------------------------------------------------
+    # trap ensures the content symlink is removed even if hugo fails
+    cleanup() { [ -L content ] && rm content; }
+    trap cleanup EXIT
+
+    echo "Building Hugo site"
+    [ ! -L content ] && ln -s documentation/content content
+    hugo --minify --cleanDestinationDir
+
+    # --- deploy to gh-pages --------------------------------------------------
+    echo "Deploying to $BRANCH"
+    cd "$BUILD_DIR"
+    git init -b "$BRANCH"
+    git remote add origin "$(git -C .. remote get-url origin)"
+    git add -A
+    git commit -m "chore: deploy documentation $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+    git push --force origin "$BRANCH"
+    cd ..
+    rm -rf "$BUILD_DIR"
+
+    # --- print the Pages URL -------------------------------------------------
+    URL=$(gh api repos/"$REPO"/pages --jq '.html_url' 2>/dev/null || echo "https://mrmxf.github.io/pihuw")
+    echo "Published → $URL"
+
   git:
     tag:
       # pihuw, like Hugo & golang requires a "v"

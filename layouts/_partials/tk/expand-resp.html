@@ -1,0 +1,19 @@
+{{- /*
+  tk/expand-resp.html
+  Substitutes {{.s}}, {{.m}}, {{.w}} in a class string with the site's
+  configured responsive breakpoint values from site.Params.resp.
+
+  Pass the class string directly as dot:
+    $class := partial "tk/expand-resp" "flex one four-{{.m}}"
+
+  .  — string — class string containing {{.s}}, {{.m}}, and/or {{.w}} tokens
+
+  returns string — the class string with all tokens replaced by integer values
+
+  DO NOT call partial "tk/dbg-template" — it prevents return from working.
+*/ -}}
+{{- $ret := . -}}
+{{- $ret  = replace $ret "{{.s}}" (string site.Params.default.responsive.s) -}}
+{{- $ret  = replace $ret "{{.m}}" (string site.Params.default.responsive.m) -}}
+{{- $ret  = replace $ret "{{.w}}" (string site.Params.default.responsive.w) -}}
+{{- return $ret -}}
