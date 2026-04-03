@@ -9,9 +9,11 @@ summary:   Full-bleed hero image with overlaid heading and text.
 
 ## cover · [parameters →](/tool/cover)
 
-{{< hw t="cover"
-  src="/rc/logo.png"
-  header="Welcome to PiHuW"
-  text="A minimal Hugo theme for embedded web servers and beyond."
-  link="/shortcodes"
->}}
+{{< hw
+  t      = "cover"
+  src    = "/rc/logo.png"
+  alt    = "logo"
+  header = "Welcome to PiHuW"
+  text   = "A minimal Hugo theme for embedded web servers and beyond."
+  link   = "/shortcodes"
+/>}}

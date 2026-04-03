@@ -84,13 +84,13 @@ These emit output and are **not** value-returning. They must be guarded with
 
 ## Help system
 
-These build the inline help cards rendered by `help="yes"` shortcodes.
+These build the inline help cards rendered by `help = "yes"` shortcodes.
 Developers writing a new tool should create a peer `-help.html` file using
 these partials.
 
 | Partial | Purpose |
 |---|---|
-| `help.html` | Entry point for `{{< hw t="help" >}}` — calls all registered tool help partials |
+| `help.html` | Entry point for `{{&lt; hw t = "help" >}}` — calls all registered tool help partials |
 | `help-tk.html` | Injects the CSS and JavaScript needed to show help modals |
 | `help-card.html` | Wraps help content in a dismissible modal trigger |
 | `help-header.html` | Renders the shortcode usage line and parameter summary |
@@ -99,7 +99,7 @@ these partials.
 | `help-examples.html` | Renders copy-pasteable code examples |
 | `help-notes.html` | Renders notes, tips, and warnings |
 
-Registering a new tool's help in `{{< hw t="help" >}}` requires adding its
+Registering a new tool's help in `{{&lt; hw t = "help" >}}` requires adding its
 name to the `$tools` slice in `tk/help.html`.
 
 ---

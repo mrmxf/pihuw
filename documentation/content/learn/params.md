@@ -123,20 +123,24 @@ not the webmaster and does not edit individual pages.
 **Examples:**
 
 - A `products/_index.md` sets:
+
   ```yaml
   cascade:
     params:
       FeaturedGlob: "hero*.*"
   ```
+
   Every product page now picks up `hero-*.jpg` as its featured image without each
   page author knowing the glob exists.
 
 - A `blog/_index.md` sets:
+
   ```yaml
   cascade:
     params:
       FeaturedWxH: "400x300"
   ```
+
   Blog post featured thumbnails site-wide become wider than the theme default
   `200x200`, matching the blog's wider content column — configured once by the
   section editor, not repeated on every post.
@@ -158,12 +162,14 @@ Overrides everything above for that page only.
 
 - `tool/gallery.html` — the gallery reads image paths from
   `$page.Params[$from]`, so the entire gallery content lives in page frontmatter:
+
   ```yaml
   params:
     photos:
       - images/cat.jpg
       - images/dog.png
   ```
+
   No shortcode attribute controls which images appear; it is entirely the page
   creator's data.
 
@@ -171,7 +177,7 @@ Overrides everything above for that page only.
 
 ### Priority 7 — `hw` shortcode attribute
 
-**What it is:** A value passed directly to a `{{</* hw */>}}` shortcode call inside
+**What it is:** A value passed directly to a `{{&lt; hw >}}` shortcode call inside
 the page body. Overrides everything, including the page's own frontmatter defaults.
 
 **Stakeholder:** Page creator, at the point of use. Useful when one page needs two
@@ -179,12 +185,12 @@ instances of the same component with different settings.
 
 **Examples:**
 
-- `tool/gallery.html` — `{{</* hw t="gallery" from="photos" mode="small" */>}}`.
+- `tool/gallery.html` — `{{&lt; hw t = "gallery" from = "photos" mode = "small" >}}`.
   The `mode` attribute switches thumbnail size to `small` for this gallery only.
-  A second gallery on the same page could use `mode="large"` without any frontmatter
+  A second gallery on the same page could use `mode = "large"` without any frontmatter
   change.
 
-- `tool/feature.html` — `{{</* hw t="feature" src="logo.svg" link="/about" */>}}`.
+- `tool/feature.html` — `{{&lt; hw t = "feature" src = "logo.svg" link = "/about" >}}`.
   The `link` attribute is entirely caller-supplied; there is no frontmatter or
   site-param fallback for it. The page creator decides at the point of authoring
   where each feature block links.

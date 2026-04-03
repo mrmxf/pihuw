@@ -9,4 +9,4 @@ summary:   List of recent blog posts as item cards.
 
 ## item-group-blog · [parameters →](/tool/item-group-blog)
 
-{{< hw t="item-group-blog" count="3" >}}
+{{< hw t = "item-group-blog" count = 3 />}}

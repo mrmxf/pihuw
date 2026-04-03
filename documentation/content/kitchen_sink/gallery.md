@@ -9,4 +9,6 @@ summary:   Responsive image grid with thumbnail links.
 
 ## gallery · [parameters →](/tool/gallery)
 
-{{< hw t="gallery" src="/rc/logo.png" >}}
+{{ < hw t = "gallery" from = "/rc" />}}
+
+Kitchen sink Gallery demo - TBD

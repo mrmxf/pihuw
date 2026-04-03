@@ -209,7 +209,7 @@ Never use `$DBG := false` as a dead variable — either wire it up or remove it.
 
 ### tool/ — components
 
-Each `tool/X.html` maps to `{{< hw t="X" ... >}}`.
+Each `tool/X.html` maps to `{{&lt; hw t="X" ... >}}`.
 Each has a peer `tool/X-help.html` documenting its params.
 
 Core image/media components: `thumb`, `image`, `image-featured`, `media`, `gallery`,
@@ -258,7 +258,7 @@ The `documentation/content/` tree has a **one-to-one mapping** with `layouts/`:
 1. Create `layouts/_partials/tool/X.html`
 2. Create `layouts/_partials/tool/X-help.html` (follow existing help pattern)
 3. Add `"X"` to the `$tools` slice in `layouts/_partials/tk/help.html`
-4. Create `documentation/content/tool/X.md` containing only frontmatter + `{{</* hw t="X" help="yes" */>}}`
+4. Create `documentation/content/tool/X.md` containing only frontmatter + `{{&lt; hw t="X" help="yes" >}}`
 5. Create `documentation/content/kitchen_sink/X.md` with a live example
 
 **Adding a new `tmpl/` or `tk/` partial:**
@@ -286,7 +286,7 @@ summary:   One-line description shown in the tool/ index listing.
 {{</* hw t="X" help="yes" */>}}
 ```
 
-The `content/tool/_index.md` uses `{{</* hw t="item-group-by-type" count="100" */>}}`
+The `content/tool/_index.md` uses `{{&lt; hw t="item-group-by-type" count=100 >}}`
 to auto-list all tool pages as item cards — no manual index maintenance needed.
 
 ---

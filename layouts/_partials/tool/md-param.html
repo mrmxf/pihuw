@@ -7,7 +7,7 @@ markdownify a page parameter and insert into the <body class="from=<param name>"
   {{printf "%s" (.page.Param .from)|markdownify}}
 {{else}}
   {{- partial "tk/dbg" (dict
-    "err" (printf ".from is not set")
+    "err" (printf ".from is not set (markdownify)(%s)(%s)" .page.File.Path .page.Parent.File.Path)
     "kv" (dict "template" templates.Current.Parent.Name)
   ) -}}
 {{- end -}}

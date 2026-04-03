@@ -35,6 +35,7 @@ mrmxf
 opengraph
 outputformat
 pihuw
+plainify
 querify
 readingtime
 relref
@@ -47,6 +48,7 @@ taxo
 taxonomycloud
 taxonomypageheade
 tmpl
+trtd
 Unmarshal
 vars
 warnf

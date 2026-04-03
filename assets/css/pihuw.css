@@ -23,21 +23,20 @@
 
   /* ── 1a  User palette ─────────────────────────────────────────────────────────────────────────────────────────── */
   /* Edit these HSL values to customise the site. Everything else is derived.                                        */
-  --mm-yellow: hsl(46,  50%, 52%);
-  --mm-green:  hsl(80,  45%, 49%);
-  --mm-purple: hsl(324, 45%, 42%);
-  --mm-blue:   hsl(243, 36%, 39%);
-  --pi-dark:   hsl(0,   0%,  20%);
+  --mm-yellow: #C2A649;
+  --mm-green:  #77B66B;
+  --mm-purple: #9A3A72;
+  --mm-blue:   #433F87;
+  --pi-dark:   #333333
   --pi-light:  hsl(0,   0%,  93%);
-  --mm-white:  hsl(0,   0%, 100%);
 
   /* metarex.media project palette (second named palette — do not rename) */
-  --mrx-amber:     var(--mm-yellow);
-  --mrx-purple:    var(--mm-purple);
-  --mrx-green:     hsl(88, 45%, 30%);
-  --mrx-grey:      var(--pi-dark);
-  --mrx-skin:      hsl(88, 45%, 60%);
-  --mrx-eye:       hsl(354, 45%, 42%);
+  --mrx-amber:     #C2A649;
+  --mrx-purple:    #9A3A72;
+  --mrx-green:     #4F702A;
+  --mrx-grey:      #333333;
+  --mrx-skin:      #b5d690; /* hsl(from var(--mrx-green) s calc(l + 40%)); */
+  --mrx-eye:       #9a3a42;
 
   /* CSS relative-colour replacements for SCSS lighten() calls */
   --mrx-trainFill: hsl(from var(--mrx-grey)   h s calc(l + 25%));
@@ -45,7 +44,7 @@
   --mrx-ground:    hsl(from var(--mrx-purple) h s calc(l + 25%));
 
   /* ── 1b  Derived tokens ───────────────────────────────────────────────────────────────────────────────────────── */
-  /* Computed from the palette above. Do not hardcode hex/hsl values here.                                           */
+  /* Computed from the mm palette above. Follow this pattern in your site.css Do not hardcode hex/hsl values.        */
   --pi-body:    var(--pi-dark);
   --pi-body-bg: hsl(40, 20%, 95%);   /* wheat-white page background */
   --pi-bg:      hsl(0,  0%, 100%);   /* component surface (white) */

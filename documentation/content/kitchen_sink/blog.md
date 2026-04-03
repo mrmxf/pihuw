@@ -9,4 +9,4 @@ summary:   Recent blog posts site-wide with summaries and featured images.
 
 ## blog · [parameters →](/tool/blog)
 
-{{< hw t="blog" count="2" >}}
+{{< hw t = "blog" count = 2 />}}

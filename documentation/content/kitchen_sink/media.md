@@ -9,4 +9,4 @@ summary:   Unified handler for images, SVGs, GIFs, and videos.
 
 ## media · [parameters →](/tool/media)
 
-{{< hw t="media" src="/rc/logo.png" alt="PiHuW logo" >}}
+{{< hw t = "media" src = "/rc/logo.png" alt = "PiHuW logo" />}}

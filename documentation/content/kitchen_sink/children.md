@@ -9,4 +9,4 @@ summary:   Links to direct child pages of the current section.
 
 ## children · [parameters →](/tool/children)
 
-{{< hw t="children" >}}
+{{< hw t = "children" />}}

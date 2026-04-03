@@ -14,7 +14,7 @@ hugo server
 
 ## Features
 
-There is one shortcode `{{< pi t = "pihuw-feature-name" thing = "value" >}}`
+There is one shortcode `{{&lt; pi t = "pihuw-feature-name" thing = "value" >}}`
 
 All the features take the same named properties to make it easy-ish to remember
 

@@ -9,4 +9,6 @@ summary:   Includes the rendered content of another page inline.
 
 ## include · [parameters →](/tool/include)
 
-{{< hw t="include" from="headless/include-example" >}}
+{{< hw
+  t    = "include"
+  from = "/content/headless/include-example.md" />}}

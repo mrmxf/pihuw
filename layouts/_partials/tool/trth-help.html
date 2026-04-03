@@ -21,7 +21,7 @@ Table row with header cell partial help using modular help system */ -}}
 {{- $descriptionData := dict
   "description" "A convenience partial that creates an HTML tr element containing a single th element. Perfect for single-column table headers or when you need a quick way to add a header row with one cell."
   "notes" (slice
-    "**Shorthand** for `{{< tr >}}{{< th >}}content{{< /th >}}{{< /tr >}}`"
+    "**Shorthand** for `{{&lt; tr >}}{{&lt; th >}}content{{&lt; /th >}}{{&lt; /tr >}}`"
     "Must be **nested inside** thead, tbody, or tfoot partials"
     "Creates a **single-header-cell row** automatically"
     "Supports **markdown content** and Hugo shortcodes"

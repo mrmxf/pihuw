@@ -9,6 +9,6 @@ summary:   Inline tag or category badge.
 
 ## label · [parameters →](/tool/label)
 
-{{< hw t="label" text="hugo" >}}
-{{< hw t="label" text="raspberry-pi" >}}
-{{< hw t="label" text="embedded" >}}
+{{< hw t = "label" text = "hugo" />}}
+{{< hw t = "label" text = "raspberry-pi" />}}
+{{< hw t = "label" text = "embedded" />}}

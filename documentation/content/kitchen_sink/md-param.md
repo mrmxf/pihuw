@@ -13,4 +13,4 @@ params:
 
 The value of the `demoText` frontmatter param rendered inline:
 
-{{< hw t="md-param" param="demoText" >}}
+{{< hw t = "md-param" from = "/content/headless/include-example.md" param = "demoText" />}}

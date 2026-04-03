@@ -19,7 +19,7 @@
 {{- $thumb        := 0 -}}
 {{- $imgPaths     := .images -}}
 
-{{- if reflect.IsString .images -}}
+{{- if and .images (reflect.IsString .images) -}}
   {{/* glob string → resolve matching page-bundle resources, collect their names */}}
   {{- $matched  := $page.Resources.Match .images -}}
   {{- $imgPaths  = apply $matched "Name" "." -}}
