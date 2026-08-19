@@ -26,6 +26,7 @@ structure:
   layouts/:
     baseof.html / home.html / list.html / single.html: Top-level page templates
     _partials/:   All reusable partial templates (underscore prefix is intentional)
+      hook/:      Empty layout hooks — the only partials consumer sites override
       tk/:     Toolkit partials — asset resolution, image processing, debug utils
       tmpl/:      Layout partials — head, nav, footer, taxonomies, pagination
       tool/:      Component partials — each maps to a {{< hw t="..." >}} shortcode type
@@ -44,6 +45,7 @@ structure:
 
 | Directory | Purpose | Called by |
 |-----------|---------|-----------|
+| `hook/`   | Empty site-wide extension points, overridden by consumers | base templates, `tmpl/head.html` |
 | `tk/`  | Return-value toolkit: asset resolution, processing, debug | other partials |
 | `tmpl/`   | Layout building blocks: head, nav, footer, SEO | base templates |
 | `tool/`   | Renderable components one-to-one with shortcode types | `_shortcodes/hw.html` |
@@ -193,6 +195,33 @@ Never use `$DBG := false` as a dead variable — either wire it up or remove it.
 | `pageList` | string | Page hierarchy (server-only debug) |
 | `kvListNoPage` | dict | Context kv without page keys (server-only debug) |
 
+### hook/ — layout hooks (output-generating, consumer-owned)
+
+| Partial | Purpose |
+|---------|---------|
+| `hook/head-begin` | Empty consumer override point — first thing in `<head>` |
+| `hook/head-end` | Empty consumer override point — last thing in `<head>` |
+| `hook/body-begin` | Empty consumer override point — first thing in `<body>` |
+| `hook/main-begin` | Empty consumer override point — inside `<main>`, before content |
+| `hook/main-end` | Empty consumer override point — inside `<main>`, after content |
+| `hook/body-end` | Empty consumer override point — last thing in `<body>` |
+
+All six are `begin`/`end` pairs. Each theme copy contains only a
+`hugo.IsServer`-guarded `tk/dbg-template` call, so production output is empty.
+
+**The inertness guarantee is documented and load-bearing.** PiHuW promises
+consumers that no theme feature depends on any `hook/` partial and that none
+contributes to a production build. Never add default content or theme logic to a
+hook copy: consumers are told they may copy the whole folder, so a stale empty
+override in their site would silently suppress it. If a feature needs a fixed
+page position, put it in a `tmpl/` partial called from the base template.
+
+Note for reasoning about overrides: an empty partial is not an absent one. Hugo
+resolves each hook name to exactly one file (project layouts beat themes; themes
+in declared order), so an empty copy still wins the lookup and shadows everything
+below it. Multi-theme precedence is explicitly out of scope — see
+`documentation/content/hook/_index.md#multi-theme-sites`.
+
 ### tk/ — output-generating
 
 | Partial | Purpose |
@@ -237,6 +266,26 @@ tertiary:  Site params in config/_default/params.yaml (ui, extensions, bio, etc.
 Do not fork or copy theme partials — override them by placing an identically
 named file in the consumer site's `layouts/` tree.
 
+### Hooks
+
+`layouts/_partials/hook/` holds six empty partials — the sanctioned site-wide
+extension points (see the `hook/` table above). Consumers override them by name;
+the theme's copies emit nothing in production. This is the one exception to the
+"do not copy theme partials" rule: consumers may copy the whole `hook/` folder,
+because every file in it is empty by contract.
+
+Call them `hook/x`, never `tk/hook-x` — the `tk/hook-*` naming was a pre-release
+iteration and is gone. Likewise `main-begin`, not `main-start`.
+
+**Any base template that emits its own `<html>`/`<body>` must call all six.**
+Currently that is `layouts/baseof.html` and `layouts/blog/section.html`; the
+head pair is inherited via `tmpl/head.html`. Templates that only
+`{{ define "main" }}` (e.g. `404.html`, `single.html`) must NOT call the hooks —
+they would fire twice.
+
+The older `my/head-begin` / `my/head-end` `templates.Exists` convention has been
+removed in favour of this one.
+
 ---
 
 ## Documentation Content Structure
@@ -247,6 +296,7 @@ The `documentation/content/` tree has a **one-to-one mapping** with `layouts/`:
 |--------------------------|-------------------------------|---------------------|
 | `content/shortcodes/`    | `layouts/_shortcodes/`        | Authors             |
 | `content/tool/`          | `layouts/_partials/tool/`     | Authors             |
+| `content/hook/`          | `layouts/_partials/hook/`     | Site integrators    |
 | `content/tmpl/`          | `layouts/_partials/tmpl/`     | Developers          |
 | `content/tk/`            | `layouts/_partials/tk/`       | Developers          |
 | `content/kitchen_sink/`  | n/a                           | Authors (live examples)  |

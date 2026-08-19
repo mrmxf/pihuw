@@ -1,25 +1,63 @@
 {{partial "tk/dbg-template" .}}
-{{- /* Inline theme-init.js before any CSS to prevent flash of wrong theme */ -}}
+{{- /*
+  tmpl/head-css — the stylesheets, plus the two bits of theme JS that must be in
+  <head>.
+
+  Every stylesheet goes through tmpl/css-link, which minifies and fingerprints in
+  production and leaves things readable in development. pihuw.css is 73% comments
+  and section banners, so minifying it saves ~27 KB of render-blocking bytes on
+  every uncached page load — that is what lets this theme stay heavily commented
+  without the reader paying for it.
+
+  ORDER IS LOAD-BEARING:
+    1. theme-init.js   inline, BEFORE any CSS, to prevent a flash of wrong theme
+    2. picnic          the grid and base components
+    3. pihuw.css       the theme
+    4. fa6             icons
+    5. site.css        the consumer's overrides — LAST so they win on equal
+                       specificity
+    6. theme-toggle.js deferred; skipped entirely when the toggle is hidden
+*/ -}}
+
+{{- /* Inline theme-init.js before any CSS to prevent flash of wrong theme.
+       This cannot be deferred or external: it must run before the first paint. */ -}}
 {{- with resources.Get "js/theme-init.js" -}}
   <script>{{ ( . | minify).Content | safeJS }}</script>
 {{- end -}}
-{{- $pihuw := resources.Get "css/pihuw.css" }}
-{{- with resources.Get "css/picnic.min.css" }}
- {{- if eq hugo.Environment "development" }}
-  <link rel="stylesheet" href="{{ .RelPermalink }}">
-  <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
- {{- else }}
-  {{- with . | minify | fingerprint }}
-   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
-  {{- end }}
-  <link rel="stylesheet" href="{{ $pihuw.RelPermalink }}">
- {{- end }}
-{{- end }}
-{{- with resources.Get "css/fa6.min.css" }}
-  <link rel="stylesheet" href="{{ .RelPermalink }}">
+
+{{- partial "tmpl/css-link" (dict "path" "css/picnic.min.css") -}}
+{{- partial "tmpl/css-link" (dict "path" "css/pihuw.css") -}}
+
+{{- with resources.Get "css/fa6.min.css" -}}
+  {{- partial "tmpl/css-link" (dict "path" "css/fa6.min.css") -}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-{{- end }}
-{{- if fileExists "static/site.css" }}<link rel="stylesheet" href="/site.css">{{end -}}
-{{- with resources.Get "js/theme-toggle.js" }}
+{{- end -}}
+
+{{- /* Site overrides, last.
+
+       assets/css/site.css is preferred: it gets minified, fingerprinted and
+       cacheable-forever. static/site.css is still fully supported so existing
+       sites keep working untouched — it is simply served as-is. */ -}}
+{{- if resources.Get "css/site.css" -}}
+  {{- partial "tmpl/css-link" (dict "path" "css/site.css") -}}
+{{- else if fileExists "static/site.css" -}}
+  {{- /* Suppression key is the bare id, NOT prefixed with "warning-" — verified. */ -}}
+  {{- warnidf "pihuw-site-css-static" "pihuw: found static/site.css. Move it to assets/css/site.css to have it minified and fingerprinted. To keep it where it is, silence this with  ignoreLogs: ['pihuw-site-css-static']  in your site config." -}}
+  <link rel="stylesheet" href="/site.css">
+{{- end -}}
+
+{{- /* The theme toggle. When ui.hide.themeToggle is set, the button is not
+       rendered (see tmpl/navbar) and this script has nothing to bind to, so it
+       is not shipped either. theme-init.js above still runs, so a site that
+       forces a theme in CSS is unaffected. */ -}}
+{{- if not site.Params.ui.hide.themeToggle -}}
+  {{- with resources.Get "js/theme-toggle.js" -}}
+    {{- if ne hugo.Environment "development" -}}
+      {{- with . | minify | fingerprint }}
+  <script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>
+      {{- end -}}
+    {{- else }}
   <script defer src="{{ .RelPermalink }}"></script>
+    {{- end -}}
+  {{- end -}}
 {{- end -}}

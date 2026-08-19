@@ -1,6 +1,6 @@
 {{partial "tk/dbg-template" .}}
-{{/* allow easy user overrides in the my/ folder  */}}
-{{- if templates.Exists "_partials/my/head-begin.html"}}{{ partial "my/head-begin.html" }}{{end -}}
+{{/* allow easy user overrides — see documentation/content/hook/_index.md */}}
+{{- partial "hook/head-begin" . -}}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 {{ hugo.Generator }}
@@ -21,4 +21,4 @@
 {{ partialCached "tmpl/head-css" . -}}
 {{ partialCached "tmpl/head-js"  . -}}
 
-{{- if templates.Exists "_partials/my/head-end.html"}}{{ partial "my/head-end.html" }}{{end -}}
+{{- partial "hook/head-end" . -}}

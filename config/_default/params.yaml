@@ -122,6 +122,11 @@ ui:
       title:  false
     sidebar:  false           # appears in list pages at the side
     childbar: false           # appears in list pages at the top or bottom
+    # Hide the light/dark/system toggle. Set this if your site.css forces a
+    # single theme: it removes the button AND stops theme-toggle.js being
+    # shipped, rather than just hiding the control with CSS.
+    # theme-init.js still runs, so nothing else changes.
+    themeToggle: false
   childbar:
     title:     this section   # can be overridden on a page
     separator: "|"            # any unicode character to separate the links

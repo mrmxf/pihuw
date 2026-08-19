@@ -1,0 +1,40 @@
+{{- /*
+  tmpl/css-link — emit a <link rel="stylesheet"> for an asset in assets/.
+
+  In production the asset is minified (unless it is already a .min. file) and
+  fingerprinted, and carries an SRI integrity attribute. In development it is
+  emitted untouched so it stays readable in devtools and rebuilds fast.
+
+  .path   asset path, e.g. "css/pihuw.css"    (required)
+  .media  optional media attribute, e.g. "print"
+
+  Emits nothing if the asset does not exist, so callers need no `with` guard.
+
+  ── Two details that look like they could be simplified, but should not be ─────
+
+  1. `ne hugo.Environment "development"` rather than `hugo.IsProduction`.
+     These are NOT equivalent: `hugo -e staging` is not production under
+     IsProduction, but every other environment check in this theme treats
+     anything that is not development as production. Switching would silently
+     change behaviour for anyone building with a custom environment name.
+
+  2. Skipping `minify` for paths containing ".min.".
+     Re-minifying an already-minified vendor file gains 0-1% and produces silly
+     names like picnic.min.min.<hash>.css. Fingerprinting still applies, which
+     is where the benefit for those files actually is.
+*/ -}}
+{{- $path := .path -}}
+{{- with resources.Get $path -}}
+  {{- $r := . -}}
+  {{- $media := "" -}}
+  {{- with $.media }}{{ $media = printf " media=\"%s\"" . }}{{ end -}}
+  {{- if ne hugo.Environment "development" -}}
+    {{- if not (strings.Contains $path ".min.") -}}
+      {{- $r = $r | minify -}}
+    {{- end -}}
+    {{- $r = $r | fingerprint -}}
+  <link rel="stylesheet" href="{{ $r.RelPermalink }}" integrity="{{ $r.Data.Integrity }}" crossorigin="anonymous"{{ $media | safeHTMLAttr }}>
+  {{- else -}}
+  <link rel="stylesheet" href="{{ $r.RelPermalink }}"{{ $media | safeHTMLAttr }}>
+  {{- end -}}
+{{- end -}}

@@ -18,6 +18,15 @@ consistently applied.
 
 ---
 
+## Hooks have moved
+
+The six site-wide extension points used to live here as `tk/hook-*`. They are
+now their own folder, `layouts/_partials/hook/`, and are documented separately —
+see [Layout hooks]({{< ref "/hook" >}}). They are the only partials a site
+integrator is expected to write; everything below this line is theme-internal.
+
+---
+
 ## Asset pipeline
 
 These are the core image and asset resolution chain. Always call them in order

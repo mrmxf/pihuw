@@ -26,8 +26,12 @@
     {{- if isset site.Params.ui "navbar2partial" -}}
     {{ partial site.Params.ui.navbar2partial .}}
     {{- end -}}
+    {{- /* ui.hide.themeToggle also stops tmpl/head-css shipping theme-toggle.js,
+           so a site that forces one theme pays nothing for the control. */ -}}
+    {{- if not site.Params.ui.hide.themeToggle }}
     <button data-theme-toggle title="Theme: system" style="background:none;border:none;cursor:pointer;padding:0.3em 0.5em;font-size:1.1em;color:inherit;">
       <i class="fa-solid fa-circle-half-stroke"></i>
     </button>
+    {{- end }}
   </div>
 </nav>

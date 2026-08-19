@@ -1,0 +1,24 @@
+{{- /*
+  hook/body-end
+  Empty extension point. Renders as the last thing inside <body>, after
+  tmpl/body-scripts. Matches hook/body-begin.
+
+  .  — page context — passed through by the calling base template
+
+  Consumer sites override this by creating an identically named file at
+  layouts/_partials/hook/body-end.html.
+
+  PiHuW guarantees this hook is inert: no theme feature depends on it and it
+  adds nothing to a production build. It is a blank template for you to inject
+  your own functionality. (Under `hugo server` it emits one HTML comment naming
+  the template, as a debug aid.)
+
+  Keep only non-empty hooks in your own project. An empty override still wins
+  the partial lookup, so it can silently suppress a hook of the same name
+  supplied by another theme.
+
+  Use for: site-wide JavaScript. The DOM and the theme's own scripts are
+  already in place here, so this is the right hook for jQuery, analytics,
+  or any init code that queries the page.
+*/ -}}
+{{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}

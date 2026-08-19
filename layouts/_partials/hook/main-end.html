@@ -1,0 +1,23 @@
+{{- /*
+  hook/main-end
+  Empty extension point. Renders immediately inside <main>, after the
+  "main" block. Matches hook/main-begin.
+
+  .  — page context — passed through by the calling base template
+
+  Consumer sites override this by creating an identically named file at
+  layouts/_partials/hook/main-end.html.
+
+  PiHuW guarantees this hook is inert: no theme feature depends on it and it
+  adds nothing to a production build. It is a blank template for you to inject
+  your own functionality. (Under `hugo server` it emits one HTML comment naming
+  the template, as a debug aid.)
+
+  Keep only non-empty hooks in your own project. An empty override still wins
+  the partial lookup, so it can silently suppress a hook of the same name
+  supplied by another theme.
+
+  Use for: furniture that must sit inside the content column below the page
+  body, e.g. a comment widget, share buttons, or a "last edited" note.
+*/ -}}
+{{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}

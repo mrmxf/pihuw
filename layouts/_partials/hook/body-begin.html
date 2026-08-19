@@ -1,0 +1,23 @@
+{{- /*
+  hook/body-begin
+  Empty extension point. Renders as the first thing inside <body>, before the
+  <header>. Matches hook/body-end.
+
+  .  — page context — passed through by the calling base template
+
+  Consumer sites override this by creating an identically named file at
+  layouts/_partials/hook/body-begin.html.
+
+  PiHuW guarantees this hook is inert: no theme feature depends on it and it
+  adds nothing to a production build. It is a blank template for you to inject
+  your own functionality. (Under `hugo server` it emits one HTML comment naming
+  the template, as a debug aid.)
+
+  Keep only non-empty hooks in your own project. An empty override still wins
+  the partial lookup, so it can silently suppress a hook of the same name
+  supplied by another theme.
+
+  Use for: a skip-to-content link, a site-wide banner above the nav, or a
+  script that must run before any markup is parsed.
+*/ -}}
+{{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}

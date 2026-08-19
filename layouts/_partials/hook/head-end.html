@@ -1,0 +1,23 @@
+{{- /*
+  hook/head-end
+  Empty extension point. Renders as the last thing inside <head>, after the
+  theme CSS and JS. Matches hook/head-begin.
+
+  .  — page context — passed through by tmpl/head.html
+
+  Consumer sites override this by creating an identically named file at
+  layouts/_partials/hook/head-end.html.
+
+  PiHuW guarantees this hook is inert: no theme feature depends on it and it
+  adds nothing to a production build. It is a blank template for you to inject
+  your own functionality. (Under `hugo server` it emits one HTML comment naming
+  the template, as a debug aid.)
+
+  Keep only non-empty hooks in your own project. An empty override still wins
+  the partial lookup, so it can silently suppress a hook of the same name
+  supplied by another theme.
+
+  Use for: site CSS that must win over the theme CSS, extra <meta> or
+  <link> tags, web fonts.
+*/ -}}
+{{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}
