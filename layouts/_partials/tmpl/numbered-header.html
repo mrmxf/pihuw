@@ -1,13 +1,17 @@
 {{partial "tk/dbg-template" .}}{{/* Set the (s)eparator, (p)refix and suffi(x) defaults */}}
 {{- $s := "."}}{{$p := ""}}{{$x := ""}}
 {{/* Override with Site settings if available */}}
-{{- if isset site.Params.heading "separator"}}{{$s = site.Params.heading.separator}}{{end}}
-{{- if isset site.Params.heading "prefix"}}{{$p = site.Params.heading.prefix}}{{end}}
-{{- if isset site.Params.heading "suffix"}}{{$x = site.Params.heading.suffix}}{{end}}
+{{- with site.Params.heading }}
+{{- if isset . "separator"}}{{$s = .separator}}{{end}}
+{{- if isset . "prefix"}}{{$p = .prefix}}{{end}}
+{{- if isset . "suffix"}}{{$x = .suffix}}{{end}}
+{{- end }}
 {{/* Override with Page settings if available */}}
-{{- if isset .ctx.Page.Params.heading "separator"}}{{$s = .ctx.Page.Params.heading.separator}}{{end}}
-{{- if isset .ctx.Page.Params.heading "prefix"}}{{$p = .ctx.Page.Params.heading.prefix}}{{end}}
-{{- if isset .ctx.Page.Params.heading "suffix"}}{{$x = .ctx.Page.Params.heading.suffix}}{{end}}
+{{- with .ctx.Page.Params.heading }}
+{{- if isset . "separator"}}{{$s = .separator}}{{end}}
+{{- if isset . "prefix"}}{{$p = .prefix}}{{end}}
+{{- if isset . "suffix"}}{{$x = .suffix}}{{end}}
+{{- end }}
 
 {{/* sanitize errors */}}
 {{- $level := int (.level | default 0) -}}
