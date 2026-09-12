@@ -28,7 +28,7 @@
 <meta property="og:description" content="{{ . }}">
 {{- end }}
 <meta property="og:url" content="{{ .Permalink }}">
-<meta property="og:locale" content="{{ replace site.Language.Lang "-" "_" }}">
+<meta property="og:locale" content="{{ replace (site.Language.Locale | default site.Language.Lang) "-" "_" }}">
 {{- $card := "" -}}
 {{- with (.Param "image" | default site.Params.ogImage) -}}
   {{- $img := partial "tk/get-asset" (dict "asset" . "page" $ "process" "resize 1200x jpg q82") -}}

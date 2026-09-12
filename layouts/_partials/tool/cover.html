@@ -7,8 +7,19 @@
   .header — heading text (optional)
   .text   — body text under the heading (optional; markdownified)
   .link   — URL; when set the heading becomes a link (optional)
+  .subtitle — line under the heading, as <p class="pi-cover-subtitle"> (optional;
+            emitted as HTML, so markup such as tk/date-offset's ordinal <sup> survives)
+  .inner  — extra content after .text, inside the overlay (optional; markdownified).
+            The hw shortcode passes its inner content here.
+  .innerHTML — as .inner but emitted verbatim (optional). For a partial calling
+            cover directly with rendered markup: markdownify would turn indented
+            HTML into a code block.
+  .class  — extra classes on the <section>, for site CSS to hook (optional)
   .height — CSS length for the band's min-height (optional; default "60svh")
   .page   — Hugo Page (supplied by the hw shortcode)
+
+  Site CSS restyling a cover must out-rank the <style> block below, which comes
+  later in the document: use .pi-cover.your-class, not .your-class alone.
 
   Emits the page's <h1>. Since v0.4.6 tmpl/page-title.html emits a
   <p class="pi-page-title">, not a heading, so a cover band is where the h1 comes
@@ -23,8 +34,11 @@
 {{- $page   := .page -}}
 {{- $height := .height | default "60svh" -}}
 {{- $img    := 0 -}}
+{{- /* get-asset defaults an empty alt to the file's basename, which would
+       announce "hero.jpg" for a decorative image. Keep the caller's alt, even "". */ -}}
+{{- $alt    := .alt | default "" -}}
 {{- with .src -}}
-  {{- $img = partial "tk/get-asset" (dict "asset" . "page" $page "alt" ($.alt | default "") "noPublish" true) -}}
+  {{- $img = partial "tk/get-asset" (dict "asset" . "page" $page "alt" $alt "noPublish" true) -}}
 {{- end -}}
 {{- if not ($page.Store.Get "hasCoverCSS") -}}
 {{- $page.Store.Set "hasCoverCSS" true -}}
@@ -63,7 +77,7 @@
   .pi-cover-inner > :last-child  { margin-bottom: 0; }
 </style>
 {{- end -}}
-<section class="pi-cover{{ if and $img (or $img.res $img.src) }} pi-cover-has-media{{ end }}"
+<section class="pi-cover{{ if and $img (or $img.res $img.src) }} pi-cover-has-media{{ end }}{{ with .class }} {{ . }}{{ end }}"
          style="min-height: {{ $height }};">
 {{- if $img -}}
   {{- if $img.isVideo -}}
@@ -86,11 +100,11 @@
          sizes="100vw"
          src="{{ $fb.src }}"
          width="{{ $fb.width }}" height="{{ $fb.height }}"
-         alt="{{ $img.alt }}" fetchpriority="high" decoding="async">
+         alt="{{ $alt }}" fetchpriority="high" decoding="async">
     <span class="pi-cover-scrim"></span>
   {{- else if $img.src -}}
     {{- /* SVG, GIF or static: nothing to process. */ -}}
-    <img class="pi-cover-media" src="{{ $img.src }}" alt="{{ $img.alt }}" fetchpriority="high">
+    <img class="pi-cover-media" src="{{ $img.src }}" alt="{{ $alt }}" fetchpriority="high">
     <span class="pi-cover-scrim"></span>
   {{- end -}}
 {{- end }}
@@ -98,8 +112,17 @@
     {{- with .header }}
     <h1>{{ with $.link }}<a href="{{ . }}">{{ end }}{{ $.header }}{{ with $.link }}</a>{{ end }}</h1>
     {{- end }}
+    {{- with .subtitle }}
+    <p class="pi-cover-subtitle">{{ . | safeHTML }}</p>
+    {{- end }}
     {{- with .text }}
     <div>{{ . | markdownify }}</div>
+    {{- end }}
+    {{- with .inner }}
+    <div>{{ . | markdownify }}</div>
+    {{- end }}
+    {{- with .innerHTML }}
+    {{ . | safeHTML }}
     {{- end }}
   </div>
 </section>

@@ -20,6 +20,28 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | C-18 | `tool/gallery.html` | `from` is a FRONTMATTER PARAM NAME, not a path, but `gallery.md` passes `/rc` as though it were a folder. |
 | B-11 | `page-title.html` + `tool/cover.html` | v0.4.6 made page-title a `<p>`, so only `cover` supplies an `h1`. A page with no cover has none. Decided: cover owns it. |
 
+## FIXED 2026-09-12 — v0.4.8, found retiring chiddingfold's overrides
+
+- **get-asset `noPublish` emptied `src` for every resource**, not just rasters. An SVG,
+  GIF or video has no processed copy to link instead, so callers got `src=""`: a cover
+  with an SVG or video rendered no media, and chiddingfold's four SVG sponsor logos would
+  have gone blank. Now `and .noPublish $isRaster` gates the `RelPermalink` read.
+- **`lang=` and `og:locale` used `site.Language.Lang`**, which is `en` on a site that sets
+  `locale: en-GB`. `baseof.html`, `blog/section.html` and `tmpl/head-seo.html` now read
+  `site.Language.Locale | default site.Language.Lang`.
+- **cover discarded `alt=""`**: it passed `""` to get-asset, whose `default` turned it into
+  the basename, so a decorative cover announced `hero.jpg`. cover now emits its own `$alt`.
+- **cover gained `subtitle`, `inner`, `innerHTML` and `class`**. `inner` is markdownified
+  (the hw convention); `innerHTML` is verbatim, for partials that pass rendered markup.
+  Site CSS restyling a cover must use `.pi-cover.x`: cover's `<style>` sits in `<body>`,
+  after site.css, and wins at equal specificity.
+- **hw never passed `height`**, so cover's documented `height` param was dead via the
+  shortcode. hw now passes `height` and `subtitle`.
+
+Verified: SVG page-bundle cover emits a real `src` and `alt=""`; subtitle `<sup>`
+survives; chiddingfold builds with an identical published file list (bar site.css's hash)
+and exactly one canonical, og:title and h1 per page.
+
 ## FIXED 2026-09-12 — B-07, mermaid never loaded
 
 `_markup/render-codeblock-mermaid.html` set `hasMermaid` and nothing read it, so the theme
@@ -171,7 +193,8 @@ so its overrides are a good read on what the theme is missing.
 |---|---|---|
 
 FIXED 2026-09-12 — `get-asset` takes `.noPublish`, `img-process` no longer gates on `.src`,
-and `tool/gallery` opts in. See the FIXED section above. `tk/img.html` in chiddingfold can go.
+and `tool/gallery` opts in. See the FIXED section above. chiddingfold removed its `tk/img.html`,
+`tk/date-offset.html` and SEO head meta against v0.4.8, and rebuilt its hero on `tool/cover`.
 
 ### Generic code to adopt
 

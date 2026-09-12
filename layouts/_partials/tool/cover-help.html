@@ -14,8 +14,10 @@ Cover partial help using modular help system */ -}}
   "params" (slice
     (dict "name" "src"    "required" false "example" "img/hero.jpg")
     (dict "name" "header" "required" false "example" "Welcome")
+    (dict "name" "subtitle" "required" false "example" "Saturday 7th November")
     (dict "name" "text"   "required" false "example" "A short line of copy")
     (dict "name" "link"   "required" false "example" "/about")
+    (dict "name" "class"  "required" false "example" "hero")
   )
   "note" "Full-bleed cover band: an image or video behind an overlaid heading and text"
 -}}
@@ -55,10 +57,38 @@ Cover partial help using modular help system */ -}}
       "default" ""
     )
     (dict
+      "name" "subtitle"
+      "type" "string"
+      "required" false
+      "description" "A line under the heading, as a `<p class=\"pi-cover-subtitle\">` rather than a heading. Emitted as HTML, so markup such as `<sup>` survives."
+      "default" ""
+    )
+    (dict
       "name" "text"
       "type" "string"
       "required" false
       "description" "Body copy under the heading. Markdownified, so inline markdown works."
+      "default" ""
+    )
+    (dict
+      "name" "inner"
+      "type" "string"
+      "required" false
+      "description" "Extra content after the text, inside the overlay. Markdownified. The hw shortcode passes its inner content here."
+      "default" ""
+    )
+    (dict
+      "name" "innerHTML"
+      "type" "string"
+      "required" false
+      "description" "As inner, but emitted verbatim. Only for a partial calling tool/cover directly with rendered markup, which markdownify would turn into a code block wherever it is indented."
+      "default" ""
+    )
+    (dict
+      "name" "class"
+      "type" "string"
+      "required" false
+      "description" "Extra classes on the `<section>`, so site CSS can restyle one cover. Select it as `.pi-cover.your-class`: the cover's own style block comes later in the document and wins at equal specificity."
       "default" ""
     )
     (dict
@@ -96,6 +126,11 @@ Cover partial help using modular help system */ -}}
       "description" "Text-only band, no image"
       "code" "{{&lt;hw t=\"cover\" header=\"Section break\" text=\"Copy with **inline markdown**.\"&gt;}}"
       "note" "With no **src** the band renders as a plain centred panel"
+    )
+    (dict
+      "description" "Full-screen hero with a subtitle, a site class and inner content"
+      "code" "{{&lt;hw t=\"cover\" src=\"img/hero.jpg\" header=\"Bonfire Night\" subtitle=\"Saturday 7&lt;sup&gt;th&lt;/sup&gt; November\" class=\"hero\" height=\"100svh\"&gt;}}[Donate](/donate){{&lt;/hw&gt;}}"
+      "note" "Style it from site CSS with **.pi-cover.hero**"
     )
     (dict
       "description" "Shorter band"

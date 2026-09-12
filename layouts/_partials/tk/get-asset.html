@@ -13,17 +13,19 @@
   .alt     — alt text for the image (optional; defaults to basename of .asset)
   .caption — caption string (optional; defaults to falsy)
   .dbg     — accumulated debug string to prepend to this partial's log (optional)
-  .noPublish — bool (optional; default false). Skip the RelPermalink read, so the
-             resource is NOT written to the output. Reading .RelPermalink is what
-             publishes a resource, so asking about an image you only intend to
-             resize otherwise ships the full-size original as well. Set this when
-             you will process .res yourself; "src" comes back empty.
+  .noPublish — bool (optional; default false). For RASTER images, skip the
+             RelPermalink read, so the original is NOT written to the output.
+             Reading .RelPermalink is what publishes a resource, so asking about an
+             image you only intend to resize otherwise ships the full-size original
+             as well. Set this when you will process .res yourself; "src" comes back
+             empty for a raster. SVG, GIF and video cannot be resized, so they are
+             published and keep their "src" regardless.
 
   DO NOT call partial "tk/dbg-template" - it prevents return from working.
 
   returns (dict
     "src"       string   — relative permalink, usable in src=; EMPTY when .noPublish
-                           is set and the asset has a resource to process
+                           is set and the asset is a raster resource
     "res"       resource — Hugo resource or 0 for static fallback
     "mediaType" string   — MIME type e.g. "image/svg+xml"; may be empty for static
     "isSvg"     bool
@@ -96,8 +98,10 @@ Set DBG to templates.Current.Parent.Name to enable debug output of search steps 
 
   {{/* Reading .RelPermalink is what WRITES the resource, so a caller that only
        wants to process .res can suppress it and avoid publishing the original.
+       Rasters only: an SVG, GIF or video has no smaller copy to link instead, so
+       suppressing it would leave the caller with nothing to emit.
        .Width/.Height below read metadata only and never publish. */}}
-  {{- if not .noPublish -}}
+  {{- if not (and .noPublish $isRaster) -}}
     {{- $src = $res.RelPermalink -}}
   {{- end -}}
   {{- if or $isRaster $isGif -}}
