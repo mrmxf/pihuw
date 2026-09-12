@@ -10,8 +10,9 @@
   .height — CSS length for the band's min-height (optional; default "60svh")
   .page   — Hugo Page (supplied by the hw shortcode)
 
-  Emits an <h2>, never an <h1>: tmpl/page-title.html already emits the page's h1
-  and a second one breaks the document outline.
+  Emits the page's <h1>. Since v0.4.6 tmpl/page-title.html emits a
+  <p class="pi-page-title">, not a heading, so a cover band is where the h1 comes
+  from. Do not put two covers with a header on one page.
 
   svh, not vh, so the band does not jump as a mobile browser's URL bar hides.
 
@@ -95,7 +96,7 @@
 {{- end }}
   <div class="pi-cover-inner">
     {{- with .header }}
-    <h2>{{ with $.link }}<a href="{{ . }}">{{ end }}{{ $.header }}{{ with $.link }}</a>{{ end }}</h2>
+    <h1>{{ with $.link }}<a href="{{ . }}">{{ end }}{{ $.header }}{{ with $.link }}</a>{{ end }}</h1>
     {{- end }}
     {{- with .text }}
     <div>{{ . | markdownify }}</div>

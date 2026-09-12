@@ -26,7 +26,7 @@ Cover partial help using modular help system */ -}}
     "**Responsive srcset** at 640/1024/1600/2000, and never wider than the source"
     "**WebP conversion** for raster images; SVG, GIF and static files pass through untouched"
     "**Video** is detected from `site.Params.extensions.video` and rendered muted, looping and inline"
-    "**Emits an `h2`**, never an `h1` — the page title partial already owns the `h1`"
+    "**Emits the page `h1`** — since v0.4.6 the page-title partial emits a `<p>`, not a heading"
     "**`svh` not `vh`** so the band does not jump as a mobile URL bar hides"
   )
 -}}
@@ -51,7 +51,7 @@ Cover partial help using modular help system */ -}}
       "name" "header"
       "type" "string"
       "required" false
-      "description" "Heading text, rendered as an h2."
+      "description" "Heading text, rendered as the page h1."
       "default" ""
     )
     (dict
@@ -117,7 +117,7 @@ Cover partial help using modular help system */ -}}
     "**Scrim**: a 45% black overlay sits under the text whenever there is media behind it"
   )
   "warnings" (slice
-    "**Not the page title**: this emits an `h2`. Do not use it expecting an `h1`"
+    "**One per page**: this emits the `h1`, so two covers with a `header` on one page make two `h1`s"
     "**SVG and static files are not processed**: Hugo Pipes cannot reach `static/`, and vectors need no resizing, so they are emitted as-is"
     "**Contrast**: the scrim assumes light text. A pale image with light copy still needs checking"
   )

@@ -18,6 +18,7 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | C-16 | `_partials/hw.html:12,36` | The `found at` debug comment is emitted twice per call and is not guarded by `hugo.IsServer`, so it ships in production builds. |
 | C-17 | `documentation/content/kitchen_sink/gallery.md:12` | `{{ < hw t = "gallery" from = "/rc" />}}` has spaces, so it renders as literal text. The gallery example has never run. |
 | C-18 | `tool/gallery.html` | `from` is a FRONTMATTER PARAM NAME, not a path, but `gallery.md` passes `/rc` as though it were a folder. |
+| B-11 | `page-title.html` + `tool/cover.html` | v0.4.6 made page-title a `<p>`, so only `cover` supplies an `h1`. A page with no cover has none. Decided: cover owns it. |
 
 ## FIXED 2026-09-12 — B-07, mermaid never loaded
 
