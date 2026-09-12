@@ -1,6 +1,59 @@
 {{partial "tk/dbg-template" .}}
 <!-- --- load all body scripts here ---------- -->
+{{/* Loaded at the END of <body> on purpose: a render hook's .Store.Set only becomes
+     visible once .Content has been rendered, so these flags are unreadable in <head>. */}}
 {{- if .Store.Get "hasGraph" }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" crossorigin="anonymous"></script>
 <script>(function(){var q=window._hwGraphQ;if(q){q.forEach(function(f){f();});}}());</script>
+{{- end }}
+{{- $mermaid := site.Params.mermaid | default dict }}
+{{- if and (.Store.Get "hasMermaid") (ne $mermaid.enable false) }}
+{{- $v := $mermaid.version | default "11.6.0" }}
+<script src="https://cdn.jsdelivr.net/npm/mermaid@{{ $v }}/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script>
+  /* Renders every <pre class="mermaid"> emitted by _markup/render-codeblock-mermaid.html.
+     Classic build, not ESM, so window.mermaid exists for pages that call it themselves.
+     Re-themes on the theme toggle: data-theme on <html> is dark|light|absent(=system). */
+  (function () {
+    if (typeof mermaid === 'undefined') return;
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('pre.mermaid'));
+    if (!nodes.length) return;
+    nodes.forEach(function (el) { el.dataset.pihuwSrc = el.textContent; });
+
+    function isDark() {
+      var t = document.documentElement.getAttribute('data-theme');
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    function render() {
+      mermaid.initialize({ startOnLoad: false, theme: isDark() ? 'dark' : 'default' });
+      mermaid.run({ nodes: nodes });
+    }
+    function rerender() {
+      nodes.forEach(function (el) {
+        if (el.dataset.pihuwSrc === undefined) return;
+        el.textContent = el.dataset.pihuwSrc;
+        el.removeAttribute('data-processed');
+      });
+      render();
+    }
+
+    render();
+
+    new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        if (muts[i].attributeName === 'data-theme') { rerender(); return; }
+      }
+    }).observe(document.documentElement, { attributes: true });
+
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function () {
+        if (!document.documentElement.hasAttribute('data-theme')) rerender();
+      };
+      mq.addEventListener ? mq.addEventListener('change', onChange) : mq.addListener(onChange);
+    }
+  }());
+</script>
 {{- end }}

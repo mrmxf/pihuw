@@ -4,9 +4,12 @@ privacy_policy:   /privacy
 contact:          /contact
 time_format_blog: Monday, 02 Jan 2006
 
-# --- libraries loaded in partial scripts.html -----------------------------------
+# --- libraries loaded on demand by tmpl/body-scripts.html ----------------------
+# mermaid loads ONLY on pages containing a ```mermaid fence, and follows the theme
+# toggle. Set enable: false to suppress it; version pins a different release.
 mermaid:
   enable: true
+  version: 11.6.0
 markmap:
   enable: false
 katex:
