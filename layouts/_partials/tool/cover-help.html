@@ -12,35 +12,74 @@ Cover partial help using modular help system */ -}}
   "shortcode" "cover"
   "type" "partial"
   "params" (slice
-    (dict "name" "from" "required" true "example" "path/to/page")
+    (dict "name" "src"    "required" false "example" "img/hero.jpg")
+    (dict "name" "header" "required" false "example" "Welcome")
+    (dict "name" "text"   "required" false "example" "A short line of copy")
+    (dict "name" "link"   "required" false "example" "/about")
   )
-  "note" "Includes and displays another page as a content block with automatic metadata"
+  "note" "Full-bleed cover band: an image or video behind an overlaid heading and text"
 -}}
 
 {{- $descriptionData := dict
-  "description" "Dynamically includes another page's content as a formatted block, automatically extracting the page's title, featured image, description, and metadata. Perfect for showcasing related content or creating content aggregations."
+  "description" "Renders a full-width band with a cover image or video behind a centred heading and paragraph. Raster images are resized to a srcset capped at the source's native width, converted to WebP, and the original is never published. A scrim sits between the media and the text so the copy keeps its contrast over any photograph."
   "notes" (slice
-    "**Automatically extracts** page metadata and content"
-    "**Featured image detection** looks for images with 'feature' in filename"
-    "**Reading time calculation** based on word count (220 words/minute)"
-    "**Smart content truncation** limits descriptions to 300 characters"
+    "**Responsive srcset** at 640/1024/1600/2000, and never wider than the source"
+    "**WebP conversion** for raster images; SVG, GIF and static files pass through untouched"
+    "**Video** is detected from `site.Params.extensions.video` and rendered muted, looping and inline"
+    "**Emits an `h2`**, never an `h1` — the page title partial already owns the `h1`"
+    "**`svh` not `vh`** so the band does not jump as a mobile URL bar hides"
   )
 -}}
 
 {{- $paramsData := dict
   "params" (slice
     (dict
-      "name" "from"
+      "name" "src"
       "type" "string"
-      "required" true
-      "description" "Path to the page to include (relative to project root)"
+      "required" false
+      "description" "Path to the cover image or video, resolved by tk/get-asset (page bundle, then assets/, then static/). Omit for a text-only band."
       "default" ""
+    )
+    (dict
+      "name" "alt"
+      "type" "string"
+      "required" false
+      "description" "Alt text for the image. Defaults to empty: a cover is decorative, and the heading beside it already carries the meaning."
+      "default" ""
+    )
+    (dict
+      "name" "header"
+      "type" "string"
+      "required" false
+      "description" "Heading text, rendered as an h2."
+      "default" ""
+    )
+    (dict
+      "name" "text"
+      "type" "string"
+      "required" false
+      "description" "Body copy under the heading. Markdownified, so inline markdown works."
+      "default" ""
+    )
+    (dict
+      "name" "link"
+      "type" "string"
+      "required" false
+      "description" "URL. When set, the heading becomes a link to it."
+      "default" ""
+    )
+    (dict
+      "name" "height"
+      "type" "string"
+      "required" false
+      "description" "CSS length for the band's min-height."
+      "default" "60svh"
     )
     (dict
       "name" "page"
       "type" "object"
       "required" true
-      "description" "Hugo page context (automatically provided by hw shortcode)"
+      "description" "Hugo page context (automatically provided by the hw shortcode)"
       "default" "current page"
     )
   )
@@ -49,51 +88,38 @@ Cover partial help using modular help system */ -}}
 {{- $examplesData := dict
   "examples" (slice
     (dict
-      "description" "Include related page content using hw shortcode"
-      "code" "{{&lt;hw t=\"cover\" from=\"docs/getting-started\"&gt;}}"
-      "note" "Use **hw shortcode** with from parameter to include any page as a formatted block"
+      "description" "Cover image with a heading, some copy and a link"
+      "code" "{{&lt;hw t=\"cover\" src=\"img/hero.jpg\" header=\"Welcome\" text=\"A minimal Hugo theme.\" link=\"/about\"&gt;}}"
+      "note" "The heading becomes the link; the image stays decorative with empty alt"
     )
     (dict
-      "description" "Feature multiple related pages in a section"
-      "code" "# Related Documentation\n\n{{&lt;hw t=\"cover\" from=\"api/authentication\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"api/rate-limiting\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"api/error-handling\"&gt;}}"
-      "note" "**Multiple covers** create an engaging content showcase with automatic formatting"
+      "description" "Text-only band, no image"
+      "code" "{{&lt;hw t=\"cover\" header=\"Section break\" text=\"Copy with **inline markdown**.\"&gt;}}"
+      "note" "With no **src** the band renders as a plain centred panel"
     )
     (dict
-      "description" "Showcase featured content with covers in accordion"
-      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"📖 Essential Guides\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"guides/quickstart\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"guides/best-practices\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"🔧 Advanced Topics\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"advanced/performance\"&gt;}}\n    {{&lt;hw t=\"cover\" from=\"advanced/security\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
-      "note" "**Organize covers** within accordions for better content management"
+      "description" "Shorter band"
+      "code" "{{&lt;hw t=\"cover\" src=\"img/hero.jpg\" header=\"Compact\" height=\"30svh\"&gt;}}"
+      "note" "**height** takes any CSS length"
     )
     (dict
-      "description" "Tutorial series with cross-references"
-      "code" "# Tutorial: Building Your First App\n\n{{&lt;hw t=\"include\" from=\"tutorials/first-app.md\"&gt;}}\n\n## Related Tutorials\n\n{{&lt;hw t=\"cover\" from=\"tutorials/setup-environment\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"tutorials/deployment\"&gt;}}\n\n{{&lt;hw t=\"caption\" text=\"Complete all tutorials in sequence for best results\"&gt;}}"
-      "note" "**Mix covers with includes** to show full content plus related material"
-    )
-    (dict
-      "description" "Product showcase with feature pages"
-      "code" "# Platform Features\n\n{{&lt;hw t=\"table\"&gt;}}\n  {{&lt;hw t=\"thead\"&gt;}}\n    {{&lt;hw t=\"trth\"&gt;}}Feature Highlights{{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n  {{&lt;hw t=\"tbody\"&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"cover\" from=\"features/analytics\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"cover\" from=\"features/automation\"&gt;}}\n    {{&lt;/hw&gt;}}\n    {{&lt;hw t=\"trtd\"&gt;}}\n      {{&lt;hw t=\"cover\" from=\"features/collaboration\"&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"Explore detailed feature documentation by clicking any feature above\"&gt;}}"
-      "note" "**Embed covers in tables** for structured feature showcases"
-    )
-    (dict
-      "description" "News and announcements section"
-      "code" "# Latest Updates\n\n{{&lt;hw t=\"blog\" count=\"1\"&gt;}}\n\n## Featured Content\n\n{{&lt;hw t=\"cover\" from=\"announcements/new-features\"&gt;}}\n\n{{&lt;hw t=\"cover\" from=\"case-studies/success-story\"&gt;}}\n\n{{&lt;hw t=\"children\"&gt;}}"
-      "note" "**Combine with blog and children** for comprehensive content sections"
+      "description" "Video cover"
+      "code" "{{&lt;hw t=\"cover\" src=\"video/loop.mp4\" header=\"In motion\"&gt;}}"
+      "note" "Extensions in **site.Params.extensions.video** render as a muted, looping, inline video"
     )
   )
 -}}
 
 {{- $notesData := dict
   "notes" (slice
-    "**Automatic metadata extraction**: Pulls title, description, and featured images from target page"
-    "**Reading time estimates**: Calculates based on standard 220 words per minute"
-    "**Featured image discovery**: Looks for images with 'feature' in filename within page bundle"
-    "**Responsive layout**: Uses block partial for consistent, mobile-friendly display"
-    "**Smart linking**: Creates clickable headers and images that link to the source page"
-    "**Content preservation**: Maintains the source page's formatting and structure"
+    "**The original is never published**: the partial resolves with `noPublish` and links only the processed copies"
+    "**One style block per page**: guarded by a page Store flag, so several covers do not repeat the CSS"
+    "**Scrim**: a 45% black overlay sits under the text whenever there is media behind it"
   )
   "warnings" (slice
-    "**Path dependency**: Target page must exist or cover will show error message"
-    "**Performance consideration**: Multiple covers may slow page generation"
-    "**Image optimization**: Featured images should be properly sized for best performance"
+    "**Not the page title**: this emits an `h2`. Do not use it expecting an `h1`"
+    "**SVG and static files are not processed**: Hugo Pipes cannot reach `static/`, and vectors need no resizing, so they are emitted as-is"
+    "**Contrast**: the scrim assumes light text. A pale image with light copy still needs checking"
   )
 -}}
 

@@ -7,8 +7,19 @@ time_format_blog: Monday, 02 Jan 2006
 # --- social cards (tmpl/head-seo.html) -----------------------------------------
 # ogImage is the site-wide social card, used when a page has no `image` param.
 # Both are paths under assets/ and must be raster - the card is resized to 1200px.
+# Handles for tool/item-socials and twitter:site. Value without the @; a value
+# starting with http is used verbatim, for anything the URL patterns get wrong.
 social:
-  twitter: ""            # handle without the @, for twitter:site
+  twitter: ""            # also used for twitter:site in the social card
+  facebook: ""
+  instagram: ""
+  linkedin: ""
+  youtube: ""
+  mastodon: ""
+  bluesky: ""
+  tiktok: ""
+  github: ""
+  email: ""
 ogImage: ""              # e.g. brand/social-card.png
 
 # --- libraries loaded on demand by tmpl/body-scripts.html ----------------------

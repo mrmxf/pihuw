@@ -1,10 +1,10 @@
 {{partial "tk/dbg-template" .}}{{/*
-Item socials partial help using modular help system */ -}}
+item-socials partial help using modular help system */ -}}
 {{ partial "tk/help-tk.html" . }}
 
 {{- $cardData := dict
   "title" "{{&lt; hw t=\"item-socials\" &gt;}}"
-  "color" "yellow"
+  "color" "blue"
   "Inner" ""
 -}}
 
@@ -12,45 +12,53 @@ Item socials partial help using modular help system */ -}}
   "shortcode" "item-socials"
   "type" "partial"
   "params" (slice
+    (dict "name" "from"  "required" false "example" "instagram-mrmxf github-mrmxf")
+    (dict "name" "skip"  "required" false "example" "1")
     (dict "name" "count" "required" false "example" "3")
-    (dict "name" "skip" "required" false "example" "1")
-    (dict "name" "from" "required" false "example" "instagram linkedin twitter")
   )
-  "note" "Generates social media links and icons (currently minimal implementation)"
+  "note" "A row of social links as Font Awesome 6 brand icons, driven by site.Params.social"
 -}}
 
 {{- $descriptionData := dict
-  "description" "Creates social media link items based on configuration. This partial appears to be minimally implemented and may require additional development for full functionality."
+  "description" "Renders a row of social icons. With no parameters it shows every platform that has a handle in site.Params.social, in a fixed order. The from parameter picks specific platforms, and can override a handle inline for a one-off link. Handles are turned into URLs by a built-in pattern per platform; a value that starts with http is used verbatim, which is the escape hatch for anything the patterns get wrong."
   "notes" (slice
-    "**Minimal implementation** - currently only has parameter comments"
-    "**Configuration-based** - expects social media platform names"
-    "**Count and skip** parameters for selective display"
-    "**Extensible design** for future social media integration"
+    "**Configure once** in `site.Params.social`, e.g. `social: {instagram: mrmxf}`"
+    "**Supported**: twitter, facebook, instagram, linkedin, youtube, mastodon, bluesky, tiktok, github, email"
+    "**Email** renders as `mailto:` and correctly omits `target=\"_blank\"`"
+    "**External links** get `target=\"_blank\"` and `rel=\"noopener\"`"
+    "**Accessible**: each link carries an `aria-label`; the icon itself is `aria-hidden`"
   )
 -}}
 
 {{- $paramsData := dict
   "params" (slice
     (dict
-      "name" "count"
-      "type" "number"
-      "required" false
-      "description" "Number of social media items to display"
-      "default" "1"
-    )
-    (dict
-      "name" "skip"
-      "type" "number"
-      "required" false
-      "description" "Number of social media items to skip"
-      "default" "1"
-    )
-    (dict
       "name" "from"
       "type" "string"
       "required" false
-      "description" "Space-separated list of social media platforms"
-      "default" "instagram linkedin instagram-mrmxf"
+      "description" "Space-separated platform tokens. A token is a platform name (instagram) or platform-handle (instagram-mrmxf), where the handle overrides site params for that one link. A handle may itself contain hyphens."
+      "default" "every platform in site.Params.social that has a value"
+    )
+    (dict
+      "name" "skip"
+      "type" "int"
+      "required" false
+      "description" "Skip this many links from the start of the resolved list."
+      "default" "0"
+    )
+    (dict
+      "name" "count"
+      "type" "int"
+      "required" false
+      "description" "Cap the row at this many links. Must be 2 or more: the hw shortcode defaults count to 1 for every tool, so 1 cannot be distinguished from not supplying it and is treated as no cap."
+      "default" "no cap"
+    )
+    (dict
+      "name" "page"
+      "type" "object"
+      "required" true
+      "description" "Hugo page context (automatically provided by the hw shortcode)"
+      "default" "current page"
     )
   )
 -}}
@@ -58,50 +66,43 @@ Item socials partial help using modular help system */ -}}
 {{- $examplesData := dict
   "examples" (slice
     (dict
-      "description" "Basic social media links using hw shortcode"
+      "description" "Every configured platform"
       "code" "{{&lt;hw t=\"item-socials\"&gt;}}"
-      "note" "Use **hw shortcode** for default social media configuration (currently minimal)"
+      "note" "Reads **site.Params.social** and renders each platform that has a handle"
     )
     (dict
-      "description" "Custom social media selection"
-      "code" "{{&lt;hw t=\"item-socials\" from=\"twitter linkedin github\"&gt;}}"
-      "note" "**Specify platforms** with from parameter (requires implementation)"
+      "description" "Specific platforms, handles from site params"
+      "code" "{{&lt;hw t=\"item-socials\" from=\"instagram linkedin github\"&gt;}}"
+      "note" "A token with no handle falls back to **site.Params.social**"
     )
     (dict
-      "description" "Limited social media display"
-      "code" "{{&lt;hw t=\"item-socials\" count=\"2\" from=\"instagram linkedin facebook\"&gt;}}"
-      "note" "**Control quantity** with count parameter (requires implementation)"
+      "description" "Override a handle inline"
+      "code" "{{&lt;hw t=\"item-socials\" from=\"instagram-mrmxf linkedin-bruce-devlin\"&gt;}}"
+      "note" "Everything after the FIRST hyphen is the handle, so **bruce-devlin** works"
     )
     (dict
-      "description" "Social media in contact section"
-      "code" "# Contact Us\n\n{{&lt;hw t=\"block\" \n  header=\"Get In Touch\" \n  description=\"Connect with us through multiple channels for support and updates.\"&gt;}}\n  \n  ## Social Media\n  \n  {{&lt;hw t=\"item-socials\" from=\"twitter linkedin instagram\"&gt;}}\n  \n  ## Direct Contact\n  \n  {{&lt;hw t=\"table\"&gt;}}\n    {{&lt;hw t=\"tbody\"&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}**Email**{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}contact@example.com{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n      {{&lt;hw t=\"tr\"&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}**Phone**{{&lt;/hw&gt;}}\n        {{&lt;hw t=\"td\"&gt;}}+1 (555) 123-4567{{&lt;/hw&gt;}}\n      {{&lt;/hw&gt;}}\n    {{&lt;/hw&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
-      "note" "**Integrate with contact information** for comprehensive communication options"
+      "description" "A full URL when the pattern is wrong"
+      "code" "{{&lt;hw t=\"item-socials\" from=\"linkedin-https://www.linkedin.com/company/mrmxf\"&gt;}}"
+      "note" "LinkedIn **company** pages do not fit the /in/ pattern, so pass the URL"
     )
     (dict
-      "description" "Footer social media section"
-      "code" "{{&lt;hw t=\"accordion\"&gt;}}\n  {{&lt;hw t=\"acc-tab\" header=\"Follow Us\"&gt;}}\n    Stay connected for the latest updates, tips, and community news.\n    \n    {{&lt;hw t=\"item-socials\" from=\"twitter linkedin youtube instagram\"&gt;}}\n    \n    {{&lt;hw t=\"caption\" text=\"Follow us on your preferred platform for regular updates\"&gt;}}\n  {{&lt;/hw&gt;}}\n  \n  {{&lt;hw t=\"acc-tab\" header=\"Community\"&gt;}}\n    {{&lt;hw t=\"item-include\" from=\"community/overview.md\"&gt;}}\n  {{&lt;/hw&gt;}}\n{{&lt;/hw&gt;}}"
-      "note" "**Organize in accordions** for clean footer or sidebar social media sections"
-    )
-    (dict
-      "description" "Team member social profiles"
-      "code" "{{&lt;hw t=\"feature-group\"&gt;}}\n  {{&lt;hw t=\"feature\" \n    header=\"John Smith\" \n    text=\"Lead Developer with expertise in full-stack development and DevOps.\" \n    src=\"/images/team/john.jpg\" \n    class=\"ui message\"&gt;}}\n{{&lt;/hw&gt;}}\n\n**Connect with John:**\n\n{{&lt;hw t=\"item-socials\" from=\"linkedin github twitter\" count=\"3\"&gt;}}\n\n{{&lt;hw t=\"banner\" text=\"All team members are active in our developer community\"&gt;}}"
-      "note" "**Personal social profiles** for team member pages (requires implementation)"
+      "description" "Skip and cap"
+      "code" "{{&lt;hw t=\"item-socials\" skip=\"1\" count=\"3\"&gt;}}"
+      "note" "Drops the first link, then keeps at most three"
     )
   )
 -}}
 
 {{- $notesData := dict
   "notes" (slice
-    "**Development status**: This partial appears to be minimally implemented"
-    "**Future potential**: Designed for social media integration with count/skip functionality"
-    "**Configuration ready**: Parameters suggest support for multiple platforms"
-    "**Extensible structure**: Framework exists for full social media implementation"
-    "**Integration friendly**: Designed to work with other hw partials"
+    "**One style block per page**, guarded by a page Store flag"
+    "**Default order** is twitter, facebook, instagram, linkedin, youtube, mastodon, bluesky, tiktok, github, email"
+    "**Nothing renders** when no platform resolves to a handle — no empty container"
   )
   "warnings" (slice
-    "**Limited functionality**: Current implementation may not produce visible output"
-    "**Requires development**: May need additional implementation for full functionality"
-    "**Configuration dependency**: Likely requires site-level social media configuration"
+    "**`count=\"1\"` does not work**: the hw shortcode already defaults count to 1, so the partial cannot tell that apart from no value. Use `from` with a single token instead"
+    "**Icons need Font Awesome 6**, which the theme ships; brand glyphs move between FA releases"
+    "**Handles are not validated**: a wrong handle produces a link to a missing profile"
   )
 -}}
 

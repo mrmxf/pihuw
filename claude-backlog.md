@@ -14,6 +14,10 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | C-13 | `.clog.yaml:128` | `[ -f hugo .yaml ]` — stray space, so the test never matches. |
 | C-14 | `.clog.yaml:113` | `suffix:` snippet has an unbalanced trailing `"`. |
 | C-15 | `.clog.yaml:119` | `project has fomantic` cats `layouts/_partials/tmpl/head-cdn`, which no longer exists. The check always fails. |
+| B-10 | `_shortcodes/hw.html:46` | `count` defaults to 1 for EVERY tool, so a tool cannot tell "no count" from `count="1"`. `item-socials` has to treat 1 as no cap. |
+| C-16 | `_partials/hw.html:12,36` | The `found at` debug comment is emitted twice per call and is not guarded by `hugo.IsServer`, so it ships in production builds. |
+| C-17 | `documentation/content/kitchen_sink/gallery.md:12` | `{{ < hw t = "gallery" from = "/rc" />}}` has spaces, so it renders as literal text. The gallery example has never run. |
+| C-18 | `tool/gallery.html` | `from` is a FRONTMATTER PARAM NAME, not a path, but `gallery.md` passes `/rc` as though it were a folder. |
 
 ## FIXED 2026-09-12 — B-07, mermaid never loaded
 
@@ -94,6 +98,33 @@ original stays out, which is the B-08 fix doing its job.
 Note the theme's own docs site sets no `baseURL`, so canonical renders as `/` there. That is
 correct for a consumer site and expected here.
 
+## FIXED 2026-09-12 — B-09 and M-20, cover and item-socials
+
+`tool/cover.html` emitted `html, body { height: 100% }` and four more rules as raw text with
+no `<style>` wrapper, so the CSS rendered as visible text and, had it applied, would have
+hijacked the page. It also hardcoded a second `<section>` containing a `<video>` pointing at
+the image's own `src`, and ignored `header`, `text` and `link` entirely — which the
+kitchen-sink example passes and the summary promises.
+
+Rewritten as the documented component: a full-bleed band with an image or video behind an
+overlaid heading and text. Scoped CSS in a real `<style>`, emitted once per page via a Store
+flag. srcset at 640/1024/1600/2000 capped at the source's native width, WebP, and `noPublish`
+so the original never ships. `min-height` uses `svh` so the band does not jump as a mobile
+URL bar hides. Emits an `h2`: `tmpl/page-title.html` already owns the page's `h1`.
+
+`tool/item-socials.html` was 166 bytes that rendered nothing. Implemented as a row of FA6
+brand icons driven by a new `site.Params.social` map, with `from` tokens
+(`instagram-mrmxf`), `skip`, and a `count` cap. Email renders `mailto:` and correctly omits
+`target="_blank"`; a handle starting with `http` is used verbatim, which is the escape hatch
+for LinkedIn company pages.
+
+Verified: default order, explicit tokens, inline handle override including a hyphenated
+handle, skip, cap, mailto, and the full-URL escape hatch.
+
+Both help files were wrong and have been rewritten. `cover-help.html` was a **copy of
+`item-include`'s help** — it documented a `from` param, page metadata extraction and reading
+times, none of which cover has ever had.
+
 ## Renaming an extension point breaks consumers silently
 
 Six sites consume this theme. A renamed partial does not error in a consumer build — Hugo
@@ -150,10 +181,7 @@ and `tool/gallery` opts in. See the FIXED section above. `tk/img.html` in chiddi
 
 ### Theme bugs these overrides route around
 
-| # | Where | Issue |
-|---|---|---|
-| B-09 | `tool/cover.html` | Emits raw CSS with no `<style>` wrapper, so the rules render as visible text. Also hardcodes a `<video>` section pointing at the image's `.src`. Unusable. |
-| M-20 | `tool/item-socials.html` | 166 bytes: a debug call and a comment, renders nothing. Yet it is in the `$tools` slice, so the help index documents a component that does not exist. |
+Both FIXED 2026-09-12 — see the FIXED sections above.
 
 `tool/heroimage.html` is the working reference for what `cover` should be: srcset capped at
 the native width (Hugo upscales silently), `min-height:100svh` so the mobile URL bar does not

@@ -1,3 +1,98 @@
-{{partial "tk/dbg-template" .}}{{/* Hugo partial that renders social media links and profiles
-   count = 1 skip = 1 from = "instagram linkedin instagram-mrmxf"
-  */}}
+{{- /*
+  tool/item-socials
+  A row of social links as Font Awesome 6 brand icons.
+
+  .from   — space-separated platform tokens (optional). A token is either a
+            platform name ("instagram") or platform-handle ("instagram-mrmxf"),
+            which overrides the handle from site params for that one link.
+            Default: every platform in site.Params.social that has a value.
+  .skip   — skip this many links from the start (optional; default 0)
+  .count  — render at most this many links (optional; 0 = no cap)
+  .page   — Hugo Page (supplied by the hw shortcode)
+
+  Handles live in site.Params.social, e.g.  social: {instagram: mrmxf}. A value
+  starting with http is used verbatim, which is the escape hatch for anything the
+  built-in URL patterns get wrong — LinkedIn company pages especially.
+
+  The <style> block is emitted once per page, guarded by a Store flag.
+*/ -}}
+{{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}
+{{- $page := .page -}}
+{{- $cfg  := site.Params.social | default dict -}}
+
+{{- /* platform -> icon, URL pattern, accessible label. Order is the default order. */ -}}
+{{- $order := slice "twitter" "facebook" "instagram" "linkedin" "youtube" "mastodon" "bluesky" "tiktok" "github" "email" -}}
+{{- $map := dict
+  "twitter"   (dict "icon" "fa-brands fa-x-twitter"  "url" "https://x.com/%s"                  "label" "Twitter")
+  "facebook"  (dict "icon" "fa-brands fa-facebook"   "url" "https://facebook.com/%s"           "label" "Facebook")
+  "instagram" (dict "icon" "fa-brands fa-instagram"  "url" "https://instagram.com/%s"          "label" "Instagram")
+  "linkedin"  (dict "icon" "fa-brands fa-linkedin"   "url" "https://www.linkedin.com/in/%s"    "label" "LinkedIn")
+  "youtube"   (dict "icon" "fa-brands fa-youtube"    "url" "https://youtube.com/@%s"           "label" "YouTube")
+  "mastodon"  (dict "icon" "fa-brands fa-mastodon"   "url" "https://mastodon.social/@%s"       "label" "Mastodon")
+  "bluesky"   (dict "icon" "fa-brands fa-bluesky"    "url" "https://bsky.app/profile/%s"       "label" "Bluesky")
+  "tiktok"    (dict "icon" "fa-brands fa-tiktok"     "url" "https://tiktok.com/@%s"            "label" "TikTok")
+  "github"    (dict "icon" "fa-brands fa-github"     "url" "https://github.com/%s"             "label" "GitHub")
+  "email"     (dict "icon" "fa-solid fa-envelope"    "url" "mailto:%s"                         "label" "Email")
+-}}
+
+{{- /* resolve the requested platform/handle pairs */ -}}
+{{- $links := slice -}}
+{{- if .from -}}
+  {{- range $tok := split (trim .from " ") " " -}}
+    {{- $tok = trim $tok " " -}}
+    {{- if $tok -}}
+      {{- $name := $tok -}}
+      {{- $hand := "" -}}
+      {{- if in $tok "-" -}}
+        {{- $bits := split $tok "-" -}}
+        {{- $name = index $bits 0 -}}
+        {{- $hand = delimit (after 1 $bits) "-" -}}
+      {{- end -}}
+      {{- if not $hand -}}{{- $hand = index $cfg $name | default "" -}}{{- end -}}
+      {{- with (index $map $name) -}}
+        {{- if $hand -}}{{- $links = $links | append (merge . (dict "handle" $hand)) -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- range $name := $order -}}
+    {{- $hand := index $cfg $name | default "" -}}
+    {{- if $hand -}}
+      {{- $links = $links | append (merge (index $map $name) (dict "handle" $hand)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* skip / count */ -}}
+{{- $skip := int (.skip | default 0) -}}
+{{- if and $skip (gt $skip 0) -}}
+  {{- $links = cond (ge $skip (len $links)) slice (after $skip $links) -}}
+{{- end -}}
+{{- /* The hw shortcode defaults `count` to 1 for EVERY tool, so 1 is
+       indistinguishable from "not supplied" here and has to mean "no cap".
+       Cap the row with count="2" or more; there is no way to ask for exactly
+       one icon. See claude-backlog.md. */ -}}
+{{- $count := int (.count | default 0) -}}
+{{- if and (gt $count 1) (gt (len $links) $count) -}}
+  {{- $links = first $count $links -}}
+{{- end -}}
+
+{{- if $links -}}
+{{- if not ($page.Store.Get "hasSocialsCSS") -}}
+{{- $page.Store.Set "hasSocialsCSS" true -}}
+<style>
+  .pi-socials { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .pi-socials a { font-size: 1.4em; line-height: 1; color: inherit; text-decoration: none; }
+  .pi-socials a:hover, .pi-socials a:focus-visible { opacity: 0.7; }
+</style>
+{{- end -}}
+<div class="pi-socials">
+{{- range $links }}
+  {{- $href := cond (hasPrefix .handle "http") .handle (printf .url .handle) }}
+  <a href="{{ $href }}" aria-label="{{ .label }}"
+     {{ if not (hasPrefix $href "mailto:") }}target="_blank" rel="noopener"{{ end }}>
+    <i class="{{ .icon }}" aria-hidden="true"></i>
+  </a>
+{{- end }}
+</div>
+{{- end -}}
