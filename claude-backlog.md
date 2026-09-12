@@ -39,6 +39,35 @@ with no fence emits none either.
 Note `markmap` and `katex` still have `enable` keys that nothing reads, and `graph.enable`
 is decorative too — `hasGraph` is what gates Chart.js.
 
+## FIXED 2026-09-12 — B-08, get-asset published every original it was asked about
+
+`tk/get-asset.html` ended with an unconditional `$src = $res.RelPermalink`. In Hugo, reading
+`.RelPermalink` is what WRITES the resource, so merely asking about an image published the
+full-size original — even when the caller only ever used a resized copy.
+
+`tool/gallery.html` was the one in-theme offender: it resolved each image, then built a
+300x300 proxy and a 1920 full copy with `tk/img-process` and linked only those two. The
+original shipped and nothing referenced it.
+
+Measured on a two-image gallery: **368,622 bytes of unlinked originals**, alongside the four
+variants actually linked. Chiddingfold reported ~8 MB from the same cause.
+
+Three changes:
+
+- `get-asset` takes `.noPublish` (default false). When set, the `RelPermalink` read is
+  skipped and `src` comes back empty. `.Width`/`.Height` are still read — those are metadata
+  and never publish.
+- `img-process` gated on `$img.src`, which made an empty-src dict unprocessable and would
+  have silently returned 0. It now gates on `or $img.res $img.src`: `src` is irrelevant to
+  processing, `res` is what it needs.
+- `tool/gallery.html` passes `noPublish true`.
+
+The default is unchanged, so nothing breaks for the six consumers. Callers that legitimately
+use `$img.src` — `banner`, `image`, `slideshow-static` — are untouched.
+
+Verified by diffing the full published file list with and without the fix: exactly the two
+originals disappear and no other file is lost.
+
 ## Renaming an extension point breaks consumers silently
 
 Six sites consume this theme. A renamed partial does not error in a consumer build — Hugo
@@ -82,13 +111,9 @@ so its overrides are a good read on what the theme is missing.
 
 | # | Where | Work |
 |---|---|---|
-| B-08 | `tk/get-asset.html:91` | `$src = $res.RelPermalink` runs unconditionally, and touching `.RelPermalink` is what WRITES the resource, so asking about an image publishes the original. |
 
-Chiddingfold measured ~8 MB of unlinked originals from this, including a 2.2 MB JPEG, and
-wrote `tk/img.html` to avoid it: for raster it returns `res` with `src` deliberately EMPTY
-so the caller processes and publishes only what it uses. Fix `get-asset` the same way and
-`tk/img` can be deleted. This affects all six consumers and contradicts the no-CDN,
-small-footprint goal more than anything else in the backlog.
+FIXED 2026-09-12 — `get-asset` takes `.noPublish`, `img-process` no longer gates on `.src`,
+and `tool/gallery` opts in. See the FIXED section above. `tk/img.html` in chiddingfold can go.
 
 ### Generic code to adopt
 

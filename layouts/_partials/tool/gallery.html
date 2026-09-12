@@ -94,7 +94,9 @@
 
 <div class="gallery-container {{ $modeClass }}" id="{{ $galleryId }}">
   {{- range $index, $imagePath := $images -}}
-    {{- $img   := partial "tk/get-asset"   (dict "asset" $imagePath "page" $page) -}}
+    {{/* noPublish: every <img> below uses a processed copy, so reading the
+         original's permalink would ship a full-size file nothing links. */}}
+    {{- $img   := partial "tk/get-asset"   (dict "asset" $imagePath "page" $page "noPublish" true) -}}
     {{- $proxy := partial "tk/img-process" (dict "img" $img "processing" "fit 300x300 q75") -}}
     {{- $full  := partial "tk/img-process" (dict "img" $img "processing" "resize 1920x1920 q85") -}}
     {{- $ext   := path.Ext $imagePath | strings.TrimPrefix "." | lower -}}
