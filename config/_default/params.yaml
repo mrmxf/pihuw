@@ -128,9 +128,18 @@ ui:
     # theme-init.js still runs, so nothing else changes.
     themeToggle: false
   childbar:
-    title:     this section   # can be overridden on a page
+    title:     "this section:"  # can be overridden on a page
     separator: "|"            # any unicode character to separate the links
-    opts:      false          # any of ascending|descending|parent for sorting or show the parent childbar
+    # space separated tokens, combine freely. Everything here can be overridden
+    # in a page's front matter under ui.childbar
+    #   parent      link the parent's pages, prefixed with an ⬆️ link up
+    #   children    link the children of the first child page
+    #   date        sort by page date rather than by link title
+    #   ascending   A→Z, or oldest first with `date`
+    #   descending  Z→A, or newest first with `date`
+    # e.g. "descending date" + maxItems 5 == the five most recent pages
+    opts:      ""
+    maxItems:  0              # cap the number of links; 0 == no cap
   section:
     blog:
       icon:    <i class="fa-solid fa-blog"></i>  #HTML icon for all blog posts

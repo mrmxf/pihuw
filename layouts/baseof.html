@@ -10,11 +10,17 @@
 
 <body >
   {{partial "tk/dbg-template" .}}
+  {{/* First focusable thing in the document: lets a keyboard or switch user jump
+       the navbar and childbar, which repeat on every page. WCAG 2.4.1. */}}
+  <a class="pi-skip" href="#pi-main">Skip to main content</a>
   {{partial "hook/body-begin" .}}
   <header>
     {{partial "tmpl/navbar" .}}
     {{if not site.Params.ui.hide.breadcrumbs}}{{partial "tmpl/breadcrumb" .}}{{end}}
   </header>
+  <!-- childbar sits AFTER </header>, not inside it: full width, but a site that
+       pins the header on scroll pins the navbar only, not this bar -->
+  {{partial "tmpl/childbar-horizontal.html" .}}
   <!-- outer div is for gutter control-->
   <div class="flex one six-{{site.Params.resp.m}} six-{{site.Params.resp.w}} pi-nav-pad">
 
@@ -23,7 +29,7 @@
 
     <!-- 2nd outer div == main -->
     <div class="full two-third-{{site.Params.resp.w}} "  style="align-content: stretch;">
-      <main>
+      <main id="pi-main" tabindex="-1">
         {{partial "hook/main-begin" .}}
         {{ block "main" . }}{{ end }}
         {{partial "hook/main-end" .}}

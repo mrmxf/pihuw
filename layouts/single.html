@@ -1,9 +1,8 @@
 {{ define "main" }}
 {{partial "tk/dbg-template" .}}
 {{partial "tmpl/page-title.html" .}}
-{{/* childbar on any single with params.ui.childbar.opts: "parent" */}}
-{{partial "tmpl/childbar-horizontal.html" .}}
+{{/* childbar is rendered once by baseof, after </header> — full width.
+     On a single page set params.ui.childbar.opts: "parent" to link siblings. */}}
 {{ .Content }}
-{{partial "tmpl/childbar-horizontal.html" .}}
 {{ partial "tmpl/taxonomy-tags-logic" . }}
 {{ end }}

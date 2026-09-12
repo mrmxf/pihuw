@@ -1,54 +1,93 @@
 {{partial "tk/dbg-template" .}}{{/*
 
-childbar can be hidden with .Params.hide.childbar
-.title is a string - default "this section"
-.separator is a string - default "|"
-.opts default is noSort + siblings
-.opts is a string ascending|descending|parent|children
+Horizontal "this section:" navigation bar.
+
+PLACEMENT: called ONCE per layout, as a sibling immediately after </header> — not
+inside the header and not inside the content column. The childbar navigates
+differently from the sidebar and is always full width, outside the gutters. A site
+that pins its header on scroll therefore pins the navbar only, not this bar.
+
+VISIBILITY: the wrapper is ALWAYS emitted. assets/css/pihuw.css hides
+.childbar-horizontal by default and .pi-show turns it on, so visibility is one class
+toggle rather than the presence or absence of markup.
+
+CONFIG: site params first, page params override. Both levels understand:
+
+  ui.hide.childbar          bool    true hides the bar
+  ui.childbar.title         string  default "this section:"
+  ui.childbar.separator     string  default "|"
+  ui.childbar.opts          string  space-separated tokens, see below
+  ui.childbar.maxItems      int     cap the number of links; 0 or unset = no cap
+
+opts tokens, combine freely:
+
+  parent        link the parent's pages rather than this page's own children,
+                and prefix the bar with an ⬆️ link to the parent
+  children      link the children of the first child page
+  date          sort by page date rather than by link title
+  ascending     sort A→Z, or oldest first with `date`
+  descending    sort Z→A, or newest first with `date`
+
+  e.g. opts: "descending date" + maxItems: 5 == the five most recent pages.
+  With neither ascending nor descending, Hugo's default page order is kept.
 */}}
-{{ if not .Params.ui.hide.childbar}}
-  {{$title := "this section:"}}
-  {{with .Params.ui.childbar.title}}
-    {{$title = .}}
-  {{end}}
-  {{$separator := "|"}}
-  {{with .Params.ui.childbar.separator}}
-    {{$separator = .}}
-  {{end}}
-  {{/* configure options for displaying the childbar */}}
-  {{$opts := .Params.ui.childbar.opts}}
-  {{$sortAscending := false}}
-  {{$sortDescending := false}}
-  {{$useParent := false}}
-  {{$useChildren := false}}
-  {{with $opts}}
-    {{$sortAscending = strings.Contains $opts "ascending"}}
-    {{$sortDescending = strings.Contains $opts "descending"}}
-    {{$useParent = strings.Contains $opts "parent"}}
-    {{$useChildren = strings.Contains $opts "children"}}
-  {{end}}
-  {{/* apply the options for displaying the childbar */}}
-  {{$sep := printf "<span class=\"divider\">%s</span>" $separator|safeHTML}}
-  {{/* use sibling pages */}}
-  {{$childbarPages := .Pages}}
-  {{- if $useParent}}{{$childbarPages = .Parent.Pages}}{{end -}}
-  {{- if $useChildren}}{{$childbarPages = (index .Pages 0)}}{{end -}}
 
-  {{- if (and $childbarPages $sortAscending)}}{{$childbarPages = $childbarPages.ByLinkTitle }}{{end -}}
-  {{- if (and $childbarPages $sortDescending)}}{{$childbarPages = $childbarPages.ByLinkTitle.Reverse }}{{end -}}
+{{/* ---- config: defaults <- site <- page ------------------------------------ */}}
+{{- $cfg := dict "title" "this section:" "separator" "|" "opts" "" "maxItems" 0 -}}
+{{- with site.Params.ui.childbar }}{{ $cfg = merge $cfg . }}{{ end -}}
+{{- with .Params.ui }}{{ with .childbar }}{{ $cfg = merge $cfg . }}{{ end }}{{ end -}}
 
-  {{if gt ($childbarPages | len) 0}}
-    <div class="childbar-horizontal">
-      <small><em>{{$title}}</em></small>
-      {{- if $useParent -}}
-        {{$sep}} <strong><a href="{{ .Parent.RelPermalink }}">⬆️</a></strong>
-      {{- end -}}
-      {{ range  $childbarPages}}
-        {{if .LinkTitle}}
-          {{$sep}} <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
-        {{end}}
-      {{end}}
-      {{$sep}}
-    </div>
-  {{end}}
-{{end}}
+{{/* `hide` is resolved with isset, NOT with `with`: `with` treats false as empty,
+     so a page setting childbar:false against a site default of true would be
+     silently dropped — which is the whole point of a page-level override. */}}
+{{- $hide := false -}}
+{{- with site.Params.ui.hide }}{{ if isset . "childbar" }}{{ $hide = .childbar }}{{ end }}{{ end -}}
+{{- with .Params.ui }}{{ with .hide }}{{ if isset . "childbar" }}{{ $hide = .childbar }}{{ end }}{{ end }}{{ end -}}
+
+{{/* ---- opts ---------------------------------------------------------------- */}}
+{{- $opts := $cfg.opts | default "" -}}
+{{- $sortAscending  := strings.Contains $opts "ascending" -}}
+{{- $sortDescending := strings.Contains $opts "descending" -}}
+{{- $sortByDate     := strings.Contains $opts "date" -}}
+{{- $useParent      := strings.Contains $opts "parent" -}}
+{{- $useChildren    := strings.Contains $opts "children" -}}
+
+{{/* ---- which pages --------------------------------------------------------- */}}
+{{- $childbarPages := .Pages -}}
+{{- if $useParent }}{{ $childbarPages = .Parent.Pages }}{{ end -}}
+{{- if $useChildren }}{{ $childbarPages = (index .Pages 0) }}{{ end -}}
+
+{{- with $childbarPages -}}
+  {{- $sorted := . -}}
+  {{- if $sortByDate -}}
+    {{- if $sortAscending }}{{ $sorted = $sorted.ByDate }}{{ end -}}
+    {{- if $sortDescending }}{{ $sorted = $sorted.ByDate.Reverse }}{{ end -}}
+  {{- else -}}
+    {{- if $sortAscending }}{{ $sorted = $sorted.ByLinkTitle }}{{ end -}}
+    {{- if $sortDescending }}{{ $sorted = $sorted.ByLinkTitle.Reverse }}{{ end -}}
+  {{- end -}}
+  {{/* cap AFTER sorting, so maxItems takes the top N of the requested order */}}
+  {{- $maxItems := $cfg.maxItems | default 0 | int -}}
+  {{- if and (gt $maxItems 0) (gt (len $sorted) $maxItems) -}}
+    {{- $sorted = first $maxItems $sorted -}}
+  {{- end -}}
+  {{- $childbarPages = $sorted -}}
+{{- end -}}
+
+{{/* ---- render -------------------------------------------------------------- */}}
+{{- $show := and (not $hide) (gt (len $childbarPages) 0) -}}
+{{- $sep := printf "<span class=\"divider\">%s</span>" ($cfg.separator | default "|") | safeHTML -}}
+{{/* whitespace around {{ $sep }} is load bearing — it is the gap either side of
+     each divider, so do not trim the newline that precedes these lines */}}
+<div class="childbar-horizontal{{ if $show }} pi-show{{ end }}">
+  <small><em>{{ $cfg.title }}</em></small>
+  {{- if $useParent }}
+  {{ $sep }} <strong><a href="{{ .Parent.RelPermalink }}">⬆️</a></strong>
+  {{- end }}
+  {{- range $childbarPages }}
+    {{- if .LinkTitle }}
+  {{ $sep }} <strong><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></strong>
+    {{- end }}
+  {{- end }}
+  {{ $sep }}
+</div>

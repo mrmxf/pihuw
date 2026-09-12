@@ -280,6 +280,31 @@ th {
 /*                         (_____|                                                                                   */
 /* ≡≡≡  5. Navigation  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
 
+/* ── Skip link ────────────────────────────────────────────────────────────────────────────────────── */
+/* Off-screen until focused, then pinned top-left above the navbar. NOT display:none                   */
+/* or visibility:hidden — either would take it out of the tab order and defeat the point.              */
+.pi-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10001;           /* the navbar is 10000 */
+  padding: 0.6em 1em;
+  background: var(--pi-bg);
+  color: var(--pi-body);
+  border: 2px solid var(--hi1);
+  border-radius: 0 0 0.4em 0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.pi-skip:focus {
+  left: 0;
+}
+
+/* The skip target. Focusing a <main tabindex="-1"> moves the reading cursor there,             */
+/* but browsers would otherwise draw a focus ring around the whole column.                      */
+main:focus { outline: none; }
+
 .pi-nav {
   color: var(--hi1);
   background-color: var(--pi-bg);
@@ -411,6 +436,29 @@ main div.page-title {
   border: solid 1px var(--hi2);
   align-items: center;
   padding: .2em;
+}
+
+/* tmpl/page-title emits a <p>, not an <h1>, so a page with a cover band does not
+   end up with two <h1>s. Restore only what the <p> loses — picnic's h1 font-size
+   and the theme's h1 colour. Deliberately NOT set here: font-weight, so a site
+   restyling its headings still reaches this; and margin/padding, because picnic
+   sizes flex children through `.flex > *` and overriding those wraps the date
+   onto its own line. */
+/* Measured against the <h1> this replaces, not guessed: that h1 computes to
+   font-size 32px, line-height 51.2px (it INHERITS 1.6 — picnic's own
+   `line-height:1` on h1 never wins the cascade), padding 19.2px top and bottom,
+   margin 0. Reproduced here with the two logical properties, so the box keeps
+   exactly the height it had.
+
+   Deliberately not set: font-weight, so a site restyling its headings still
+   reaches this. Deliberately BLOCK-only: picnic sizes flex children through
+   `.flex > *`, and an inline margin or a padding shorthand wraps the date onto
+   its own line. */
+.page-title .pi-page-title {
+  font-size: 2em;
+  color: var(--hi1);
+  margin-block: 0;
+  padding-block-start: .6em;
 }
 
 /* ≈≈≈≈  6. 2 Blocks ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ */
@@ -561,10 +609,18 @@ sidebar {
   height: 100%;
 }
 
+/* The wrapper is always emitted by tmpl/childbar-horizontal.html, hidden. The
+   template adds .pi-show to reveal it, so visibility is one class toggle rather
+   than the presence or absence of markup. */
 .childbar-horizontal {
+  display: none;
   padding: 0.3em 1em;
   text-align: center;
   width: 100%;
+}
+
+.childbar-horizontal.pi-show {
+  display: block;
 }
 
 .childbar-horizontal .divider {

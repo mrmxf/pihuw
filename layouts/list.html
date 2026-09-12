@@ -1,7 +1,6 @@
 {{ define "main" }}
 {{partial "tk/dbg-template" .}}
 {{partial "tmpl/page-title.html" .}}
-{{partial "tmpl/childbar-horizontal.html" .}}
+{{/* childbar is rendered once by baseof, after </header> — full width */}}
 {{ .Content }}
-{{partial "tmpl/childbar-horizontal.html" .}}
 {{ end }}

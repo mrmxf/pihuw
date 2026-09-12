@@ -1,8 +1,11 @@
 {{partial "tk/dbg-template" .}}
 {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
 {{ $dateHuman := .Date | time.Format "2006-01-02" }}
+{{/* A <p>, not an <h1>. A page whose content opens with a cover band already has
+     an <h1> in that band, and two <h1>s with the same text make the heading tree
+     unusable for screen-reader navigation. .pi-page-title keeps the h1 look. */}}
 <div class="flex two grow page-title">
-  <h1 class="three-fourth">{{ .Title }}</h1>
+  <p class="three-fourth pi-page-title">{{ .Title }}</p>
   <div class="fourth">
     <small>
       <p>

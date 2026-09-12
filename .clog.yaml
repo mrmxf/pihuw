@@ -31,7 +31,6 @@ snippets:
   #       - MAKE dev  - forces development
   # clog bc-prod-logic-xx returns    "dev|prod"+"(reasonString)"
   bc-releases-yaml: yq -r '.clog."releases-path"' clogrc/clog.yaml
-  bc-main-repo: echo "metarex-media/www-metarex-media"
   # ---------------------------------------------------------------------------------------------------------
   watch: |
     [ ! -d content ] && ln -s documentation/content content

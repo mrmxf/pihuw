@@ -1,8 +1,8 @@
 {{ define "main" }}
 {{partial "tk/dbg-template" .}}
 {{partial "tmpl/page-title-blog.html" .}}
-{{/* childbar on any single with params.ui.childbar.opts: "parent" */}}
-{{partial "tmpl/childbar-horizontal.html" .}}
+{{/* childbar is rendered once by baseof, after </header> — full width.
+     On a post set params.ui.childbar.opts: "parent" to link sibling posts. */}}
 {{- $src := partial "tk/path-image-featured" (dict "page" .) -}}
 {{- $alt := .Params.FeaturedAlt | default "featured" -}}
 {{- if $src -}}
@@ -26,6 +26,5 @@
 </label>
 {{- end -}}
 {{partial "tool/block" (dict "page" . "html" .Content)}}
-{{partial "tmpl/childbar-horizontal.html" .}}
 {{ partial "tmpl/taxonomy-tags-logic" . }}
 {{ end }}
