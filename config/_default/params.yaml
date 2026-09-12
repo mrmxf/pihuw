@@ -4,6 +4,13 @@ privacy_policy:   /privacy
 contact:          /contact
 time_format_blog: Monday, 02 Jan 2006
 
+# --- social cards (tmpl/head-seo.html) -----------------------------------------
+# ogImage is the site-wide social card, used when a page has no `image` param.
+# Both are paths under assets/ and must be raster - the card is resized to 1200px.
+social:
+  twitter: ""            # handle without the @, for twitter:site
+ogImage: ""              # e.g. brand/social-card.png
+
 # --- libraries loaded on demand by tmpl/body-scripts.html ----------------------
 # mermaid loads ONLY on pages containing a ```mermaid fence, and follows the theme
 # toggle. Set enable: false to suppress it; version pins a different release.
@@ -130,6 +137,8 @@ ui:
     # shipped, rather than just hiding the control with CSS.
     # theme-init.js still runs, so nothing else changes.
     themeToggle: false
+    # Suppress canonical, Open Graph and Twitter card meta (tmpl/head-seo.html).
+    seo: false
   childbar:
     title:     this section   # can be overridden on a page
     separator: "|"            # any unicode character to separate the links

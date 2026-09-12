@@ -68,6 +68,32 @@ use `$img.src` — `banner`, `image`, `slideshow-static` — are untouched.
 Verified by diffing the full published file list with and without the fix: exactly the two
 originals disappear and no other file is lost.
 
+## FIXED 2026-09-12 — M-16 and M-18, adopted from chiddingfoldbonfire
+
+`tk/date-offset.html` — offset a time by `1w`/`5w-1d`/`3h5m` and format it, with an
+`ordinal` format. Taken as-is; only the bonfire-specific comments were generalised. Keep the
+w/d-via-AddDate split: `time.ParseDuration` rejects `1w` and `1d`, and AddDate stays
+calendar-correct across DST.
+
+Verified: `1w`, `5w-1d`, `3h5m`, `15m`, `minus`, every ordinal suffix including 11/12/13th
+and 21st/22nd, and a 1w offset across the UK October clock change which keeps 19:00 at 19:00.
+
+`tmpl/head-seo.html` — canonical URL, Open Graph and Twitter cards, called from
+`tmpl/head.html` just before the `hook/head-end` hook so a site can still add or override.
+New params: `social.twitter`, `ogImage`, and `ui.hide.seo` to suppress the lot.
+
+The card image comes from the page's `image` param or `ogImage`, processed to 1200px jpg, and
+uses `.Permalink` because og:image must be absolute. With no usable raster the card degrades
+to `summary` rather than emitting a broken `og:image`. An empty description omits the tag
+instead of emitting an empty one.
+
+Verified with `--baseURL https://example.com/`: canonical and og:url absolute, og:image
+1200x800 with `summary_large_image`, and only the processed card is published — the 2400px
+original stays out, which is the B-08 fix doing its job.
+
+Note the theme's own docs site sets no `baseURL`, so canonical renders as `/` there. That is
+correct for a consumer site and expected here.
+
 ## Renaming an extension point breaks consumers silently
 
 Six sites consume this theme. A renamed partial does not error in a consumer build — Hugo
@@ -119,9 +145,7 @@ and `tool/gallery` opts in. See the FIXED section above. `tk/img.html` in chiddi
 
 | # | From | Work |
 |---|---|---|
-| M-16 | `tk/date-offset.html` | Offset a time by `1w`/`5w-1d`/`3h5m` and format it, with an `ordinal` format. Fully generic; only the comments mention bonfires. |
 | M-17 | `_markup/render-image.html` | No image render hook in the theme, so a plain `![alt](img/x.jpg)` ships full size. This emits resized WebP with srcset and lazy loading. Depends on B-08. |
-| M-18 | `hook/head-end.html` | Canonical URL, Open Graph and Twitter cards — the theme emits none. Extract to `tmpl/head-seo.html`; leave the font `<link>` behind. |
 | M-19 | `hook/body-end.html` | Consent-gated analytics. The theme offers nothing, so the obvious thing is unconditional GA — a UK PECR problem. Take the mechanism, leave the banner copy. |
 
 ### Theme bugs these overrides route around
