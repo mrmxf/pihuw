@@ -13,11 +13,17 @@
   .alt     — alt text for the image (optional; defaults to basename of .asset)
   .caption — caption string (optional; defaults to falsy)
   .dbg     — accumulated debug string to prepend to this partial's log (optional)
+  .noPublish — bool (optional; default false). Skip the RelPermalink read, so the
+             resource is NOT written to the output. Reading .RelPermalink is what
+             publishes a resource, so asking about an image you only intend to
+             resize otherwise ships the full-size original as well. Set this when
+             you will process .res yourself; "src" comes back empty.
 
   DO NOT call partial "tk/dbg-template" - it prevents return from working.
 
   returns (dict
-    "src"       string   — relative permalink, always usable in src=
+    "src"       string   — relative permalink, usable in src=; EMPTY when .noPublish
+                           is set and the asset has a resource to process
     "res"       resource — Hugo resource or 0 for static fallback
     "mediaType" string   — MIME type e.g. "image/svg+xml"; may be empty for static
     "isSvg"     bool
@@ -88,7 +94,12 @@ Set DBG to templates.Current.Parent.Name to enable debug output of search steps 
     {{- if $DBG }}{{- $DBG = printf "%s\nget-asset processed (%s)" $DBG .process -}}{{- end -}}
   {{- end -}}
 
-  {{- $src = $res.RelPermalink -}}
+  {{/* Reading .RelPermalink is what WRITES the resource, so a caller that only
+       wants to process .res can suppress it and avoid publishing the original.
+       .Width/.Height below read metadata only and never publish. */}}
+  {{- if not .noPublish -}}
+    {{- $src = $res.RelPermalink -}}
+  {{- end -}}
   {{- if or $isRaster $isGif -}}
     {{- $w = $res.Width -}}
     {{- $h = $res.Height -}}

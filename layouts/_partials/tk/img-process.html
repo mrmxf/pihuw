@@ -9,7 +9,9 @@
   .processing — string or slice of strings applied to .res in sequence (optional)
 
   For SVG and static images, processing is skipped; alt/caption are still updated.
-  Returns 0 (falsy) if .img is missing or has no .src.
+  Returns 0 (falsy) if .img is missing, or has neither .res nor .src. It is
+  deliberately NOT gated on .src: a dict from get-asset with .noPublish set has an
+  empty src and a perfectly processable .res.
 
   DO NOT call partial "tk/dbg-template" - it prevents return from working.
 
@@ -24,7 +26,7 @@
 */ -}}
 {{- $ret     := 0 -}}
 {{- $img     := .img -}}
-{{- if and $img $img.src -}}
+{{- if and $img (or $img.res $img.src) -}}
   {{- $alt     := .alt     | default $img.alt -}}
   {{- $caption := .caption | default "" -}}
   {{- $procs   := slice -}}

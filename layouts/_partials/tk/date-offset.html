@@ -1,0 +1,78 @@
+{{- /*
+  tk/date-offset
+  Offset a time by a w/d/h/m string and format the result.
+
+  .base   — time.Time (required) — the time to offset from
+  .dir    — string (optional; "plus" default | "minus") — applies to the whole offset
+  .offset — string (optional) — "1w" · "5w-1d" · "3h5m" · "15m". Empty means no offset.
+  .format — string (optional; default "Monday 02 January 2006") — a Go layout, or the
+            keyword "ordinal" for "Saturday 7<sup>th</sup> November 2026". "ordinal"
+            emits markup, so the caller must pipe it through safeHTML.
+
+  returns (string — the formatted, offset time)
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+
+  ── Two constraints that shaped this file ──────────────────────────────────────
+
+  1. WHY THE w/d AND h/m SPLIT — do not "simplify" this away.
+     Go's time.ParseDuration accepts only h/m/s. It rejects "1w" and "1d"
+     outright, so weeks and days cannot go through a duration at all. They also
+     belong in AddDate rather than Add, because AddDate stays calendar-correct
+     across a DST boundary — a date a week after a clock change is a live
+     concern, not a theoretical one.
+
+  2. WHY THERE IS EXACTLY ONE `return`, AT THE END.
+     Hugo rewrites only the FIRST return it finds in a partial. A second one is
+     then resolved as an ordinary function and the build dies with
+     "wrong number of args for return: want 0 got 1". Branches must therefore
+     assign to a variable and fall through to the single return below.
+*/ -}}
+
+{{- $base   := .base -}}
+{{- $dir    := .dir    | default "plus" -}}
+{{- $offset := .offset | default "" -}}
+{{- $format := .format | default "Monday 02 January 2006" -}}
+
+{{- $sign := cond (eq $dir "minus") -1 1 -}}
+
+{{- $days := 0 -}}
+{{- $mins := 0 -}}
+
+{{- /* Each match is [whole, sign, number, unit] — so "5w-1d" yields two terms. */ -}}
+{{- range findRESubmatch `([+-]?)([0-9]+)([wdhm])` $offset -}}
+  {{- $n := mul (int (index . 2)) (cond (eq (index . 1) "-") -1 1) -}}
+  {{- $u := index . 3 -}}
+  {{- if     eq $u "w" -}}{{- $days = add $days (mul $n 7)   -}}
+  {{- else if eq $u "d" -}}{{- $days = add $days $n          -}}
+  {{- else if eq $u "h" -}}{{- $mins = add $mins (mul $n 60) -}}
+  {{- else if eq $u "m" -}}{{- $mins = add $mins $n          -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $t := $base -}}
+{{- $d := mul $days $sign -}}
+{{- $m := mul $mins $sign -}}
+{{- if ne $d 0 -}}{{- $t = $t.AddDate 0 0 $d -}}{{- end -}}
+{{- if ne $m 0 -}}{{- $t = $t.Add (time.Duration "minute" $m) -}}{{- end -}}
+
+{{- $out := "" -}}
+
+{{- if eq $format "ordinal" -}}
+  {{- /* "Saturday 7<sup>th</sup> November 2026". Caller must pipe through safeHTML. */ -}}
+  {{- $day := int ($t.Format "2") -}}
+  {{- $suf := "th" -}}
+  {{- $mod100 := mod $day 100 -}}
+  {{- if not (and (ge $mod100 11) (le $mod100 13)) -}}
+    {{- $mod10 := mod $day 10 -}}
+    {{- if     eq $mod10 1 -}}{{- $suf = "st" -}}
+    {{- else if eq $mod10 2 -}}{{- $suf = "nd" -}}
+    {{- else if eq $mod10 3 -}}{{- $suf = "rd" -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $out = printf "%s %d<sup>%s</sup> %s" ($t.Format "Monday") $day $suf ($t.Format "January 2006") -}}
+{{- else -}}
+  {{- $out = $t.Format $format -}}
+{{- end -}}
+
+{{- return $out -}}

@@ -34,8 +34,9 @@ rather than calling `.Resources.Get`, `.Process`, or `.Fit` directly.
 
 | Partial | Returns | Purpose |
 |---|---|---|
-| `get-asset.html` | `$img` dict | Resolves a path to a normalised `$img` dict (page resource / assets/ / static/) — gold standard |
+| `get-asset.html` | `$img` dict | Resolves a path to a normalised `$img` dict (page resource / assets/ / static/) — gold standard. Pass `noPublish` when you will process `res` yourself, so the original is not published |
 | `img-process.html` | `$img` dict | Applies a Hugo process string or slice of strings to a resource; returns updated `$img` |
+| `date-offset.html` | string | Offsets a time by a `w`/`d`/`h`/`m` string and formats it; `ordinal` format gives `7<sup>th</sup>` |
 | `get-width-height.html` | `dict "w" int "h" int` | Parses a Hugo process string to extract target dimensions |
 | `resource-image-featured.html` | `$img` dict or `0` | Resolves the featured image for a page using `get-asset` and `img-process` |
 | `path-image-featured.html` | string | Returns the RelPermalink of the first resource matching `FeaturedGlob` |

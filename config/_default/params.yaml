@@ -4,9 +4,30 @@ privacy_policy:   /privacy
 contact:          /contact
 time_format_blog: Monday, 02 Jan 2006
 
-# --- libraries loaded in partial scripts.html -----------------------------------
+# --- social cards (tmpl/head-seo.html) -----------------------------------------
+# ogImage is the site-wide social card, used when a page has no `image` param.
+# Both are paths under assets/ and must be raster - the card is resized to 1200px.
+# Handles for tool/item-socials and twitter:site. Value without the @; a value
+# starting with http is used verbatim, for anything the URL patterns get wrong.
+social:
+  twitter: ""            # also used for twitter:site in the social card
+  facebook: ""
+  instagram: ""
+  linkedin: ""
+  youtube: ""
+  mastodon: ""
+  bluesky: ""
+  tiktok: ""
+  github: ""
+  email: ""
+ogImage: ""              # e.g. brand/social-card.png
+
+# --- libraries loaded on demand by tmpl/body-scripts.html ----------------------
+# mermaid loads ONLY on pages containing a ```mermaid fence, and follows the theme
+# toggle. Set enable: false to suppress it; version pins a different release.
 mermaid:
   enable: true
+  version: 11.6.0
 markmap:
   enable: false
 katex:
@@ -127,6 +148,8 @@ ui:
     # shipped, rather than just hiding the control with CSS.
     # theme-init.js still runs, so nothing else changes.
     themeToggle: false
+    # Suppress canonical, Open Graph and Twitter card meta (tmpl/head-seo.html).
+    seo: false
   childbar:
     title:     "this section:"  # can be overridden on a page
     separator: "|"            # any unicode character to separate the links
