@@ -1,6 +1,7 @@
 # claude-plan-clog-pages.md — retire the legacy build, adopt clog BC
 
-Detail for [CLAUDE.md](CLAUDE.md). Status: **plan only, nothing implemented.**
+Detail for [CLAUDE.md](CLAUDE.md). Status: **sections A and B implemented 2026-09-21.** Remaining: C (cloudflare), the
+end-to-end rehearsal, and clog's `go.sum` (see Blocked, below).
 Rewritten 2026-09-21 against clog v0.11.14. Replaces the earlier "port the snippet" plan,
 which was wrong: it assumed the `bc-*` shell era was current. It is not.
 
@@ -134,6 +135,54 @@ Target branch: see open question 1. clog has no `dev` branch.
 - Rehearse the Pages deploy on a scratch fork. It force-pushes an orphan branch.
 - Confirm the old `gh-static.yml` is gone before the first run, or both will race the
   `gh-pages` branch.
+
+## What is done
+
+clog, on a new `dev` branch off `main` (commit `07f8251`):
+
+- `bc-deploy-ghpages`, `bc-metadata`, `install.wrangler` in `embedfilesystem/konfig.yaml`
+- `.github/workflows/deploy-ghpages.yaml`, mirroring `deploy-s3.yaml`
+- `bc-hugo` no longer requires a `content/` directory — it asks `hugo list all` instead,
+  so a mount-only repo builds. This is what finally kills the symlink.
+
+pihuw:
+
+- `.clog.yaml` rewritten, 155 lines -> 92, legacy deleted. `clog Check build` and
+  `clog Check tools` both pass.
+- `gh-static.yml` deleted, replaced by `build-deploy.yaml` calling clog's two workflows.
+- `CLAUDE.md` rules updated (it forbade `clog build`/`clog deploy`; it no longer does).
+
+Closes `C-13`, `C-14`, `C-15` and `B-05` by deletion — every one was in the removed snippets.
+
+## Blocked
+
+**clog does not build from source.** `go build` fails on both `main` and `dev`:
+
+```
+slogger/nats-handler.go:13:2: missing go.sum entry for module providing
+package github.com/nats-io/nats.go
+```
+
+Pre-existing, not caused by this work. Until it is fixed, the new embedded workers cannot
+be compiled into a `clog` binary, so `clog Build` on this repo still resolves the OLD
+`bc-hugo` and does not know `bc-metadata` at all. `go get github.com/mrmxf/clog/slogger`
+would fix it, but that rewrites `go.mod`/`go.sum` and is the maintainer's call.
+
+What this means: everything above is committed and correct, and nothing can be rehearsed
+end to end until clog compiles.
+
+## Tested so far
+
+- `bc-metadata` run in a scratch git repo with tags: correct version, production tag, mode,
+  commit, branch and both output files. A bug was found and fixed here — the repo field
+  came out as `acme/widget.git`, because POSIX sed has no non-greedy quantifier, so the
+  `.git` suffix has to be stripped before the owner/name match. Verified against both SSH
+  and HTTPS remotes.
+- `clog BC flow --build "X"` resolves to snippet `bc-X`, confirmed empirically.
+- `bc-hugo`'s new content test: `hugo list all` returns 52 rows in this repo with no
+  `content/` directory present.
+- `clog Check build` / `clog Check tools` pass against the rewritten `.clog.yaml`.
+- Not tested: `bc-deploy-ghpages`. It force-pushes an orphan branch; rehearse on a fork.
 
 ## Open questions
 

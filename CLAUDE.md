@@ -3,13 +3,15 @@
 Hugo theme on PicnicCSS, consumed as a Hugo module by six sites. Small footprint, no
 CDNs, Hugo built-ins only — it targets Raspberry Pi and ESP32 hosting.
 
-`clog watch` serves locally, `clog github-page` publishes the docs.
-There is no `clog build`/`clog deploy` here — consumer sites define those, the theme does not.
+`clog watch` serves locally. `clog Build` makes `kodata/`, `clog Deploy` publishes it to
+GitHub Pages. Both are thin: the logic is clog's generic `bc-*` workers, and `.clog.yaml`
+holds only this repo's settings. Version and prod mode come from git tags via `clog BC`,
+never from `releases.yaml`.
 Verify any change with `hugo --quiet`: it must exit 0.
 
 `documentation/content/` is the docs site. `module.yaml`'s local-dev self-import mounts it
-as `content/`, so a bare clone builds it — no symlink needed. `clog watch` still creates one;
-never leave it behind, `clog Check build` fails on a stale link.
+as `content/`, so a bare clone builds it. There is no symlink anywhere any more — if you
+find `ln -s documentation/content content`, it is stale and it shadows the mount.
 
 ## Detail — read on demand, not every query
 
@@ -18,7 +20,7 @@ never leave it behind, `clog Check build` fails on a stale link.
 | Build, module, config | [claude-build.md](claude-build.md) |
 | Deploy, gh-pages, Actions | [claude-deploy.md](claude-deploy.md) |
 | Known issues | [claude-backlog.md](claude-backlog.md) |
-| Plan: clog build/deploy for Pages | [claude-plan-clog-pages.md](claude-plan-clog-pages.md) |
+| Build/deploy: clog BC, Pages | [claude-plan-clog-pages.md](claude-plan-clog-pages.md) |
 | Why the theme is shaped this way | [claude-human-narrative.md](claude-human-narrative.md) |
 | Human-facing docs | [README.md](README.md) |
 
@@ -36,7 +38,7 @@ layouts/_partials/
   tk/                  toolkit — value-returning, asset resolution, debug
   tmpl/                layout blocks — head, nav, footer, pagination
   tool/                components, one per {{< hw t="..." >}}; each has X-help.html
-.clog.yaml             watch, github-page, checks
+.clog.yaml             watch, build, deploy, checks — repo specifics only
 ```
 
 Catalogues are deliberately absent. `ls layouts/_partials/tool/` is current; a table is not.

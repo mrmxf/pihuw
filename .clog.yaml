@@ -5,13 +5,28 @@
 #  |  _/ | | | __ | | || |  \ \/\/ /
 #  |_|   |_| |_||_|  \_,_|   \_/\_/
 # =============================================================================
+# pihuw build control.
+#
+# Everything generic lives in clog (embedded konfig.yaml + callable workflows).
+# This file holds ONLY what is specific to this repo. If something here would be
+# true of any hugo site, it belongs in clog, not here.
+#
+# Version and production mode come from GIT TAGS, via `clog BC`. releases.yaml is
+# changelog history only - BC never decides from it. There is deliberately no
+# bc-prod-logic-*, no bc-releases-yaml and no git tag override: those were the old
+# shell era and clog does all of it now.
+#
+#   clog Build     -> BC flow: metadata + hugo  -> kodata/
+#   clog Deploy    -> BC flow: deploy-ghpages   -> gh-pages branch
+#   clog watch     -> local hugo server
 # -----------------------------------------------------------------------------
 kfg:
-  # path to the yaml file defining release history - see semver package
+  # release history for humans and the changelog. NOT used to pick dev/prod.
   releases-path: "data/releases.yaml"
 clog:
-  # legacy - can be deleted
   releases-path: "data/releases.yaml"
+  stash-path: tmp/BcStash.yaml
+
 #               _                       _
 #   ||_  _ _   (_)  _ __   _ __   ___  | |_   ___
 #  (_-< | ' \  | | | '_ \ | '_ \ / -_) |  _| (_-<
@@ -19,120 +34,40 @@ clog:
 #   ||             |_|    |_|
 # -----------------------------------------------------------------------------
 snippets:
-  # build control logic for this repo - all commands start with bc
-  # dev or prod rules:
-  #     default - always dev unless build: prod in bc-releases-yaml
-  #     rules
-  #       - build+deploy- if github_event=="create" then checkout to main
-  #       - prod deploy - main branch or empty(default) branch only
-  #       - prod deploy - main repo (not fork) only
-  #     override
-  #       - MAKE prod - forces production (and overrides MAKE dev)
-  #       - MAKE dev  - forces development
-  # clog bc-prod-logic-xx returns    "dev|prod"+"(reasonString)"
-  bc-releases-yaml: yq -r '.clog."releases-path"' clogrc/clog.yaml
-  # ---------------------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # No content symlink. config/_default/module.yaml mounts documentation/content
+  # as content/, so a bare clone builds the whole docs site. Do not reintroduce
+  # `ln -s documentation/content content` - it shadows the mount and every doc
+  # that described it as required was wrong.
   watch: |
-    [ ! -d content ] && ln -s documentation/content content
     hugo server --port=1313 --logLevel debug --buildDrafts --buildFuture --buildExpired --cleanDestinationDir
-    rm content
-  github-page: |
-    # Publish the pihuw documentation site to GitHub Pages.
-    # Works locally (requires gh CLI) or as a GitHub Actions workflow step.
-    # Safe to run repeatedly — creates the gh-pages branch if absent.
 
-    set -euo pipefail
-    REPO="mrmxf/pihuw"
-    BRANCH="gh-pages"
-    BUILD_DIR="public"
-
-    # --- always run from the repo root ---------------------------------------
-    ROOT="$(git rev-parse --show-toplevel)"
-    cd "$ROOT"
-
-    # --- install gh CLI if missing -------------------------------------------
-    if ! command -v gh &>/dev/null; then
-      echo "gh not found — running clog Install gh"
-      clog Install gh
-    fi
-
-    # --- pass token to gh automatically (gh reads GH_TOKEN, no login needed) -
-    export GH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
-
-    # --- ensure gh-pages branch exists on remote (first-time setup) ----------
-    CURRENT_BRANCH="$(git branch --show-current)"
-    if ! git ls-remote --exit-code --heads origin "$BRANCH" &>/dev/null; then
-      echo "Creating orphan branch $BRANCH on remote"
-      git fetch origin || true
-      git checkout --orphan "$BRANCH"
-      git reset --hard
-      git commit --allow-empty -m "chore: initialise GitHub Pages branch"
-      git push origin "$BRANCH"
-      git checkout "$CURRENT_BRANCH"
-      gh api repos/"$REPO"/pages \
-        --method POST \
-        --field source[branch]="$BRANCH" \
-        --field source[path]="/" \
-        --silent || echo "Pages source already configured"
-    fi
-
-    # --- build the site ------------------------------------------------------
-    # trap ensures the content symlink is removed even if hugo fails
-    cleanup() { [ -L content ] && rm content; }
-    trap cleanup EXIT
-
-    echo "Building Hugo site"
-    [ ! -L content ] && ln -s documentation/content content
-    hugo --minify --cleanDestinationDir
-
-    # --- deploy to gh-pages --------------------------------------------------
-    echo "Deploying to $BRANCH"
-    cd "$BUILD_DIR"
-    git init -b "$BRANCH"
-    git remote add origin "$(git -C .. remote get-url origin)"
-    git add -A
-    git commit -m "chore: deploy documentation $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-    git push --force origin "$BRANCH"
-    cd ..
-    rm -rf "$BUILD_DIR"
-
-    # --- print the Pages URL -------------------------------------------------
-    URL=$(gh api repos/"$REPO"/pages --jq '.html_url' 2>/dev/null || echo "https://mrmxf.github.io/pihuw")
-    echo "Published → $URL"
-
-  git:
-    tag:
-      # pihuw, like Hugo & golang requires a "v"
-      ref: echo "v$(yq -r '.[0].version'  "$(clog bc-releases-yaml)")"
-      # a go package needs a preceding "v"
-      refgo: echo "v$(clog git tag ref)"
-    message:
-      ref:  yq -r '.[0].note'  data/releases.yaml
-    suffix: |
-      b="$(git branch --show-current)"
-      [[ "$b" == main ]] && echo "" || echo "$b"|tr -d '[:blank:]'"
   project:
     config: |
-      PROJECT=pihuw
-      DOCKER_NS=mrmxf
+      export PROJECT=pihuw
+      export DOCKER_NS=mrmxf
+      # consumed by clog's generic bc-deploy-ghpages worker
+      export GHP_DIR=kodata
+      export GHP_BRANCH=gh-pages
+      # consumed by clog's generic bc-metadata worker: publish build identity as
+      # hugo site data so the footer reads git, not releases.yaml
+      export BUILDINFO_JSON=data/buildinfo.json
     has:
-      fomantic: cat layouts/_partials/tmpl/head-cdn|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'|tail -1
-      hugo: hugo version|grep -oE '[0-9]\.[0-9]+\.[0-9]+'
-      git-lfs: git-lfs version|grep -oE '[0-9]\.[0-9]+\.[0-9]+'|head -1
+      hugo: hugo version|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'|head -1
     needs:
-      # grab the golang version from go.mod
-      golang: cat go.mod|grep '^go '|grep -oE '[0-9]\.[0-9]+\.[0-9]+'
-      # hunt for the hugo version
-      hugo: |
-        # grab the version from configuration
-        if [ -f hugo .yaml ];then
-          yq -r '.module.hugoVersion.min' hugo.yaml
-        elif [ -f config/_default/module.yaml ];then
-          yq -r '.hugoVersion.min' config/_default/module.yaml
-        else
-          echo "hugo config not found"
-        fi
-      git-lfs: echo "3.6.0"
+      # module.yaml stores it as v0.166.0; `hugo version` reports 0.166.0
+      hugo: yq -r '.hugoVersion.min' config/_default/module.yaml|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'
+
+  # ---------------------------------------------------------------------------
+  # MAKE/CHK overrides follow the clog convention: `clog Build MAKE "hugo ko"`
+  build: |
+    export CHK="build"
+    export MAKE="metadata hugo"; [[ "MAKE" == "$1" ]] && MAKE="$2"
+    clog BC flow
+  deploy: |
+    export CHK="tools"
+    export MAKE="deploy-ghpages"; [[ "MAKE" == "$1" ]] && MAKE="$2"
+    clog BC flow
 
 # =============================================================================
 #    ___   _                 _
@@ -145,11 +80,13 @@ check:
     blocks:
       - name: hugo version
         try: |
-          [[ "$(clog project needs hugo)" == "$(clog project has hugo)" ]]
-        ok: clog Log -I "hugo $(clog project has hugo) is up to date"
+          clog BC semver "$(clog project needs hugo)" "$(clog project has hugo)" >/dev/null 2>&1
+        ok: clog Log -I "hugo $(clog project has hugo) satisfies $(clog project needs hugo)"
         catch: |
-          clog Log -W "hugo: bad version. Need $(clog project needs hugo), got $(clog project has hugo)"
-      - name: content folder
-        try: "[ ! -d content ]"
-        ok: clog Log -I "content folder not linked"
-        catch: eval "$(clog Inc)";clog Log -E "content folder exists -$cC ln$cW -d$cF content"
+          clog Log -E "hugo: need >= $(clog project needs hugo), got $(clog project has hugo)"
+  tools:
+    blocks:
+      - name: gh cli
+        try: "gh --version >/dev/null 2>&1"
+        ok: clog Log -I "gh $(gh --version|head -1|grep -oE '[0-9]+\.[0-9]+\.[0-9]+') present"
+        catch: clog Log -W "gh not found - bc-deploy-ghpages will install it"

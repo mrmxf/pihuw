@@ -1,0 +1,44 @@
+---
+# Copyright ©2017-2026  Mr MXF   info@mrmxf.com
+# BSD-3-Clause License           https://opensource.org/license/bsd-3-clause/
+#
+#  pihuw docs site: build then deploy to GitHub Pages.
+#
+#  This file is deliberately thin. All the logic lives in clog's callable
+#  workflows and its generic bc-* workers; the repo-specific settings are in
+#  .clog.yaml (PROJECT, GHP_DIR, GHP_BRANCH, BUILDINFO_JSON).
+#
+#  Replaces gh-static.yml, which pinned its own hugo version, installed Dart
+#  Sass, and deployed with a hand-rolled 60-line snippet.
+
+name: build-deploy
+run-name: ${{ github.workflow }}(${{ github.event_name }}) 🥷${{ github.actor }}
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: mrmxf/clog/.github/workflows/build-hugo.yaml@main
+    with:
+      docker_ns: ""                 # no container image for the docs site
+      artifact-name: pihuw-site
+      make: "metadata hugo"
+      bcTitle: "pihuw docs build"
+    secrets:
+      get_clog: ${{ secrets.GET_CLOG }}
+      webhook_slack: ${{ secrets.WEBHOOK_SLACK }}
+      docker_pat: ${{ secrets.DOCKER_PAT }}
+
+  deploy:
+    needs: build
+    uses: mrmxf/clog/.github/workflows/deploy-ghpages.yaml@main
+    with:
+      artifact-name: pihuw-site
+      make: "deploy-ghpages"
+      bcTitle: "pihuw docs → GitHub Pages"
+    secrets:
+      get_clog: ${{ secrets.GET_CLOG }}
+      webhook_slack: ${{ secrets.WEBHOOK_SLACK }}
