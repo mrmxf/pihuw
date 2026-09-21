@@ -8,12 +8,12 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 
 | # | Where | Issue |
 |---|---|---|
-| B-05 | `.clog.yaml:47` | `BUILD_DIR="public"` but `hugo.yaml` sets `publishDir: kodata`. The `cd public` fails, so deploy is broken. |
+| ~~B-05~~ | `.clog.yaml` | FIXED 2026-09-21 — the whole `github-page` snippet is deleted; deploy is now clog's `bc-deploy-ghpages` against `kodata/`. |
 | ~~B-06~~ | `.github/workflows/gh-static.yml` | FIXED 2026-09-21 — `HUGO_VERSION` now 0.166.0, matching `module.yaml` min. |
 | M-15 | `tk/get-asset-help.html` | Documents `tool/thumb`, `tool/img` and `tool/srcset`. None exist. The old CLAUDE.md called `tool/thumb` a gold-standard reference. |
-| C-13 | `.clog.yaml:128` | `[ -f hugo .yaml ]` — stray space, so the test never matches. |
-| C-14 | `.clog.yaml:113` | `suffix:` snippet has an unbalanced trailing `"`. |
-| C-15 | `.clog.yaml:119` | `project has fomantic` cats `layouts/_partials/tmpl/head-cdn`, which no longer exists. The check always fails. |
+| ~~C-13~~ | `.clog.yaml` | FIXED 2026-09-21 — snippet deleted in the clog BC rewrite. |
+| ~~C-14~~ | `.clog.yaml` | FIXED 2026-09-21 — snippet deleted in the clog BC rewrite. |
+| ~~C-15~~ | `.clog.yaml` | FIXED 2026-09-21 — check deleted in the clog BC rewrite. |
 | B-10 | `_shortcodes/hw.html:46` | `count` defaults to 1 for EVERY tool, so a tool cannot tell "no count" from `count="1"`. `item-socials` has to treat 1 as no cap. |
 | C-16 | `_partials/hw.html:12,36` | The `found at` debug comment is emitted twice per call and is not guarded by `hugo.IsServer`, so it ships in production builds. |
 | C-17 | `documentation/content/kitchen_sink/gallery.md:12` | `{{ < hw t = "gallery" from = "/rc" />}}` has spaces, so it renders as literal text. The gallery example has never run. |
@@ -27,6 +27,7 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | ~~B-12~~ | `.clog.yaml:33` | MOOT 2026-09-21 — `bc-releases-yaml` is legacy. `clog BC` derives version and prod mode from git tags; nothing in the new flow calls it. The snippet gets deleted, not fixed. |
 | ~~B-13~~ | `.clog.yaml:106` + `data/releases.yaml` | MOOT 2026-09-21 — the `vv` comes from the legacy shell override. `clog BC git tag ref` returns `v0.4.9` correctly. Delete the override. |
 | C-19 | `documentation/content/kitchen_sink/graph.md:12` | The bar-chart example passes inline `x`/`y` with no `from`, and `tool/graph` reports "no data source". Pre-dates v0.4.9; the kitchen-sink graph has never rendered. |
+| B-14 | clog repo | `go build` fails on `main` and `dev`: missing go.sum entry for `github.com/nats-io/nats.go`. Pre-existing. Until fixed, clog cannot be rebuilt, so the new embedded `bc-metadata` / `bc-deploy-ghpages` workers cannot be exercised and `clog Build` here still resolves the old `bc-hugo`. |
 
 ## Documentation gaps — found 2026-09-21
 
