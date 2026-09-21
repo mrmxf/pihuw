@@ -77,11 +77,28 @@ snippets:
       # module.yaml stores it as v0.166.0; `hugo version` reports 0.166.0
       hugo: yq -r '.hugoVersion.min' config/_default/module.yaml|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'
 
+  #   clog deploy prod              force a production deploy
+  #   clog deploy prod -- --dry-run  ...and pass flags on to `clog ci deploy`
+  #
+  # The `--` is required for flags: cobra claims them for clog itself otherwise.
+  #
+  # The mode goes through `clog ci mode`, which validates it: `clog deploy prodd`
+  # fails here rather than quietly deploying a dev build to the live site. The
+  # first argument is only treated as a mode when it is not a flag.
   build: |
+    if [ -n "${1:-}" ] && [ "${1#-}" = "$1" ]; then
+      CLOG_MODE="$(clog ci mode "$1")" || exit 1
+      export CLOG_MODE; shift
+    fi
     export CHK="build"
-    export MAKE="hugo"; [[ "MAKE" == "$1" ]] && MAKE="$2"
-    clog BC flow
-  deploy: clog ci deploy
+    export MAKE="hugo"
+    clog BC flow "$@"
+  deploy: |
+    if [ -n "${1:-}" ] && [ "${1#-}" = "$1" ]; then
+      CLOG_MODE="$(clog ci mode "$1")" || exit 1
+      export CLOG_MODE; shift
+    fi
+    clog ci deploy "$@"
 
 # =============================================================================
 #    ___   _                 _
