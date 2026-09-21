@@ -20,6 +20,14 @@
 #  pihuw declares no ci.infisical block, so `clog ci run` runs without secrets
 #  (needs util ci v0.16.0).
 #
+#  clog itself is pinned in .clog-version and downloaded, checksum-verified,
+#  from the mrmxf/clog-sample release (the action default).
+#
+#  Do NOT point clog-repo at mrmxf/clog-mrmxf: that repo is private, this repo
+#  is public, and its Actions GITHUB_TOKEN cannot read it. The only way to make
+#  it work is a PAT for private source in a public repo's secrets, which is a
+#  worse problem than a broken deploy.
+#
 #  The deploy workflow is still called deploy-s3: the name is historical, it
 #  runs `clog deploy` once per ci.targets entry and the target's kind decides
 #  where it goes. pihuw's target is kind: github-pages.
