@@ -24,8 +24,8 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 
 | # | Where | Issue |
 |---|---|---|
-| B-12 | `.clog.yaml:33` | `bc-releases-yaml` reads `clogrc/clog.yaml`, which this repo does not have. It returns empty, so `clog git tag ref` yields a bare `v` and every build-control snippet that depends on it is inert. Blocks adopting the clog build pattern. |
-| B-13 | `.clog.yaml:106` + `data/releases.yaml` | `git tag ref` is `echo "v$(yq '.[0].version')"` but versions are already stored WITH the `v` (`"v0.4.9"`), so it would emit `vv0.4.9`. `refgo` adds a third. clog's own repo has the same defect. |
+| ~~B-12~~ | `.clog.yaml:33` | MOOT 2026-09-21 — `bc-releases-yaml` is legacy. `clog BC` derives version and prod mode from git tags; nothing in the new flow calls it. The snippet gets deleted, not fixed. |
+| ~~B-13~~ | `.clog.yaml:106` + `data/releases.yaml` | MOOT 2026-09-21 — the `vv` comes from the legacy shell override. `clog BC git tag ref` returns `v0.4.9` correctly. Delete the override. |
 | C-19 | `documentation/content/kitchen_sink/graph.md:12` | The bar-chart example passes inline `x`/`y` with no `from`, and `tool/graph` reports "no data source". Pre-dates v0.4.9; the kitchen-sink graph has never rendered. |
 
 ## Documentation gaps — found 2026-09-21
