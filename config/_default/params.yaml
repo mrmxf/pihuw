@@ -54,7 +54,7 @@ graph:
 # Change them to your favourite values for your website
 # environment variable HUGO_PARAM_BUILDMSG becomes site.Params.builsmsg in the footer
 
-# the releases file is in assets/data/releases.yaml
+# the releases file is in data/releases.yaml (Hugo data dir, read via site.Data)
 releaseTracking: data/releases.yaml
 
 # --- extensions -----------------------------------

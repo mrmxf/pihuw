@@ -9,7 +9,7 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | # | Where | Issue |
 |---|---|---|
 | B-05 | `.clog.yaml:47` | `BUILD_DIR="public"` but `hugo.yaml` sets `publishDir: kodata`. The `cd public` fails, so deploy is broken. |
-| B-06 | `.github/workflows/gh-static.yml` | `HUGO_VERSION: 0.159.0` is below `module.yaml` min `v0.161.0`. |
+| ~~B-06~~ | `.github/workflows/gh-static.yml` | FIXED 2026-09-21 — `HUGO_VERSION` now 0.166.0, matching `module.yaml` min. |
 | M-15 | `tk/get-asset-help.html` | Documents `tool/thumb`, `tool/img` and `tool/srcset`. None exist. The old CLAUDE.md called `tool/thumb` a gold-standard reference. |
 | C-13 | `.clog.yaml:128` | `[ -f hugo .yaml ]` — stray space, so the test never matches. |
 | C-14 | `.clog.yaml:113` | `suffix:` snippet has an unbalanced trailing `"`. |
@@ -19,6 +19,14 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | C-17 | `documentation/content/kitchen_sink/gallery.md:12` | `{{ < hw t = "gallery" from = "/rc" />}}` has spaces, so it renders as literal text. The gallery example has never run. |
 | C-18 | `tool/gallery.html` | `from` is a FRONTMATTER PARAM NAME, not a path, but `gallery.md` passes `/rc` as though it were a folder. |
 | B-11 | `page-title.html` + `tool/cover.html` | v0.4.6 made page-title a `<p>`, so only `cover` supplies an `h1`. A page with no cover has none. Decided: cover owns it. |
+
+## Found 2026-09-21
+
+| # | Where | Issue |
+|---|---|---|
+| B-12 | `.clog.yaml:33` | `bc-releases-yaml` reads `clogrc/clog.yaml`, which this repo does not have. It returns empty, so `clog git tag ref` yields a bare `v` and every build-control snippet that depends on it is inert. Blocks adopting the clog build pattern. |
+| B-13 | `.clog.yaml:106` + `data/releases.yaml` | `git tag ref` is `echo "v$(yq '.[0].version')"` but versions are already stored WITH the `v` (`"v0.4.9"`), so it would emit `vv0.4.9`. `refgo` adds a third. clog's own repo has the same defect. |
+| C-19 | `documentation/content/kitchen_sink/graph.md:12` | The bar-chart example passes inline `x`/`y` with no `from`, and `tool/graph` reports "no data source". Pre-dates v0.4.9; the kitchen-sink graph has never rendered. |
 
 ## Documentation gaps — found 2026-09-21
 
@@ -62,7 +70,7 @@ contributor wanting to develop against a local checkout, has nowhere to look.
 
 Wanted: a docs section covering both routes.
 
-- **Manually** — Hugo extended >= 0.161.0, and *why* extended (WebP encoding, not SASS:
+- **Manually** — Hugo extended >= 0.166.0, and *why* extended (WebP encoding, not SASS:
   people keep assuming SASS and relaxing the requirement). The `content/` symlink and why
   it is not committed. `hugo --quiet` must exit 0. `publishDir: kodata`, not `public`,
   and that its output is committed.

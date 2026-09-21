@@ -8,10 +8,10 @@
 # -----------------------------------------------------------------------------
 kfg:
   # path to the yaml file defining release history - see semver package
-  releases-path: "assets/data/releases.yaml"
+  releases-path: "data/releases.yaml"
 clog:
   # legacy - can be deleted
-  releases-path: "assets/data/releases.yaml"
+  releases-path: "data/releases.yaml"
 #               _                       _
 #   ||_  _ _   (_)  _ __   _ __   ___  | |_   ___
 #  (_-< | ' \  | | | '_ \ | '_ \ / -_) |  _| (_-<
@@ -107,7 +107,7 @@ snippets:
       # a go package needs a preceding "v"
       refgo: echo "v$(clog git tag ref)"
     message:
-      ref:  yq -r '.[0].note'  assets/data/releases.yaml
+      ref:  yq -r '.[0].note'  data/releases.yaml
     suffix: |
       b="$(git branch --show-current)"
       [[ "$b" == main ]] && echo "" || echo "$b"|tr -d '[:blank:]'"

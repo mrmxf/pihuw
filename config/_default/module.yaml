@@ -4,7 +4,7 @@
 # CLI upgrade to the latest theme:   hugo mod get github.com/mrmxf/pihuw@latest
 hugoVersion:
   extended: true
-  min: v0.161.0
+  min: v0.166.0
 
 # These mounts define what consumers receive when pihuw is used as a Hugo module
 # or submodule.  Deliberately omits:

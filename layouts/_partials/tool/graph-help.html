@@ -3,7 +3,7 @@ Graph partial help using modular help system */ -}}
 {{ partial "tk/help-tk.html" . }}
 
 {{- $cardData := dict
-  "title" "{{&lt; hw t=\"graph\" from=\"data/releases.yaml\" x=\"date\" y=\"version\" &gt;}}"
+  "title" "{{&lt; hw t=\"graph\" from=\"data:releases\" x=\"date\" y=\"version\" &gt;}}"
   "color" "blue"
   "Inner" ""
 -}}
@@ -12,7 +12,7 @@ Graph partial help using modular help system */ -}}
   "shortcode" "hw t=\"graph\""
   "type" "partial"
   "params" (slice
-    (dict "name" "from"        "required" true  "example" "data/releases.yaml")
+    (dict "name" "from"        "required" true  "example" "data:releases")
     (dict "name" "x"           "required" false "example" "date")
     (dict "name" "y"           "required" false "example" "version,build")
     (dict "name" "class"       "required" false "example" "line")
@@ -118,12 +118,12 @@ Graph partial help using modular help system */ -}}
   "examples" (slice
     (dict
       "description" "Minimal — file data, auto-detected fields"
-      "code" "{{&lt;hw t=\"graph\" from=\"data/releases.yaml\"&gt;}}"
+      "code" "{{&lt;hw t=\"graph\" from=\"data:releases\"&gt;}}"
       "note" "x = first field, all remaining fields become traces"
     )
     (dict
       "description" "Explicit axes and chart type"
-      "code" "{{&lt;hw t=\"graph\" from=\"data/releases.yaml\" x=\"date\" y=\"version,build\" class=\"bar\" header=\"Release History\"&gt;}}"
+      "code" "{{&lt;hw t=\"graph\" from=\"data:releases\" x=\"date\" y=\"version,build\" class=\"bar\" header=\"Release History\"&gt;}}"
       "note" "Two bar traces; header shown as chart title"
     )
     (dict

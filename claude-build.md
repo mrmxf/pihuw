@@ -19,7 +19,7 @@ build needs it.
 
 ## Facts
 
-- Requires Hugo >= 0.161.0 **extended** (`config/_default/module.yaml`). 0.166.0 is installed.
+- Requires Hugo >= 0.166.0 **extended** (`config/_default/module.yaml`). 0.166.0 is installed.
 - `extended` is needed for **WebP encoding** (`tool/cover` emits `webp q80`), NOT for SASS.
   The theme has no SASS. Do not relax the requirement on the assumption that it was.
 - **`publishDir: kodata`**, not `public`. Output is committed — it is the `ko` container payload.
@@ -55,5 +55,10 @@ that is for theme development and must be commented out before they vendor.
 
 ## Versioning
 
-`assets/data/releases.yaml` is the release history; `clog bc-releases-yaml` resolves the path.
+`data/releases.yaml` is the release history (moved out of `assets/data/` in v0.4.10, so it is
+Hugo data, read via `site.Data`, not `resources.Get`). `.clog.yaml` `releases-path` points at it.
+
+**`clog bc-releases-yaml` does not work in this repo.** The core snippet reads
+`clogrc/clog.yaml`; pihuw has no `clogrc/`, so it returns empty and `clog git tag ref`
+yields a bare `v`. See the clog build-pattern plan.
 Tags need a `v` prefix — Hugo and Go both require it (`clog git tag ref`).

@@ -18,6 +18,7 @@ never leave it behind, `clog Check build` fails on a stale link.
 | Build, module, config | [claude-build.md](claude-build.md) |
 | Deploy, gh-pages, Actions | [claude-deploy.md](claude-deploy.md) |
 | Known issues | [claude-backlog.md](claude-backlog.md) |
+| Plan: clog build/deploy for Pages | [claude-plan-clog-pages.md](claude-plan-clog-pages.md) |
 | Why the theme is shaped this way | [claude-human-narrative.md](claude-human-narrative.md) |
 | Human-facing docs | [README.md](README.md) |
 

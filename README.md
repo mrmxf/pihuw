@@ -9,7 +9,7 @@ tinygo server.
 
 ## Requirements
 
-Hugo **extended**, v0.161.0 or newer. Extended is required for WebP encoding, not for SASS.
+Hugo **extended**, v0.166.0 or newer. Extended is required for WebP encoding, not for SASS.
 
 ## Run the documentation site locally
 

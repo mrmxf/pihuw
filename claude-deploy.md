@@ -29,4 +29,4 @@ Runs the same locally and as an Actions step.
 ## Two known breaks — see [claude-backlog.md](claude-backlog.md)
 
 - The snippet assumes `BUILD_DIR="public"` but `hugo.yaml` sets `publishDir: kodata`.
-- The workflow pins `HUGO_VERSION: 0.159.0`, below the required 0.161.0.
+- ~~The workflow pins `HUGO_VERSION: 0.159.0`~~ — fixed 2026-09-21, now 0.166.0.

@@ -1,6 +1,6 @@
 {{partial "tk/dbg-template" .}}{{/*
 tool/graph — XY chart rendered via Chart.js from yaml | json | csv | front-matter data.
-Called as: {{< hw t="graph" from="data/releases.yaml" x="date" y="version" >}}
+Called as: {{< hw t="graph" from="data:releases" x="date" y="version" >}}
 
 Param mapping from the hw.html normalized dict:
   .from        → data file path (assets/-relative) OR "frontmatter:dot.path"
@@ -67,6 +67,14 @@ Param resolution order (lowest → highest):
   {{/* Form A: walk page.Params via dot-path e.g. "frontmatter:data.banana-prices" */}}
   {{- $node := .page.Params -}}
   {{- range split (strings.TrimPrefix "frontmatter:" $from) "." -}}
+    {{- $node = index $node . -}}
+  {{- end -}}
+  {{- $rows = $node -}}
+
+{{- else if hasPrefix $from "data:" -}}
+  {{/* Form B: walk site.Data via dot-path e.g. "data:releases" for data/releases.yaml */}}
+  {{- $node := site.Data -}}
+  {{- range split (strings.TrimPrefix "data:" $from) "." -}}
     {{- $node = index $node . -}}
   {{- end -}}
   {{- $rows = $node -}}
