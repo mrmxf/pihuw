@@ -1,0 +1,34 @@
+/* ≡≡≡  pihuw · 51-component-footer  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Footer — .footer, .pi-footer-*                                                                                   */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+.footer {
+  display: inline-flex;
+  flex-flow: wrap;
+  align-items: center;
+  color: var(--mrx-skin);
+  background-color: var(--mrx-green);
+  font-size: 0.7em;
+  padding: 1px;
+}
+
+.footer .left   { text-align: center; flex-grow: 1; }
+.footer .middle { text-align: center; flex-grow: 4; }
+.footer .right  { text-align: center; flex-grow: 2; }
+
+.footer .left .label,
+.footer .middle .label,
+.footer .right .label {
+  color: var(--mrx-green);
+  background-color: oklch(from var(--mrx-green) 0.7241 0.0609 h);
+  margin: 1px;
+  padding: 1px;
+  font-size: 1em;
+}
+
+.footer .label > a       { color: var(--mm-purple); opacity: 1; }
+.footer .label > a:hover { color: red; }
+
+/* oklch relative-colour tints — the theme has no SASS; lighten() is not available */
+.pi-footer-label { color: oklch(from var(--mm-purple) calc(l + 0.3423) calc(c * 0.3842) h); }
+.pi-footer-title { color: var(--mrx-skin); font-size: 1.2em; }

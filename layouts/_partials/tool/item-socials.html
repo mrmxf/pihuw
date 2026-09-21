@@ -14,7 +14,7 @@
   starting with http is used verbatim, which is the escape hatch for anything the
   built-in URL patterns get wrong — LinkedIn company pages especially.
 
-  The <style> block is emitted once per page, guarded by a Store flag.
+  Styles live in assets/css/pihuw/64-component-socials.css, in the theme bundle.
 */ -}}
 {{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}
 {{- $page := .page -}}
@@ -78,14 +78,6 @@
 {{- end -}}
 
 {{- if $links -}}
-{{- if not ($page.Store.Get "hasSocialsCSS") -}}
-{{- $page.Store.Set "hasSocialsCSS" true -}}
-<style>
-  .pi-socials { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
-  .pi-socials a { font-size: 1.4em; line-height: 1; color: inherit; text-decoration: none; }
-  .pi-socials a:hover, .pi-socials a:focus-visible { opacity: 0.7; }
-</style>
-{{- end -}}
 <div class="pi-socials">
 {{- range $links }}
   {{- $href := cond (hasPrefix .handle "http") .handle (printf .url .handle) }}

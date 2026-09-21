@@ -1,0 +1,67 @@
+/* ≡≡≡  pihuw · 70-taxonomy  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Taxonomies — .pi-tax-*, .pi-flex-*, .label-blog, .meta                                                           */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* Taxonomy colour classes — assigned by tmpl/taxonomy-display-class.html (ordinal position).                       */
+/* Selectors no longer require .ui. prefix — tool/label.html emits <span class="label label-X">.                    */
+
+.pi-tax-1.label {
+  background: oklch(from var(--hi3) 0.9678 calc(c * 0.119) h);
+  border-color: var(--hi3);
+  color: var(--hi3);
+}
+
+.pi-tax-2.label {
+  background: oklch(from var(--hi2) 0.9562 calc(c * 0.1038) h);
+  border-color: var(--hi2);
+  color: var(--hi2);
+}
+
+.pi-tax-3.label {
+  background: oklch(from var(--hi1) 0.9727 calc(c * 0.1158) h);
+  border-color: var(--hi1);
+  color: var(--hi1);
+}
+
+.pi-tax-4.label {
+  background: oklch(from var(--hi4) 0.9522 calc(c * 0.1012) h);
+  border-color: var(--hi4);
+  color: var(--hi4);
+}
+
+/* Flex layouts for taxonomy tag rows */
+.pi-flex-with-tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.pi-flex-title-tags {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Blog label pill */
+.label-blog {
+  background-color: var(--mm-green);
+  color: #F2F2F2;
+  font-weight: bold;
+  padding: 0.2em 1em;
+  border-radius: 0.2em;
+}
+
+/* Meta line — reading time, date, category */
+.meta {
+  font-size: 80%;
+  font-weight: lighter;
+  font-style: italic;
+  color: var(--pi-meta);
+  display: inline;
+}
+
+.meta .date     { color: var(--hi1); }
+.meta .category { color: var(--hi2); }

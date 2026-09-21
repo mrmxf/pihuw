@@ -1,0 +1,88 @@
+/* ≡≡≡  pihuw · 00-tokens  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Colours & fonts — raw palette, derived hi/bg tokens, component tokens, typography, breakpoints                   */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+:root {
+
+  /* ── 1a  User palette ─────────────────────────────────────────────────────────────────────────────────────────── */
+  /* Edit these HSL values to customise the site. Everything else is derived.                                        */
+  --mm-yellow: #C2A649;
+  --mm-green:  #77B66B;
+  --mm-purple: #9A3A72;
+  --mm-blue:   #433F87;
+  --pi-dark:   #333333;
+  --pi-light:  #EDEDED;
+
+  /* metarex.media project palette (second named palette — do not rename) */
+  --mrx-amber:     #C2A649;
+  --mrx-purple:    #9A3A72;
+  --mrx-green:     #4F702A;
+  --mrx-grey:      #333333;
+  --mrx-skin:      oklch(from var(--mrx-green) calc(l + 0.3342) calc(c * 0.9586) h);  /* -> #B3D892 */
+  --mrx-eye:       #9a3a42;
+
+  /* oklch relative-colour tints — the theme has no SASS; lighten() is not available */
+  --mrx-trainFill: oklch(from var(--mrx-grey)   calc(l + 0.2344) 0 h);
+  --mrx-sky:       oklch(from var(--mrx-amber)  calc(l + 0.2251) calc(c * 0.1698) h);
+  --mrx-ground:    oklch(from var(--mrx-purple) calc(l + 0.2099) calc(c * 0.7494) h);
+
+  /* ── 1b  Derived tokens ───────────────────────────────────────────────────────────────────────────────────────── */
+  /* Computed from the mm palette above. Follow this pattern in your site.css Do not hardcode hex/oklch values.      */
+  --pi-body:    var(--pi-dark);
+  --pi-body-bg: #F5F3F0;   /* wheat-white page background */
+  --pi-bg:      #FFFFFF;   /* component surface (white) */
+
+  --hi1: var(--mm-yellow);
+  --hi2: var(--mm-purple);
+  --hi3: var(--mm-green);
+  --hi4: var(--mm-blue);
+
+  --bg1: oklch(from var(--hi1) 0.9727 calc(c * 0.1158) h);
+  --bg2: oklch(from var(--hi2) 0.9562 calc(c * 0.1038) h);
+  --bg3: oklch(from var(--hi3) 0.9678 calc(c * 0.119) h);
+  --bg4: oklch(from var(--hi4) 0.9522 calc(c * 0.1012) h);
+
+  --pi-meta:       oklch(from var(--pi-dark) 0.683 0 h);
+  --pi-code:       var(--mm-blue);
+  --pi-link:       oklch(from var(--hi4) calc(l - 0.151) calc(c * 0.5361) h);  /* hi4 dimmed for light bg */
+
+  --pi-teal:          #35BDB2;   /* teal brand colour for logo — use --hi* for theme colours */
+  --hugo-theme-color: #FF4088;
+
+  /* graph palette — referenced by Chart.js via JS getComputedStyle */
+  --graph-c1: var(--hi1);
+  --graph-c2: var(--hi2);
+  --graph-c3: var(--hi3);
+  --graph-c4: var(--hi4);
+
+  /* ── 1c  Component tokens ─────────────────────────────────────────────────────────────────────────────────────── */
+  /* Compositing surfaces for tool/ components. Each follows the theme by default; override a single                 */
+  /* var in your site.css to restyle that component across every page.                                               */
+  /* Scrims and on-scrim colours deliberately do NOT invert — they sit over photographs, where the                   */
+  /* text contrast floor has to hold in both themes.                                                                 */
+  --pi-scrim:        oklch(0 0 0 / 0.75);   /* full-screen modal / lightbox backdrop    */
+  --pi-scrim-media:  oklch(0 0 0 / 0.45);   /* softer scrim over a cover photograph     */
+  --pi-on-scrim:     oklch(1 0 0);          /* text and controls sitting on a scrim     */
+  --pi-on-scrim-dim: oklch(1 0 0 / 0.3);    /* muted control on a scrim (spinner track) */
+
+  --pi-shadow:       oklch(0 0 0 / 0.10);   /* resting elevation  — gallery tile        */
+  --pi-shadow-hover: oklch(0 0 0 / 0.20);   /* raised elevation   — hover, dropdown     */
+  --pi-shadow-float: oklch(0 0 0 / 0.30);   /* floating elevation — phone mock          */
+
+  --pi-tooltip-bg:   oklch(from var(--pi-dark) 0.25 c h);   /* -> #222222 */
+  --pi-tooltip-fg:   var(--hi1);
+
+  /* ── 1d  Typography ───────────────────────────────────────────────────────────────────────────────────────────── */
+  /* Google Fonts: uncomment the @import at the top of site.css and replace these values.                            */
+  --font-body:        'Arial', sans-serif;
+  --font-mono:        'Courier New', monospace;
+  --font-narrow:      'Arial Narrow', Arial, sans-serif;
+  --font-size-base:   16px;
+  --line-height-base: 1.25;
+
+  /* ── 1e  Breakpoints ──────────────────────────────────────────────────────────────────────────────────────────── */
+  /* NOTE: CSS variables cannot be used inside @media queries — keep px values in sync with these.                   */
+  --break-s: 500px;    /* -s  small:  mobile & portrait phones — hamburger menu, no gutters                          */
+  --break-m: 800px;    /* -m  medium: tablets & low-res screens — normal menu, no sidebars                           */
+  --break-w: 1100px;   /* -w  wide:   TVs, 4K, desktop — full menu, gutters, optional sidebars                       */
+}

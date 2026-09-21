@@ -5,7 +5,11 @@
   fingerprinted, and carries an SRI integrity attribute. In development it is
   emitted untouched so it stays readable in devtools and rebuilds fast.
 
-  .path   asset path, e.g. "css/pihuw.css"    (required)
+  .path   asset path, e.g. "css/picnic.min.css"  (required unless .res)
+  .res    an already-built resource, e.g. the output of resources.Concat.
+          Use INSTEAD of .path when the stylesheet is assembled rather than
+          read straight off disk. Minify is decided by .path, so a concatenated
+          bundle is always minified — name it *.min.css only if it really is.
   .media  optional media attribute, e.g. "print"
 
   Emits nothing if the asset does not exist, so callers need no `with` guard.
@@ -23,8 +27,8 @@
      names like picnic.min.min.<hash>.css. Fingerprinting still applies, which
      is where the benefit for those files actually is.
 */ -}}
-{{- $path := .path -}}
-{{- with resources.Get $path -}}
+{{- $path := .path | default "" -}}
+{{- with or .res (resources.Get $path) -}}
   {{- $r := . -}}
   {{- $media := "" -}}
   {{- with $.media }}{{ $media = printf " media=\"%s\"" . }}{{ end -}}

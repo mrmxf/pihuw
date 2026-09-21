@@ -1,0 +1,82 @@
+/* ≡≡≡  pihuw · 66-component-typist  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/typist — .typist-* typewriter effect                                                                        */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+.typist-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.typist-header {
+  text-align: center;
+  margin: 0;
+  padding-bottom: 0;
+  font-size: 1.2em;
+}
+
+.typist-container {
+  position: relative;
+  display: block;
+  background-color: var(--pi-bg);
+  padding: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid var(--meta);
+  font-family: 'Special Elite', monospace;
+  font-size: 1rem;
+  min-height: 1.5rem;
+  width: 100%;
+}
+
+.typist-text {
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.typist-cursor {
+  opacity: 0;
+  animation: cursor-blink 1s infinite step-end;
+}
+
+.typist-reset-button {
+  position: absolute;
+  top: -0.7rem;
+  right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 1px solid var(--meta);
+  border-radius: 2px;
+  background-color: var(--bg4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--hi4);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.typist-reset-button:hover {
+  background-color: var(--bg3);
+  border-color: var(--meta);
+  color: var(--pi-body);
+}
+
+.typist-reset-button:active {
+  background-color: var(--hi3);
+  transform: scale(0.95);
+}
+
+
+@keyframes cursor-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,16 @@
+/* ≡≡≡  pihuw · 50-component-banner  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Banner — .banner                                                                                                 */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+.banner {
+  display: block;
+  text-align: center;
+  color: var(--hi3);
+  background-color: oklch(from var(--hi3) 0.9678 calc(c * 0.119) h);
+  font-size: 1.3em;
+  padding: 0.5em;
+  width: 100%;
+}
+
+.banner .text   { color: var(--hi2); flex-grow: 1; }
+.banner .header { font-weight: bolder; flex-grow: 1; }

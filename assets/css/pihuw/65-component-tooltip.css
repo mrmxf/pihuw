@@ -1,0 +1,42 @@
+/* ≡≡≡  pihuw · 65-component-tooltip  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/tooltip — .tooltip-container hover tooltip                                                                  */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+/* Was per-instance #id CSS with !important; now class-scoped so site.css can restyle it.                           */
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background-color: var(--pi-tooltip-bg);
+  color: var(--tooltip, var(--pi-tooltip-fg));
+  padding: 8px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  margin-bottom: 5px;
+  display: none;
+}
+.tooltip-container .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--pi-tooltip-bg) transparent transparent transparent;
+}
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+}

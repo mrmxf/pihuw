@@ -1,0 +1,36 @@
+/* ≡≡≡  pihuw · 90-animation  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Animations — @keyframes bounce, hue-rotate; .view-s/m/w responsive classes                                       */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+@keyframes bounce {
+  25% { transform: translateX( .2rem); }
+  75% { transform: translateX(-.2rem); }
+}
+
+@keyframes hue-rotate {
+  0%   { filter: hue-rotate(0deg);   }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* ── Responsive view classes ──────────────────────────────────────────────────────────────────────── */
+/* .view-s/m/w toggle which element is shown at each breakpoint.                                       */
+/* Breakpoints must match --break-s (500px) and --break-m (800px) in section 1d.                      */
+
+/* Default (wide): show wide, hide narrow and medium */
+.view-s { display: none; }
+.view-m { display: none; }
+.view-w { display: flex; }
+
+/* Medium screens (≤ --break-m = 800px): show medium, hide wide */
+@media screen and (max-width: 800px) {
+  .view-s { display: none; }
+  .view-m { display: flex; }
+  .view-w { display: none; }
+}
+
+/* Small screens (≤ --break-s = 500px): show small, hide medium and wide */
+@media screen and (max-width: 500px) {
+  .view-s { display: flex; }
+  .view-m { display: none; }
+  .view-w { display: none; }
+}

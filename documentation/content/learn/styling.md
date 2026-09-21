@@ -1,10 +1,15 @@
-# Site styling
+---
+title:     Site styling
+linkTitle: styling
+date:      2026-03-30
+summary:   'site.css, fonts, overriding the theme CSS, hiding the theme toggle'
+---
 
 ## site.css
 
 Create **`assets/css/site.css`** and put your site-specific CSS tweaks in it.
 
-It is loaded last — after picnic, pihuw.css and the icon font — so anything in it
+It is loaded last — after picnic, the theme bundle and the icon font — so anything in it
 wins over the theme on equal specificity. In production it is minified,
 fingerprinted and given an SRI hash, which means it can be cached forever and you
 can comment it as freely as you like: the comments never reach the browser. Under
@@ -53,11 +58,17 @@ parsed, which serialises two round trips before any text can paint. Use a real
 Then redeclare `--font-body`, `--font-narrow` and `--font-mono` in your
 `site.css`.
 
-## style overrides pihuw.css
+## Overriding the theme's own CSS
 
-The colour system is described in [css](../css/). Prefer overriding the tokens
-from `site.css` — replacing `assets/css/pihuw.css` wholesale means merging by
-hand on every theme upgrade.
+The colour system is described in [css](../css/). Prefer redefining the tokens
+from `site.css`: that survives every theme upgrade untouched.
+
+If you need more, the theme's CSS is a directory of small files
+(`assets/css/pihuw/*.css`), not one monolith. You can replace any single one by
+putting a file of the same name in your own `assets/css/pihuw/` — your copy wins
+and keeps the theme's cascade position. That copy stops receiving theme updates
+for that component, so reach for it only when a token or a `site.css` rule will
+not do.
 
 ## Hiding the theme toggle
 

@@ -1,0 +1,6 @@
+/* ≡≡≡  pihuw · 67-component-itemgroup  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/item-group-by-type — .card wrapping                                                                         */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+   div.card {flex-wrap: wrap}
+   div.card > header {flex: 0 0 100%}

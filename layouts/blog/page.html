@@ -8,7 +8,7 @@
 {{- if $src -}}
 {{- $modalId := printf "modzl-%s" (.RelPermalink | md5) -}}
 <style>
-  #{{$modalId}}-box { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.75); justify-content:center; align-items:center; }
+  #{{$modalId}}-box { display:none; position:fixed; inset:0; z-index:9999; background:var(--pi-scrim); justify-content:center; align-items:center; }
   #{{$modalId}}:checked ~ #{{$modalId}}-box { display:flex; }
   #{{$modalId}}-box figure { position:relative; margin:0; }
   #{{$modalId}}-close { position:absolute; top:-.6em; right:-.6em; width:1.4em; height:1.4em; line-height:1.4em; text-align:center; border-radius:50%; background:var(--pi-bg); color:var(--pi-body); font-weight:bold; cursor:pointer; font-size:1.1em; }

@@ -1,0 +1,70 @@
+/* ≡≡≡  pihuw · 61-component-gallery  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/gallery — .gallery-* grid, thumbnails, modal                                                                */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.gallery-item {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px var(--pi-shadow);
+  border: 3px solid;
+  position: relative;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px var(--pi-shadow-hover);
+}
+
+.gallery-proxy {
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-modal .content {
+  text-align: center;
+  padding: 0;
+}
+
+.gallery-modal .content img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.gallery-ext-label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  font-size: 0.7em;
+  text-transform: uppercase;
+}
+
+.gallery-container.small .gallery-ext-label {
+  display: none;
+}
+
+.gallery-proxy {
+  width: 300px;
+  height: 300px;
+}
+
+.gallery-container.medium .gallery-proxy {
+  width: 180px;
+  height: 180px;
+}
+
+.gallery-container.small .gallery-proxy {
+  width: 75px;
+  height: 75px;
+}

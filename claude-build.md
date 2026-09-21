@@ -5,23 +5,30 @@ Detail for [CLAUDE.md](CLAUDE.md). Deploy is in [claude-deploy.md](claude-deploy
 ## Commands
 
 ```bash
-ln -s documentation/content content   # required: no content/ means an empty build
 hugo --quiet                          # verify: must exit 0
-rm content                            # always unlink; clog Check build fails on a stale link
 clog watch                            # symlink + hugo server 1313 --buildDrafts --buildFuture
 clog Check build                      # hugo version matches, content/ not linked
 ```
 
-`clog watch` creates and removes the symlink itself. Do it by hand only for a one-off build.
+**The `content/` symlink is NOT required.** `module.yaml`'s local-dev self-import mounts
+`documentation/content -> content`, so a bare clone builds the full site. Verified
+2026-09-21: a fresh `git clone` with no symlink builds all 73 pages, and the file set is
+identical to a symlinked build. `clog watch` still creates one, and `clog Check build`
+fails on a stale one, so never leave it behind — but do not add it by hand believing the
+build needs it.
 
 ## Facts
 
-- Requires Hugo >= 0.161.0 extended (`config/_default/module.yaml`). 0.162.1 is installed.
+- Requires Hugo >= 0.161.0 **extended** (`config/_default/module.yaml`). 0.166.0 is installed.
+- `extended` is needed for **WebP encoding** (`tool/cover` emits `webp q80`), NOT for SASS.
+  The theme has no SASS. Do not relax the requirement on the assumption that it was.
 - **`publishDir: kodata`**, not `public`. Output is committed — it is the `ko` container payload.
 - `--cleanDestinationDir` therefore rewrites a tracked directory. Expect a large diff.
 - `go.mod` declares `github.com/mrmxf/pihuw` at go 1.26.3. The module path is the theme name.
 - `podserver.go` serves `kodata/` for the container image. Not used in development.
-- SASS lives in `assets/css/`. `postcss.config.js` and `.nvmrc` exist; npm is optional.
+- No SASS, no PostCSS, no npm. `assets/css/pihuw/*.css` is plain CSS, concatenated by
+  `tmpl/head-css` into one minified, fingerprinted file. See `assets/css/pihuw/README.md`.
+- There is no build step outside Hugo. `hugo --quiet` is the whole toolchain.
 
 ## The module contract
 

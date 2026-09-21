@@ -12,7 +12,8 @@
   ORDER IS LOAD-BEARING:
     1. theme-init.js   inline, BEFORE any CSS, to prevent a flash of wrong theme
     2. picnic          the grid and base components
-    3. pihuw.css       the theme
+    3. the pihuw bundle  every assets/css/pihuw/*.css, concatenated in
+                         filename order (see below)
     4. fa6             icons
     5. site.css        the consumer's overrides — LAST so they win on equal
                        specificity
@@ -26,7 +27,36 @@
 {{- end -}}
 
 {{- partial "tmpl/css-link" (dict "path" "css/picnic.min.css") -}}
-{{- partial "tmpl/css-link" (dict "path" "css/pihuw.css") -}}
+{{- /* The theme bundle.
+
+       pihuw's CSS lives as numbered files in assets/css/pihuw/ so it stays
+       readable: 00-tokens, 05-theme-dark, 30-nav, 6x-component-*, and so on.
+       They are concatenated here into one minified, fingerprinted request, so
+       splitting the source costs the visitor nothing.
+
+       TWO THINGS ARE LOAD-BEARING:
+
+       1. `sort ... "Name"`. resources.Match returns the PROJECT's files first
+          and the MODULE's second, NOT in filename order. Without this sort a
+          consumer's 61-component-gallery.css would load before the theme's
+          00-tokens.css and the cascade would invert. Verified, not theoretical.
+
+       2. The numeric prefixes. They are the cascade order, which is why they
+          step in 5s and 10s — there is room to insert without renaming.
+
+       A consumer overrides any single file by putting a file of the same name
+       in their own assets/css/pihuw/. Hugo's union filesystem gives theirs
+       precedence, and the sort keeps it in the theme's cascade position. A new
+       file, e.g. 95-mine.css, simply joins the bundle at its sorted place. */ -}}
+{{- with sort (resources.Match "css/pihuw/*.css") "Name" -}}
+  {{- partial "tmpl/css-link" (dict "res" (. | resources.Concat "css/pihuw.bundle.css")) -}}
+{{- end -}}
+
+{{- /* Pre-v0.5 sites kept their overrides in assets/css/pihuw.css, which the
+       theme no longer loads. Warn rather than fail silently. */ -}}
+{{- if resources.Get "css/pihuw.css" -}}
+  {{- warnidf "pihuw-css-monolith" "pihuw: found assets/css/pihuw.css. Since v0.5.0 the theme loads assets/css/pihuw/*.css as a bundle and ignores this file. Move your changes into assets/css/pihuw/<NN-name>.css, or into assets/css/site.css. Silence with  ignoreLogs: ['pihuw-css-monolith']  in your site config." -}}
+{{- end -}}
 
 {{- with resources.Get "css/fa6.min.css" -}}
   {{- partial "tmpl/css-link" (dict "path" "css/fa6.min.css") -}}

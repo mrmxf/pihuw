@@ -1,0 +1,114 @@
+/* ≡≡≡  pihuw · 40-layout  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Page layout — block columns, .src.block, .txt.block, .page-title, .breadcrumb                                    */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* ≈≈≈≈  6. 1 page-title ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ */
+main div.page-title {
+  background-color: var(--bg2);
+  border-radius: 0.5em;
+  border: solid 1px var(--hi2);
+  align-items: center;
+  padding: .2em;
+}
+
+/* tmpl/page-title emits a <p>, not an <h1>, so a page with a cover band does not
+   end up with two <h1>s. Restore only what the <p> loses — picnic's h1 font-size
+   and the theme's h1 colour. Deliberately NOT set here: font-weight, so a site
+   restyling its headings still reaches this; and margin/padding, because picnic
+   sizes flex children through `.flex > *` and overriding those wraps the date
+   onto its own line. */
+/* Measured against the <h1> this replaces, not guessed: that h1 computes to
+   font-size 32px, line-height 51.2px (it INHERITS 1.6 — picnic's own
+   `line-height:1` on h1 never wins the cascade), padding 19.2px top and bottom,
+   margin 0. Reproduced here with the two logical properties, so the box keeps
+   exactly the height it had.
+
+   Deliberately not set: font-weight, so a site restyling its headings still
+   reaches this. Deliberately BLOCK-only: picnic sizes flex children through
+   `.flex > *`, and an inline margin or a padding shorthand wraps the date onto
+   its own line. */
+.page-title .pi-page-title {
+  font-size: 2em;
+  color: var(--hi1);
+  margin-block: 0;
+  padding-block-start: .6em;
+}
+
+/* ≈≈≈≈  6. 2 Blocks ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ */
+section > div.block, section {
+  align-items: stretch;
+}
+
+div .src.block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div .src.block img {
+  max-width: 100%;
+  height: auto;
+}
+
+div .txt.block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.txt.block .card {
+  padding: 0.3em;
+}
+
+.block-hr {
+  height: 3px;
+  border: none;
+  color: rgb(60, 90, 180);
+  background-color: rgb(255, 90, 180);
+}
+
+/* ≈≈≈≈  6. 3 Features ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ */
+
+div.feature-group div.feature {
+  margin: 0.3em;
+  border-radius: 0.5em;
+  padding: 1px;
+  border: solid 1px var(--hi1);
+  background-color: var(--pi-bg);
+  text-align: center;
+  max-width: 24%;
+}
+
+div.feature .header {
+  color: var(--hi1);
+  /* font-size: 1.2em; */
+  font-weight: bold;
+}
+
+div.feature img{
+  max-width: 80%;
+  height: auto;
+  border-radius: 0.3em;
+  border: solid 1px var(--bg2);
+}
+
+div.feature footer.caption {
+  font-size: smaller;
+  color: var(--hi2);
+  font-style: italic;
+  background-color: var(--bg2);
+}
+
+/* ≈≈≈≈  6. 4 Footer ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ */
+section footer {
+  text-align: center;
+  font-size: smaller;
+  font-style: italic;
+  color: var(--hi2);
+}
+
+/* Reading time — simplified from over-specific #block-1>div>div.fifth>footer selector */
+.pi-reading-time {
+  font-size: 80%;
+  color: var(--hi3);
+}

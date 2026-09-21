@@ -62,6 +62,9 @@ live example.
 1. Override `assets/data/defaults.yaml` in the consumer site.
 2. Page frontmatter params — `bodyClass`, `FeaturedGlob`, `FeaturedWxH`.
 3. Site params in `config/_default/params.yaml` — `ui`, `extensions`, `bio`.
-4. Override a partial by name in the consumer's `layouts/`.
+4. Redefine a CSS token in `assets/css/site.css` — survives every upgrade.
+5. Replace one `assets/css/pihuw/<NN-name>.css` by name. Same stale-copy hazard as
+   a copied `hook/` file: you stop receiving theme fixes for that component.
+6. Override a partial by name in the consumer's `layouts/`.
 
 Forking is not on the list.

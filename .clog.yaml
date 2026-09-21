@@ -52,8 +52,8 @@ snippets:
 
     # --- install gh CLI if missing -------------------------------------------
     if ! command -v gh &>/dev/null; then
-      echo "gh not found — running clog install gh"
-      clog install gh
+      echo "gh not found — running clog Install gh"
+      clog Install gh
     fi
 
     # --- pass token to gh automatically (gh reads GH_TOKEN, no login needed) -

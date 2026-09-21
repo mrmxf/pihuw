@@ -1,0 +1,7 @@
+/* ≡≡≡  pihuw · 64-component-socials  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/item-socials — .pi-socials icon row                                                                         */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+  .pi-socials { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .pi-socials a { font-size: 1.4em; line-height: 1; color: inherit; text-decoration: none; }
+  .pi-socials a:hover, .pi-socials a:focus-visible { opacity: 0.7; }

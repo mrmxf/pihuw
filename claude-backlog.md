@@ -20,6 +20,62 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | C-18 | `tool/gallery.html` | `from` is a FRONTMATTER PARAM NAME, not a path, but `gallery.md` passes `/rc` as though it were a folder. |
 | B-11 | `page-title.html` + `tool/cover.html` | v0.4.6 made page-title a `<p>`, so only `cover` supplies an `h1`. A page with no cover has none. Decided: cover owns it. |
 
+## Documentation gaps — found 2026-09-21
+
+Both are M. Neither blocks a build; both cost every new consumer the same hour.
+
+### M-21 — no "Customising the theme" section
+
+`documentation/content/learn/` has `styling.md` (four lines on `site.css`), `css.md`
+(tokens and the CSS bundle), `params.md` and `adding-things.md`. There is no page that
+explains *how the theme is designed to be bent*, so a consumer reads four part-pages and
+infers the model. The reasoning exists only in `claude-human-narrative.md`, which is an
+internal file consumers never see.
+
+Wanted: a distinct top-level docs section, not another `learn/` leaf.
+
+- **Design intent** — the two audiences (author vs integrator), why forking is not on the
+  customisation list, why hooks are empty by contract. Port the public half of
+  `claude-human-narrative.md`; it is written for people already.
+- **The override ladder**, one page, in preference order: `defaults.yaml` → frontmatter →
+  `params.yaml` → `site.css` → replace one `assets/css/pihuw/*.css` → override a partial.
+  Each rung needs a worked example and a note on what it costs at upgrade time.
+- **Reference pages for the things people actually reach for.** These do not exist anywhere:
+  - CSS custom properties — one table per group (`--hi*`, `--bg*`, `--pi-*`, the `1c`
+    component tokens), with the light and dark value of each and what reads it. `css.md`
+    has some of this but it is organised by source file, not by what a user wants to change.
+  - Animation — `90-animation.css` ships `@keyframes bounce`, `hue-rotate` and the
+    `.view-s/m/w` responsive classes. Nothing documents them; they are discoverable only
+    by reading the CSS.
+  - Dark mode — the tri-state contract (system / forced-light / forced-dark), and the rule
+    that both dark blocks must be edited together. Currently a comment in `05-theme-dark.css`.
+  - Fonts and typography tokens, and the Google Fonts `@import` route.
+
+Watch for: `learn/css.md` and `learn/styling.md` already overlap. Fold, do not add a third.
+
+### M-22 — no docs on building the theme
+
+Nothing in `documentation/content/` says how to build. `README.md` now covers the clone,
+symlink and `hugo server`, and `claude-build.md` has the full picture, but that file is
+internal and reads as notes-to-self. A consumer wanting to build the docs site, or a
+contributor wanting to develop against a local checkout, has nowhere to look.
+
+Wanted: a docs section covering both routes.
+
+- **Manually** — Hugo extended >= 0.161.0, and *why* extended (WebP encoding, not SASS:
+  people keep assuming SASS and relaxing the requirement). The `content/` symlink and why
+  it is not committed. `hugo --quiet` must exit 0. `publishDir: kodata`, not `public`,
+  and that its output is committed.
+- **With clog** — `clog watch`, `clog Check build`, `clog github-page`. What each does, and
+  that `clog watch` manages the symlink itself so it should not be created by hand.
+- **Developing against a local checkout** — the `replacements:` line in a consumer's
+  `module.yaml`, and the warning that it must be commented out before `hugo mod vendor`.
+  This is in `claude-build.md` and is exactly the kind of thing a consumer gets wrong.
+
+Both routes need the same caveat: there is no npm, no SASS and no PostCSS step. Say so
+explicitly, because the repo carried `postcss.config.js` and `.nvmrc` until 2026-09-21 and
+the muscle memory will outlive them.
+
 ## FIXED 2026-09-12 — v0.4.8, found retiring chiddingfold's overrides
 
 - **get-asset `noPublish` emptied `src` for every resource**, not just rasters. An SVG,

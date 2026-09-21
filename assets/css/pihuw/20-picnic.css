@@ -1,0 +1,28 @@
+/* ≡≡≡  pihuw · 20-picnic  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* PicnicCSS — .card, .button, .label, .breadcrumb tweaks                                                           */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* Rules that target PicnicCSS class names to adapt them to the pihuw palette.                                       */
+
+/* Base card — neutral component surface */
+.card { background-color: var(--pi-bg); }
+
+/* Highlight cards — .hi1 through .hi4 map to the four named highlight colours */
+.card.hi1 { color: var(--hi1); background-color: var(--bg1); }
+.card.hi2 { color: var(--hi2); background-color: var(--bg2); }
+.card.hi3 { color: var(--hi3); background-color: var(--bg3); }
+.card.hi4 { color: var(--hi4); background-color: var(--bg4); }
+
+/* Button — override PicnicCSS default with pihuw highlight colour */
+.button {
+  background-color: var(--hi1);
+}
+
+/* Breadcrumb — PicnicCSS component, overridden here for layout */
+.breadcrumb {
+  margin-top: 3.5em;
+  height: 1em;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+}

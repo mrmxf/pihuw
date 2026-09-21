@@ -1,0 +1,21 @@
+/* ≡≡≡  pihuw · 80-media  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Media — .image, section img, main footer.caption                                                                 */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+.image {
+  padding: 1em;
+}
+
+section img {
+  display: inline;
+  height: 70%;
+  object-fit: contain;
+}
+
+main footer.caption {
+  font-style: italic;
+  font-weight: bold;
+  color: var(--hi1);
+  background-color: var(--bg3);
+  text-align: center;
+}

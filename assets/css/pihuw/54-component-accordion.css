@@ -1,0 +1,72 @@
+/* ≡≡≡  pihuw · 54-component-accordion  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Accordion / Tab — .accordion, .tab                                                                               */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+.tab {
+  position: relative;
+}
+
+.tab input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.tab__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+}
+
+.tab input:checked ~ .tab__content {
+  max-height: 100%;
+}
+
+.accordion {
+  border-left: 1px solid lightgray;
+  border-radius: none;
+  overflow: hidden;
+}
+
+.tab__label,
+.tab__close {
+  display: flex;
+  background: var(--theme);
+  cursor: pointer;
+  padding: 0;
+}
+
+.tab__label {
+  justify-content: flex-start;
+  gap: 0.35em;
+  padding: 0.2rem 0.1rem;
+}
+
+.tab__label::after       { content: none; }
+.tab__label:hover::after { animation: none; }
+
+/* FA disclosure icons — right-chevron when closed, down-chevron when open */
+.pi-tog-o { display: none;   color: var(--hi1); }
+.pi-tog-c { display: inline; color: var(--hi2); }
+.tab input:checked + .tab__label .pi-tog-o { display: inline; }
+.tab input:checked + .tab__label .pi-tog-c { display: none; }
+
+.tab__content p {
+  margin: 0;
+  padding: 0.2rem 1rem;
+}
+
+.tab__close {
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+.accordion--radio {
+  --theme: var(--secondary);
+}
+
+/* Arrow animation on FA icon (keyframes in section 11) */
+.tab input:not(:checked) + .tab__label:hover .pi-tog-c {
+  animation: bounce .5s infinite;
+}

@@ -7,13 +7,15 @@ CDNs, Hugo built-ins only — it targets Raspberry Pi and ESP32 hosting.
 There is no `clog build`/`clog deploy` here — consumer sites define those, the theme does not.
 Verify any change with `hugo --quiet`: it must exit 0.
 
-`documentation/content/` is the docs site. It only builds when symlinked to `content/`.
+`documentation/content/` is the docs site. `module.yaml`'s local-dev self-import mounts it
+as `content/`, so a bare clone builds it — no symlink needed. `clog watch` still creates one;
+never leave it behind, `clog Check build` fails on a stale link.
 
 ## Detail — read on demand, not every query
 
 | Topic | File |
 |---|---|
-| Build, symlink, module, config | [claude-build.md](claude-build.md) |
+| Build, module, config | [claude-build.md](claude-build.md) |
 | Deploy, gh-pages, Actions | [claude-deploy.md](claude-deploy.md) |
 | Known issues | [claude-backlog.md](claude-backlog.md) |
 | Why the theme is shaped this way | [claude-human-narrative.md](claude-human-narrative.md) |
@@ -23,7 +25,8 @@ Verify any change with `hugo --quiet`: it must exit 0.
 
 ```
 config/_default/       hugo.yaml, params.yaml, module.yaml
-assets/css/            SASS source
+assets/css/            picnic.min.css, fa6.min.css — vendor only
+assets/css/pihuw/      the theme CSS, split by concern; see its README.md
 assets/data/           defaults.yaml — every component default class and setting
 documentation/content/ docs site, mirrors layouts/ one-to-one
 layouts/               baseof, home, list, single + _markup/, _shortcodes/
@@ -78,6 +81,21 @@ Catalogues are deliberately absent. `ls layouts/_partials/tool/` is current; a t
   Treat one as breaking, and state the version a hook appeared in. See claude-backlog.md.
 - All six are called by any base template emitting `<html>`/`<body>` — `baseof.html` and
   `blog/section.html`. Templates that only `define "main"` must not: they would fire twice.
+
+### CSS bundle
+- The theme CSS is `assets/css/pihuw/*.css`, concatenated by `tmpl/head-css` into one
+  minified, fingerprinted request. Numeric prefixes ARE the cascade order; they step in
+  5s and 10s so a file can be inserted without renaming.
+- `sort (resources.Match ...) "Name"` is load-bearing. `resources.Match` returns the
+  project's files before the module's, NOT in filename order — without the sort a
+  consumer's `61-*.css` loads before the theme's `00-tokens.css`. Verified, not theoretical.
+- A consumer overrides one file by name in their own `assets/css/pihuw/`. Theirs replaces
+  the theme's wholesale and keeps its cascade position — same stale-copy hazard as `hook/`.
+  Prefer a token redefinition or a rule in `site.css`; file replacement is the escape hatch.
+- New `tool/X` CSS goes in `assets/css/pihuw/6N-component-X.css`, not an inline `<style>`.
+  Only config-generated CSS stays inline: `resp-classes` (@media from params), `gallery`
+  (per-media colours), `typist` (font @import).
+- There is no `assets/css/pihuw.css`. `tmpl/head-css` warns if a consumer still has one.
 
 ### On-demand libraries
 - A render hook flags a need with `.Store.Set "hasX"`; `tmpl/body-scripts.html` reads it and

@@ -2,10 +2,6 @@
    partial to create a list of latest pages of a given type. Reading rate in site config
    force headers to be full width on their flex line (not always the default)
 */}}
-<style>
-   div.card {flex-wrap: wrap}
-   div.card > header {flex: 0 0 100%}
-</style>
 {{- $group := .page.Pages.ByDate.Reverse -}}
 {{- $groupTags := printf "%s" .page.Type | lower -}}
 {{ $dot := merge . (dict "group" $group "groupTags" $groupTags) }}

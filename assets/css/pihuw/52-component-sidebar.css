@@ -1,0 +1,34 @@
+/* ≡≡≡  pihuw · 52-component-sidebar  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Sidebar — <sidebar>, .childbar                                                                                   */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* NOTE: bare `sidebar` selector is intentional — <sidebar> is a custom HTML element used             */
+/* in blog/section.html as `<sidebar class="four-fifth">`. Do not rename to .sidebar.                 */
+sidebar {
+  display: inline-flex;
+  color: var(--hi2);
+  background-color: var(--bg2);
+  border: 1px solid var(--hi2);
+  border-radius: 0.5em;
+  padding: 0.6em;
+  height: 100%;
+}
+
+/* The wrapper is always emitted by tmpl/childbar-horizontal.html, hidden. The
+   template adds .pi-show to reveal it, so visibility is one class toggle rather
+   than the presence or absence of markup. */
+.childbar-horizontal {
+  display: none;
+  padding: 0.3em 1em;
+  text-align: center;
+  width: 100%;
+}
+
+.childbar-horizontal.pi-show {
+  display: block;
+}
+
+.childbar-horizontal .divider {
+  color: var(--hi1);
+  font-weight: bold;
+}

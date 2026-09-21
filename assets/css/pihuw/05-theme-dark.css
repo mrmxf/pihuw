@@ -1,0 +1,130 @@
+/* ≡≡≡  pihuw · 05-theme-dark  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* Dark mode — system / forced-light / forced-dark tri-state                                                        */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* Tri-state: "system" follows OS preference, "light"/"dark" user-forced via data-theme attribute on <html>.       */
+/* theme-toggle.js writes data-theme; theme-init.js restores it from localStorage on page load.                     */
+/* WHY THE DARK VALUES APPEAR TWICE (and why that is not a bug):                                                     */
+/* CSS cannot share a ruleset between a @media block and an attribute selector — there is no equivalent             */
+/* of a preprocessor mixin or @apply in plain CSS. The two blocks below are therefore intentionally identical.       */
+/*   @media (prefers-color-scheme: dark)  — "system" mode: OS is dark, no data-theme attribute set.                 */
+/*   [data-theme="dark"]                  — user-forced dark: attribute present, OS preference irrelevant.           */
+/* Attribute selectors beat media queries in specificity, so [data-theme="light"] can override the @media           */
+/* block even when the OS is dark — that is what makes forced-light work correctly.                                  */
+/* The @media block must fire before JS runs to prevent a flash of wrong theme (FOUC), so it cannot depend           */
+/* on JS-written attributes. Edit both blocks together whenever dark palette values change.                          */
+
+/* ── system — dark values when OS is dark and the user has not forced a theme ───────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pi-dark:  #DEDEDE;
+    --pi-light: #1F1F1F;
+
+    --pi-body-bg: #141414;   /* near-black page background */
+    --pi-bg:      #262626;   /* dark grey component surface */
+
+    /* hi* raised in lightness so they pop against a ~10% background */
+    --hi1: #DAC581;   /* warm gold   — lighter --mm-yellow */
+    --hi2: #D685B6;   /* bright pink — lighter --mm-purple */
+    --hi3: #B1CD7A;   /* lime green  — lighter --mm-green  */
+    --hi4: #8985D6;   /* periwinkle  — lighter --mm-blue   */
+
+    /* bg* switched to dark tinted surfaces — the oklch tint formula stays near-white in light mode */
+    --bg1: #2D281B;   /* dark amber */
+    --bg2: #2B1D25;   /* dark mauve */
+    --bg3: #23281B;   /* dark olive */
+    --bg4: #1F1F2E;   /* dark indigo */
+
+    /* pi-meta — slightly brighter than the formula gives on a dark bg */
+    --pi-meta: #A6A6A6;
+    --pi-link: oklch(from var(--hi4) calc(l + 0.2193) calc(c * 0.3365) h);  /* hi4 brightened for dark bg */
+
+    /* component tokens — shadows deepen on dark, tooltip lifts off the page surface */
+    --pi-scrim:        oklch(0 0 0 / 0.85);
+    --pi-scrim-media:  oklch(0 0 0 / 0.55);
+    --pi-shadow:       oklch(0 0 0 / 0.45);
+    --pi-shadow-hover: oklch(0 0 0 / 0.60);
+    --pi-shadow-float: oklch(0 0 0 / 0.65);
+    --pi-tooltip-bg:   oklch(from var(--pi-bg) calc(l + 0.15) c h);   /* -> #4D4D4D, AA vs --hi1 */
+  }
+  /* banner and taxonomy label backgrounds use an inline oklch tint — must override via class */
+  .banner         { background-color: var(--bg3); }
+  .pi-tax-1.label { background: var(--bg3); }
+  .pi-tax-2.label { background: var(--bg2); }
+  .pi-tax-3.label { background: var(--bg1); }
+  .pi-tax-4.label { background: var(--bg4); }
+}
+
+/* ── forced light — attribute selector wins over the @media block above ──────────────────────────────────────────── */
+[data-theme="light"] {
+  --pi-dark:  #333333;
+  --pi-light: #EDEDED;
+
+  --pi-body-bg: #F5F3F0;   /* wheat-white page background */
+  --pi-bg:      #FFFFFF;   /* component surface (white) */
+  --pi-link:    oklch(from var(--hi4) calc(l - 0.151) calc(c * 0.5361) h);  /* hi4 dimmed for light bg */
+
+  /* hi, bg and meta restored too — the @media dark block above sets all of these, and an
+     attribute selector only wins for the properties it actually declares. Without these,
+     forced light on a dark OS renders dark-mode highlights on a wheat-white page. */
+  --hi1: var(--mm-yellow);
+  --hi2: var(--mm-purple);
+  --hi3: var(--mm-green);
+  --hi4: var(--mm-blue);
+
+  --bg1: oklch(from var(--hi1) 0.9727 calc(c * 0.1158) h);
+  --bg2: oklch(from var(--hi2) 0.9562 calc(c * 0.1038) h);
+  --bg3: oklch(from var(--hi3) 0.9678 calc(c * 0.119) h);
+  --bg4: oklch(from var(--hi4) 0.9522 calc(c * 0.1012) h);
+
+  --pi-meta:    oklch(from var(--pi-dark) 0.683 0 h);
+
+  /* component tokens — restored, or the @media dark block above leaks into forced light */
+  --pi-scrim:        oklch(0 0 0 / 0.75);
+  --pi-scrim-media:  oklch(0 0 0 / 0.45);
+  --pi-shadow:       oklch(0 0 0 / 0.10);
+  --pi-shadow-hover: oklch(0 0 0 / 0.20);
+  --pi-shadow-float: oklch(0 0 0 / 0.30);
+  --pi-tooltip-bg:   oklch(from var(--pi-dark) 0.25 c h);
+}
+
+/* ── forced dark — identical values to the @media block above; duplicated because CSS cannot share between          */
+/*    a @media query and an attribute selector. Edit both blocks together if dark palette values change. ─────────── */
+[data-theme="dark"] {
+  --pi-dark:  #DEDEDE;
+  --pi-light: #1F1F1F;
+
+  --pi-body-bg: #141414;   /* near-black page background */
+  --pi-bg:      #262626;   /* dark grey component surface */
+
+  /* hi* raised in lightness so they pop against a ~10% background */
+  --hi1: #DAC581;   /* warm gold   — lighter --mm-yellow */
+  --hi2: #D685B6;   /* bright pink — lighter --mm-purple */
+  --hi3: #B1CD7A;   /* lime green  — lighter --mm-green  */
+  --hi4: #8985D6;   /* periwinkle  — lighter --mm-blue   */
+
+  /* bg* switched to dark tinted surfaces — the oklch tint formula stays near-white in light mode */
+  --bg1: #2D281B;   /* dark amber */
+  --bg2: #2B1D25;   /* dark mauve */
+  --bg3: #23281B;   /* dark olive */
+  --bg4: #1F1F2E;   /* dark indigo */
+
+  /* pi-meta — slightly brighter than the formula gives on a dark bg */
+  --pi-meta: #A6A6A6;
+  --pi-link: oklch(from var(--hi4) calc(l + 0.2193) calc(c * 0.3365) h);  /* hi4 brightened for dark bg */
+
+  /* component tokens — shadows deepen on dark, tooltip lifts off the page surface */
+  --pi-scrim:        oklch(0 0 0 / 0.85);
+  --pi-scrim-media:  oklch(0 0 0 / 0.55);
+  --pi-shadow:       oklch(0 0 0 / 0.45);
+  --pi-shadow-hover: oklch(0 0 0 / 0.60);
+  --pi-shadow-float: oklch(0 0 0 / 0.65);
+  --pi-tooltip-bg:   oklch(from var(--pi-bg) calc(l + 0.15) c h);   /* -> #4D4D4D, AA vs --hi1 */
+}
+
+/* banner and taxonomy label backgrounds use an inline oklch tint — must override via class */
+[data-theme="dark"] .banner         { background-color: var(--bg3); }
+[data-theme="dark"] .pi-tax-1.label { background: var(--bg3); }
+[data-theme="dark"] .pi-tax-2.label { background: var(--bg2); }
+[data-theme="dark"] .pi-tax-3.label { background: var(--bg1); }
+[data-theme="dark"] .pi-tax-4.label { background: var(--bg4); }

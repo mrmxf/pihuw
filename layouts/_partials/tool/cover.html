@@ -18,17 +18,16 @@
   .height — CSS length for the band's min-height (optional; default "60svh")
   .page   — Hugo Page (supplied by the hw shortcode)
 
-  Site CSS restyling a cover must out-rank the <style> block below, which comes
-  later in the document: use .pi-cover.your-class, not .your-class alone.
+  Styles live in assets/css/pihuw/60-component-cover.css, loaded in the theme
+  bundle BEFORE site.css, so site CSS now wins on equal specificity — .your-class
+  alone is enough. Override the whole component by putting your own
+  60-component-cover.css in your site's assets/css/pihuw/.
 
   Emits the page's <h1>. Since v0.4.6 tmpl/page-title.html emits a
   <p class="pi-page-title">, not a heading, so a cover band is where the h1 comes
   from. Do not put two covers with a header on one page.
 
   svh, not vh, so the band does not jump as a mobile browser's URL bar hides.
-
-  The <style> block is emitted once per page, guarded by a Store flag, so several
-  covers on one page do not repeat it.
 */ -}}
 {{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}
 {{- $page   := .page -}}
@@ -39,43 +38,6 @@
 {{- $alt    := .alt | default "" -}}
 {{- with .src -}}
   {{- $img = partial "tk/get-asset" (dict "asset" . "page" $page "alt" $alt "noPublish" true) -}}
-{{- end -}}
-{{- if not ($page.Store.Get "hasCoverCSS") -}}
-{{- $page.Store.Set "hasCoverCSS" true -}}
-<style>
-  .pi-cover {
-    position: relative;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    margin: 1rem 0;
-  }
-  .pi-cover-media {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
-  }
-  /* Scrim: text over a photograph needs a guaranteed contrast floor. */
-  .pi-cover-media + .pi-cover-scrim {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-  }
-  .pi-cover-inner {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 2rem 1rem;
-    max-width: 42rem;
-  }
-  .pi-cover-has-media .pi-cover-inner,
-  .pi-cover-has-media .pi-cover-inner a { color: #fff; }
-  .pi-cover-inner > :first-child { margin-top: 0; }
-  .pi-cover-inner > :last-child  { margin-bottom: 0; }
-</style>
 {{- end -}}
 <section class="pi-cover{{ if and $img (or $img.res $img.src) }} pi-cover-has-media{{ end }}{{ with .class }} {{ . }}{{ end }}"
          style="min-height: {{ $height }};">

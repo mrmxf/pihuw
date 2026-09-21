@@ -1,5 +1,6 @@
 # flow:"stage",   build:"dev"  = auto-add to staging server
 # flow:"release", build:"prod" = to flag as a production release
+- {version: "v0.4.9",  date: 2026-09-21, build: prod, flow: main, note: theme unification - relative colours migrated hsl to oklch; component tokens for scrims/shadows/tooltip; pihuw.css split into the assets/css/pihuw bundle overridable per file; SASS/PostCSS/npm removed}
 - {version: "v0.4.8",  date: 2026-09-12, build: prod, flow: main, note: get-asset noPublish only suppresses rasters so SVG/GIF/video keep src; lang and og:locale read site locale; cover takes subtitle/innerHTML/class and keeps alt=""; hw passes height and subtitle}
 - {version: "v0.4.7",  date: 2026-09-12, build: prod, flow: main, note: mermaid loads on demand; get-asset no longer publishes originals; canonical+OpenGraph+Twitter cards; tk/date-offset; cover and item-socials implemented}
 - {version: "v0.4.6",  date: 2026-09-12, build: dev,  flow: dev,  note: childbar rendered once per page below the header; skip link + main landmark; page titles are <p> not <h1>}

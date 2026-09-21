@@ -1,4 +1,9 @@
-# Adding things
+---
+title:     Adding things
+linkTitle: adding-things
+date:      2026-03-30
+summary:   'Page JavaScript, extensions and other per-page additions'
+---
 
 ## page javascript
 
