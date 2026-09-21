@@ -1,7 +1,7 @@
 # claude-plan-clog-pages.md — retire the legacy build, adopt clog BC
 
-Detail for [CLAUDE.md](CLAUDE.md). Status: **sections A and B implemented 2026-09-21.** Remaining: C (cloudflare), the
-end-to-end rehearsal, and clog's `go.sum` (see Blocked, below).
+Detail for [CLAUDE.md](CLAUDE.md). Status: **pihuw side done. The clog side was written against the wrong repo and has been
+withdrawn** — see "Course correction" below. Rewritten again 2026-09-21.
 Rewritten 2026-09-21 against clog v0.11.14. Replaces the earlier "port the snippet" plan,
 which was wrong: it assumed the `bc-*` shell era was current. It is not.
 
@@ -136,62 +136,60 @@ Target branch: see open question 1. clog has no `dev` branch.
 - Confirm the old `gh-static.yml` is gone before the first run, or both will race the
   `gh-pages` branch.
 
-## What is done
+## Course correction, 2026-09-21
 
-clog, on a new `dev` branch off `main` (commit `07f8251`):
+The clog work described in earlier versions of this plan was implemented in
+`/home/bruce/gr/0_mrmxf/clog` and has been **reverted**. That repo is `github.com/mrmxf/clog`:
+the archived, pre-rename project, last touched "last update before refactor". It does not
+build, it has no `BC` command, and nothing consumes it.
 
-- `bc-deploy-ghpages`, `bc-metadata`, `install.wrangler` in `embedfilesystem/konfig.yaml`
-- `.github/workflows/deploy-ghpages.yaml`, mirroring `deploy-s3.yaml`
-- `bc-hugo` no longer requires a `content/` directory — it asks `hugo list all` instead,
-  so a mount-only repo builds. This is what finally kills the symlink.
+The live project is **`/home/bruce/gr/clogs/clog-mrmxf`**, module `github.com/mrmxf/clog-mrmxf`,
+sitting in a Go workspace at `/home/bruce/gr/clogs/` alongside `util`, `clog-app`,
+`clog-sample` and `utbd`. It is already on a `dev` branch, HEAD
+`cb547c8 release: v0.11.14 - BC flow from git + mode`, which is exactly the installed binary.
+**It builds cleanly.** There was never a broken clog build to fix; `B-14` was raised against
+the archived repo and is withdrawn.
 
-pihuw:
+### Why the earlier design was wrong
 
-- `.clog.yaml` rewritten, 155 lines -> 92, legacy deleted. `clog Check build` and
-  `clog Check tools` both pass.
-- `gh-static.yml` deleted, replaced by `build-deploy.yaml` calling clog's two workflows.
-- `CLAUDE.md` rules updated (it forbade `clog build`/`clog deploy`; it no longer does).
+`util/ci/targets.go` already declares `KindGitHubPages = "github-pages"` alongside
+`container-registry`, `bucket` and `cloudflare-pages`. The kinds are declared and validated;
+what is missing is a deployer behind them. So GitHub Pages support is **not** a new
+`bc-deploy-ghpages` snippet — it is the deployer for an existing target kind, dispatched by
+`clog deploy` from a `ci:` data block.
 
-Closes `C-13`, `C-14`, `C-15` and `B-05` by deletion — every one was in the removed snippets.
+`clog-mrmxf/todo-hugo-sites-config-only.md` (2026-09-19) already sets this out, and two
+items bear directly on what I had written:
 
-## Blocked
+- item 1 — make `ci.targets.*.kind` do something; deployers move into clog
+- item 2 — **fix `bc-hugo` and `bc-ko` in util, then retire them.** My change to `bc-hugo`'s
+  `content/` check was patching a worker already slated for deletion.
 
-**clog does not build from source.** `go build` fails on both `main` and `dev`:
+### What a pihuw target should look like
 
+Following that document's end state, pihuw's `.clog.yaml` should become data, not snippets:
+
+```yaml
+ci:
+  modes:
+    dev:  {base-url: "https://mrmxf.github.io/pihuw/", noindex: "true"}
+    prod: {base-url: "https://mrmxf.github.io/pihuw/"}
+  targets:
+    pages:
+      kind: github-pages
+      prod: {branch: gh-pages, dir: kodata}
 ```
-slogger/nats-handler.go:13:2: missing go.sum entry for module providing
-package github.com/nats-io/nats.go
-```
 
-Pre-existing, not caused by this work. Until it is fixed, the new embedded workers cannot
-be compiled into a `clog` binary, so `clog Build` on this repo still resolves the OLD
-`bc-hugo` and does not know `bc-metadata` at all. `go get github.com/mrmxf/clog/slogger`
-would fix it, but that rewrites `go.mod`/`go.sum` and is the maintainer's call.
+Note that document's item 4 also says a site should NOT set both `clog:` and `kfg:`
+`releases-path`. pihuw currently sets both; drop the `kfg:` one.
 
-What this means: everything above is committed and correct, and nothing can be rehearsed
-end to end until clog compiles.
+### Open, for the maintainer
 
-## Tested so far
-
-- `bc-metadata` run in a scratch git repo with tags: correct version, production tag, mode,
-  commit, branch and both output files. A bug was found and fixed here — the repo field
-  came out as `acme/widget.git`, because POSIX sed has no non-greedy quantifier, so the
-  `.git` suffix has to be stripped before the owner/name match. Verified against both SSH
-  and HTTPS remotes.
-- `clog BC flow --build "X"` resolves to snippet `bc-X`, confirmed empirically.
-- `bc-hugo`'s new content test: `hugo list all` returns 52 rows in this repo with no
-  `content/` directory present.
-- `clog Check build` / `clog Check tools` pass against the rewritten `.clog.yaml`.
-- Not tested: `bc-deploy-ghpages`. It force-pushes an orphan branch; rehearse on a fork.
-
-## Open questions
-
-1. **clog has no `dev` branch** — only `main` (at "last update before refactor") and
-   `cfg-update` (the koanf/embed refactor: 85 files, +1747/-5921). Which branch takes this
-   work? If `cfg-update` is the future, building on `main` wastes the effort.
-2. Should `bc-metadata` write a Hugo data file, or does the site read `tmp/BcStash.yaml`
-   directly? The first is cleaner for pihuw and needs a documented path.
-3. `CLAUDE.md` says "There is no `clog build`/`clog deploy` here — consumer sites define
-   those, the theme does not." Steps 6-7 reverse that. Confirm it is intended: it makes the
-   theme repo buildable in its own right, which is what "buildable to Cloudflare or a
-   container" requires.
+1. The `github-pages` deployer belongs in `util` (module `github.com/mrmxf/util`, currently
+   on `main`), not in `clog-mrmxf`. That is a third repo and outside anything agreed so far.
+2. The suggested order in `todo-hugo-sites-config-only.md` puts `cloudflare-pages` first
+   (item 3) and the Hugo build rework next (item 4). GitHub Pages is not in that list at all,
+   because pihuw is the first site to need it. Where should it slot in?
+3. Everything salvageable from the withdrawn work is saved as a patch and a workflow file in
+   this session's scratchpad. The `bc-metadata` worker may still be worth having; the
+   `bc-deploy-ghpages` snippet should be rewritten as a kind deployer instead.

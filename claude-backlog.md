@@ -27,7 +27,7 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | ~~B-12~~ | `.clog.yaml:33` | MOOT 2026-09-21 — `bc-releases-yaml` is legacy. `clog BC` derives version and prod mode from git tags; nothing in the new flow calls it. The snippet gets deleted, not fixed. |
 | ~~B-13~~ | `.clog.yaml:106` + `data/releases.yaml` | MOOT 2026-09-21 — the `vv` comes from the legacy shell override. `clog BC git tag ref` returns `v0.4.9` correctly. Delete the override. |
 | C-19 | `documentation/content/kitchen_sink/graph.md:12` | The bar-chart example passes inline `x`/`y` with no `from`, and `tool/graph` reports "no data source". Pre-dates v0.4.9; the kitchen-sink graph has never rendered. |
-| B-14 | clog repo | `go build` fails on `main` and `dev`: missing go.sum entry for `github.com/nats-io/nats.go`. Pre-existing. Until fixed, clog cannot be rebuilt, so the new embedded `bc-metadata` / `bc-deploy-ghpages` workers cannot be exercised and `clog Build` here still resolves the old `bc-hugo`. |
+| ~~B-14~~ | clog repo | WITHDRAWN 2026-09-21 — raised against `github.com/mrmxf/clog`, the archived pre-rename repo. The live project is `github.com/mrmxf/clog-mrmxf` at `/home/bruce/gr/clogs/clog-mrmxf`, which builds cleanly on `dev`. |
 
 ## Documentation gaps — found 2026-09-21
 
