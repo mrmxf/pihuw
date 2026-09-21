@@ -31,11 +31,21 @@ clog:
 # -----------------------------------------------------------------------------
 # `clog ci policy` explains any decision this block produces.
 ci:
+  # the build job uploads kodata/ + tmp/ under this name and the deploy job
+  # downloads it - without ci.artifact the two jobs share nothing and the
+  # deploy finds an empty kodata/
+  artifact: pihuw-site
+  title: pihuw docs
+
   policy:
     # every event may build, including a laptop; only a release tag publishes
     build: [branch, tag, dispatch, schedule, local]
     deploy:
-      prod: {tags: ["v*"], schedule: true}
+      # a v* tag publishes; a manual run may also publish (it checks out the
+      # newest release tag first - see .github/workflows/build-deploy.yaml).
+      # dispatch is needed because a manual run's ref is the branch it was
+      # launched from, so it can never match the tag glob.
+      prod: {tags: ["v*"], schedule: true, dispatch: true}
 
   modes:
     # One Pages site, so both modes share a base URL. A dev build differs by
@@ -86,12 +96,14 @@ snippets:
   # fails here rather than quietly deploying a dev build to the live site. The
   # first argument is only treated as a mode when it is not a flag.
   build: |
-    if [ -n "${1:-}" ] && [ "${1#-}" = "$1" ]; then
+    # `clog build MAKE "hugo ko"` is the clog convention for overriding the
+    # steps, and build-hugo.yaml uses it, so MAKE must not be read as a mode.
+    if [ -n "${1:-}" ] && [ "${1#-}" = "$1" ] && [ "$1" != MAKE ]; then
       CLOG_MODE="$(clog ci mode "$1")" || exit 1
       export CLOG_MODE; shift
     fi
     export CHK="build"
-    export MAKE="hugo"
+    export MAKE="hugo"; [ "${1:-}" = MAKE ] && MAKE="$2" && shift 2
     clog BC flow "$@"
   deploy: |
     if [ -n "${1:-}" ] && [ "${1#-}" = "$1" ]; then

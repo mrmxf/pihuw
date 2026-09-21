@@ -2,43 +2,54 @@
 # Copyright ©2017-2026  Mr MXF   info@mrmxf.com
 # BSD-3-Clause License           https://opensource.org/license/bsd-3-clause/
 #
-#  pihuw docs site: build then deploy to GitHub Pages.
+#  pihuw docs: build the Hugo site and publish it to GitHub Pages.
 #
-#  This file is deliberately thin. All the logic lives in clog's callable
-#  workflows and its generic bc-* workers; the repo-specific settings are in
-#  .clog.yaml (PROJECT, GHP_DIR, GHP_BRANCH, BUILDINFO_JSON).
+#  Deliberately thin. The work is in mrmxf/util's callable workflows, and what
+#  this repo wants is data in .clog.yaml (ci.policy, ci.modes, ci.targets).
 #
-#  Replaces gh-static.yml, which pinned its own hugo version, installed Dart
-#  Sass, and deployed with a hand-rolled 60-line snippet.
+#  WHEN IT RUNS
+#    v* tag        build + deploy. ci.policy.deploy.prod.tags is ["v*"], so the
+#                  tag is what makes a run production - not the branch.
+#    other push    build only. No ci.policy.deploy.dev rule, so nothing ships.
+#    manual        build + deploy the NEWEST RELEASE TAG, not the branch you
+#                  launched from: production: true makes clog-prepare check out
+#                  the production tag and force prod mode. Use it to republish
+#                  the current release without cutting a new one.
+#
+#  No repository secrets. The Pages push uses the token Actions provides, and
+#  pihuw declares no ci.infisical block, so `clog ci run` runs without secrets
+#  (needs util ci v0.16.0).
+#
+#  The deploy workflow is still called deploy-s3: the name is historical, it
+#  runs `clog deploy` once per ci.targets entry and the target's kind decides
+#  where it goes. pihuw's target is kind: github-pages.
 
 name: build-deploy
-run-name: ${{ github.workflow }}(${{ github.event_name }}) 🥷${{ github.actor }}
+run-name: ${{ github.workflow }} 🥷${{ github.actor }} (${{ github.event_name }} ${{ github.ref_name }})
 
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
+    tags: ["v*"]            # a release publishes the docs
+    branches: ["main"]      # ordinary pushes build, and stop there
+  workflow_dispatch:        # manual: rebuild + republish the newest release tag
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    uses: mrmxf/clog/.github/workflows/build-hugo.yaml@main
+    uses: mrmxf/util/.github/workflows/build-hugo.yaml@workflows-v1
+    permissions:
+      contents: read
+      id-token: write
     with:
-      docker_ns: ""                 # no container image for the docs site
-      artifact-name: pihuw-site
-      make: "metadata hugo"
-      bcTitle: "pihuw docs build"
-    secrets:
-      get_clog: ${{ secrets.GET_CLOG }}
-      webhook_slack: ${{ secrets.WEBHOOK_SLACK }}
-      docker_pat: ${{ secrets.DOCKER_PAT }}
+      production: ${{ github.event_name == 'workflow_dispatch' }}
 
   deploy:
-    needs: build
-    uses: mrmxf/clog/.github/workflows/deploy-ghpages.yaml@main
+    needs: [build]
+    uses: mrmxf/util/.github/workflows/deploy-s3.yaml@workflows-v1
+    permissions:
+      contents: write       # the Pages deploy force-pushes the gh-pages branch
+      id-token: write
     with:
-      artifact-name: pihuw-site
-      make: "deploy-ghpages"
-      bcTitle: "pihuw docs → GitHub Pages"
-    secrets:
-      get_clog: ${{ secrets.GET_CLOG }}
-      webhook_slack: ${{ secrets.WEBHOOK_SLACK }}
+      production: ${{ github.event_name == 'workflow_dispatch' }}
