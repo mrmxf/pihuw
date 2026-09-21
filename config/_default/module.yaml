@@ -36,6 +36,8 @@ imports:
   #   documentation/content -> content   (serves the docs pages)
   #   documentation/static  -> static    (serves favicon, logo, rc/)
   #   static                -> static    (serves webfonts alongside the above)
+  # data/ is NOT remounted here: the top-level mounts above already provide it, and
+  # mounting it twice makes Hugo warn that releases.yaml overrides itself.
   mounts:
   - source: documentation/content
     target: content
@@ -43,8 +45,6 @@ imports:
     target: static
   - source: static
     target: static
-  - source: data
-    target: data
   - source: layouts
     target: layouts
   - source: i18n

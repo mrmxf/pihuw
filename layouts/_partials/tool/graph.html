@@ -72,8 +72,8 @@ Param resolution order (lowest → highest):
   {{- $rows = $node -}}
 
 {{- else if hasPrefix $from "data:" -}}
-  {{/* Form B: walk site.Data via dot-path e.g. "data:releases" for data/releases.yaml */}}
-  {{- $node := site.Data -}}
+  {{/* Form B: walk hugo.Data via dot-path e.g. "data:releases" for data/releases.yaml */}}
+  {{- $node := hugo.Data -}}
   {{- range split (strings.TrimPrefix "data:" $from) "." -}}
     {{- $node = index $node . -}}
   {{- end -}}

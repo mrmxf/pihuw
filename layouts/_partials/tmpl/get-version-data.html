@@ -6,8 +6,8 @@
          Hugo data directory (default "data/releases.yaml")
 
   Since v0.4.10 the file lives in data/, not assets/data/, so it is read through
-  site.Data rather than resources.Get. The param is still written as a path; the
-  leading "data/" and the extension are stripped to give the site.Data key, so a
+  hugo.Data rather than resources.Get. The param is still written as a path; the
+  leading "data/" and the extension are stripped to give the hugo.Data key, so a
   consumer's existing `releaseTracking: data/releases.yaml` keeps working.
 
   returns (dict) — first entry from the YAML list, or "" if the file is missing/empty
@@ -17,7 +17,7 @@
 {{- $ret  := "" -}}
 {{- $file := site.Params.releaseTracking | default "data/releases.yaml" -}}
 {{- $key  := strings.TrimSuffix (path.Ext $file) (strings.TrimPrefix "data/" $file) -}}
-{{- $node := site.Data -}}
+{{- $node := hugo.Data -}}
 {{- range split $key "/" -}}
   {{- $node = index ($node | default dict) . -}}
 {{- end -}}
