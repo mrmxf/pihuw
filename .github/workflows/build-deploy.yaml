@@ -5,7 +5,8 @@
 #  pihuw docs: build the Hugo site and publish it to GitHub Pages.
 #
 #  Deliberately thin. The work is in mrmxf/util's callable workflows, and what
-#  this repo wants is data in .clog.yaml (ci.policy, ci.modes, ci.targets).
+#  this repo wants is data in .clog.yaml (ci.stack, ci.scan, ci.policy,
+#  ci.modes, ci.targets).
 #
 #  WHEN IT RUNS
 #    v* tag        build + deploy. ci.policy.deploy.prod.tags is ["v*"], so the
@@ -16,12 +17,31 @@
 #                  the production tag and force prod mode. Use it to republish
 #                  the current release without cutting a new one.
 #
+#  ONE BUILD WORKFLOW, NOT ONE PER LANGUAGE
+#  build.yaml replaces build-hugo.yaml. The two per-stack workflows differed
+#  only in which tools they installed and which snippets they ran, and ci.stack
+#  now knows both - so the repo declares its stack and the workflow stops
+#  caring. That removes the class of bug where the workflow and the config
+#  disagree about what kind of repo this is. `stack:` is left unset here, which
+#  means every stack: pihuw has one, and a default of "everything" is the one
+#  that keeps working if it ever gains another.
+#
+#  SCANNING
+#  The sweeps are check phases inside `clog build`, not workflow steps, so they
+#  run on every build - a branch push and a pull request included, which the old
+#  `if: do_deploy` trivy step never did. They write SARIF to tmp/scan and
+#  build.yaml uploads it once, which is what security-events: write below is
+#  for: without it the upload step fails on an otherwise green run.
+#
 #  No repository secrets. The Pages push uses the token Actions provides, and
-#  pihuw declares no ci.infisical block, so `clog ci run` runs without secrets
+#  pihuw declares no ci.infisical block, so `clog CI run` runs without secrets
 #  (needs util ci v0.16.0).
 #
 #  clog itself is pinned in .clog-version and downloaded, checksum-verified,
-#  from the mrmxf/clog-sample release (the action default).
+#  from the mrmxf/clog-sample release (the action default). That pin is what
+#  makes the staged rollout real: the four verbs, ci.stack and ci.scan all live
+#  in clog's embedded konfig, so this repo joins the new behaviour by bumping
+#  .clog-version and not before.
 #
 #  Do NOT point clog-repo at mrmxf/clog-mrmxf: that repo is private, this repo
 #  is public, and its Actions GITHUB_TOKEN cannot read it. The only way to make
@@ -46,10 +66,11 @@ permissions:
 
 jobs:
   build:
-    uses: mrmxf/util/.github/workflows/build-hugo.yaml@workflows-v1
+    uses: mrmxf/util/.github/workflows/build.yaml@workflows-v1
     permissions:
       contents: read
-      id-token: write
+      id-token: write       # OIDC, for `clog CI run`
+      security-events: write # the SARIF upload of tmp/scan
     with:
       production: ${{ github.event_name == 'workflow_dispatch' }}
 
