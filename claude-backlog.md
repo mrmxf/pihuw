@@ -72,11 +72,10 @@ contributor wanting to develop against a local checkout, has nowhere to look.
 Wanted: a docs section covering both routes.
 
 - **Manually** — Hugo extended >= 0.166.0, and *why* extended (WebP encoding, not SASS:
-  people keep assuming SASS and relaxing the requirement). The `content/` symlink and why
-  it is not committed. `hugo --quiet` must exit 0. `publishDir: kodata`, not `public`,
-  and that its output is committed.
-- **With clog** — `clog watch`, `clog Check build`, `clog github-page`. What each does, and
-  that `clog watch` manages the symlink itself so it should not be created by hand.
+  people keep assuming SASS and relaxing the requirement). That there is no `content/`
+  symlink: `module.yaml` mounts the docs. `hugo --quiet` must exit 0. `publishDir: kodata`,
+  not `public`, and that it is gitignored.
+- **With clog** — `clog watch`, `clog build`, `clog deploy prod`. What each does.
 - **Developing against a local checkout** — the `replacements:` line in a consumer's
   `module.yaml`, and the warning that it must be commented out before `hugo mod vendor`.
   This is in `claude-build.md` and is exactly the kind of thing a consumer gets wrong.

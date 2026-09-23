@@ -4,81 +4,45 @@
 #
 #  pihuw docs: build the Hugo site and publish it to GitHub Pages.
 #
-#  Deliberately thin. The work is in mrmxf/util's callable workflows, and what
-#  this repo wants is data in .clog.yaml (ci.stack, ci.scan, ci.policy,
-#  ci.modes, ci.targets).
+#  The work is in mrmxf/clog's reusable workflows. What this repo wants is data
+#  in .clog.yaml, and .clog-version pins the clog they install.
 #
-#  WHEN IT RUNS
-#    v* tag        build + deploy. ci.policy.deploy.prod.tags is ["v*"], so the
-#                  tag is what makes a run production - not the branch.
-#    other push    build only. No ci.policy.deploy.dev rule, so nothing ships.
-#    manual        build + deploy the NEWEST RELEASE TAG, not the branch you
-#                  launched from: production: true makes clog-prepare check out
-#                  the production tag and force prod mode. Use it to republish
-#                  the current release without cutting a new one.
+#    v* tag   build + deploy - ci.policy.deploy.prod.tags makes a tag prod
+#    main     build only
+#    manual   rebuild + republish the NEWEST RELEASE TAG, whatever branch the
+#             run is launched from (production: true)
 #
-#  ONE BUILD WORKFLOW, NOT ONE PER LANGUAGE
-#  build.yaml replaces build-hugo.yaml. The two per-stack workflows differed
-#  only in which tools they installed and which snippets they ran, and ci.stack
-#  now knows both - so the repo declares its stack and the workflow stops
-#  caring. That removes the class of bug where the workflow and the config
-#  disagree about what kind of repo this is. `stack:` is left unset here, which
-#  means every stack: pihuw has one, and a default of "everything" is the one
-#  that keeps working if it ever gains another.
-#
-#  SCANNING
-#  The sweeps are check phases inside `clog build`, not workflow steps, so they
-#  run on every build - a branch push and a pull request included, which the old
-#  `if: do_deploy` trivy step never did. They write SARIF to tmp/scan and
-#  build.yaml uploads it once, which is what security-events: write below is
-#  for: without it the upload step fails on an otherwise green run.
-#
-#  No repository secrets. The Pages push uses the token Actions provides, and
-#  pihuw declares no ci.infisical block, so `clog CI run` runs without secrets
-#  (needs util ci v0.16.0).
-#
-#  clog itself is pinned in .clog-version and downloaded, checksum-verified,
-#  from the mrmxf/clog-sample release (the action default). That pin is what
-#  makes the staged rollout real: the four verbs, ci.stack and ci.scan all live
-#  in clog's embedded konfig, so this repo joins the new behaviour by bumping
-#  .clog-version and not before.
-#
-#  Do NOT point clog-repo at mrmxf/clog-mrmxf: that repo is private, this repo
-#  is public, and its Actions GITHUB_TOKEN cannot read it. The only way to make
-#  it work is a PAT for private source in a public repo's secrets, which is a
-#  worse problem than a broken deploy.
-#
-#  The deploy workflow is still called deploy-s3: the name is historical, it
-#  runs `clog deploy` once per ci.targets entry and the target's kind decides
-#  where it goes. pihuw's target is kind: github-pages.
+#  No secrets: the Pages push uses the Actions token, and .clog.yaml has no
+#  ci.infisical block. Leave clog-repo at its default - a private release repo
+#  would need a PAT in this public repo's secrets.
 
 name: build-deploy
 run-name: ${{ github.workflow }} 🥷${{ github.actor }} (${{ github.event_name }} ${{ github.ref_name }})
 
 on:
   push:
-    tags: ["v*"]            # a release publishes the docs
-    branches: ["main"]      # ordinary pushes build, and stop there
-  workflow_dispatch:        # manual: rebuild + republish the newest release tag
+    tags: ["v*"]
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   build:
-    uses: mrmxf/util/.github/workflows/build.yaml@workflows-v1
+    uses: mrmxf/clog/.github/workflows/build-check.yaml@workflows
     permissions:
       contents: read
-      id-token: write       # OIDC, for `clog CI run`
-      security-events: write # the SARIF upload of tmp/scan
+      id-token: write        # OIDC, for `clog CI run`
+      security-events: write # SARIF upload of _clog_build/scan
     with:
       production: ${{ github.event_name == 'workflow_dispatch' }}
 
   deploy:
     needs: [build]
-    uses: mrmxf/util/.github/workflows/deploy-s3.yaml@workflows-v1
+    uses: mrmxf/clog/.github/workflows/deploy-probe.yaml@workflows
     permissions:
-      contents: write       # the Pages deploy force-pushes the gh-pages branch
+      contents: write        # the Pages deploy force-pushes gh-pages
       id-token: write
     with:
       production: ${{ github.event_name == 'workflow_dispatch' }}

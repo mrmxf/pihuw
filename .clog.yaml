@@ -27,7 +27,6 @@
 clog:
   # changelog history for humans. BC does not decide anything from it.
   releases-path: "data/releases.yaml"
-  stash-path: tmp/BcStash.yaml
 
 # =============================================================================
 #    ___   ___
@@ -37,8 +36,8 @@ clog:
 # -----------------------------------------------------------------------------
 # `clog CI show policy` explains any decision this block produces.
 ci:
-  # the build job uploads kodata/ + tmp/ under this name and the deploy job
-  # downloads it - without ci.artifact the two jobs share nothing and the
+  # the build job uploads _clog_build/ + kodata/ under this name and the deploy
+  # job downloads it - without ci.artifact the two jobs share nothing and the
   # deploy finds an empty kodata/
   artifact: pihuw-site
   title: pihuw docs
@@ -82,7 +81,7 @@ ci:
       # generated from what this sweep already reads, so scanning them again
       # only slows it down. kodata's rendered output IS swept, for secrets, by
       # the pages target below.
-      skip-dirs: node_modules,vendor,public,tmp,kodata,resources
+      skip-dirs: node_modules,vendor,public,kodata,resources,_clog_build,_clog_deploy
 
   policy:
     # every event may build, including a laptop; only a release tag publishes
@@ -143,7 +142,6 @@ snippets:
   project:
     config: |
       export PROJECT=pihuw
-      export DOCKER_NS=mrmxf
     has:
       hugo: hugo version|grep -oE '[0-9]+\.[0-9]+\.[0-9]+'|head -1
     needs:
@@ -163,7 +161,7 @@ check:
     blocks:
       - name: hugo version
         try: |
-          clog BC semver "$(clog project needs hugo)" "$(clog project has hugo)" >/dev/null 2>&1
+          clog BC semver satisfies "$(clog project needs hugo)" "$(clog project has hugo)"
         ok: clog Log -I "hugo $(clog project has hugo) satisfies $(clog project needs hugo)"
         catch: |
           clog Log -E "hugo: need >= $(clog project needs hugo), got $(clog project has hugo)"

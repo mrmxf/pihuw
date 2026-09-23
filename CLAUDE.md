@@ -20,7 +20,6 @@ find `ln -s documentation/content content`, it is stale and it shadows the mount
 | Build, module, config | [claude-build.md](claude-build.md) |
 | Deploy, gh-pages, Actions | [claude-deploy.md](claude-deploy.md) |
 | Known issues | [claude-backlog.md](claude-backlog.md) |
-| Build/deploy: clog BC, Pages | [claude-plan-clog-pages.md](claude-plan-clog-pages.md) |
 | Why the theme is shaped this way | [claude-human-narrative.md](claude-human-narrative.md) |
 | Human-facing docs | [README.md](README.md) |
 

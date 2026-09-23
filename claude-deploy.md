@@ -8,25 +8,22 @@ module — consumers get it from a git tag, so there is nothing to deploy for th
 ## Commands
 
 ```bash
-clog github-page      # build + force-push to the gh-pages branch. Needs gh CLI.
+clog build prod              # every gate, then hugo -> kodata/. Refuses a HEAD that is not a clean v* tag
+clog deploy prod --dry-run   # what would be published, publishing nothing
+clog deploy prod             # kodata/ -> force-push gh-pages -> https://mrmxf.github.io/pihuw/
 ```
 
-Idempotent: it creates the orphan `gh-pages` branch and configures Pages on first run.
-`GH_TOKEN` or `GITHUB_TOKEN` must be set; it never prompts for a login.
-Runs the same locally and as an Actions step.
+## A release
+
+Push a `v*` tag. [build-deploy.yaml](.github/workflows/build-deploy.yaml) calls mrmxf/clog's
+`build-check.yaml`, then `deploy-probe.yaml`, which publishes the exact `kodata/` the build
+gated and then probes the live site. A push to `main` builds and stops. A manual run
+republishes the **newest release tag**, whichever branch it is launched from.
 
 ## Facts
 
-- Target is `mrmxf/pihuw` → https://mrmxf.github.io/pihuw — hardcoded in the snippet.
-- `git push --force` to `gh-pages`. That branch has no history worth keeping.
-- The snippet symlinks `content`, builds, and removes the link in a trap, so a failed
-  build cannot leave a stale symlink behind.
-- `.github/workflows/gh-static.yml` fires on push to `gh-pages`, so `clog github-page`
-  triggers the workflow rather than replacing it.
-- The workflow builds with `--minify --baseURL <pages base_url>` and uploads via
-  `actions/upload-pages-artifact@v3`.
-
-## Two known breaks — see [claude-backlog.md](claude-backlog.md)
-
-- The snippet assumes `BUILD_DIR="public"` but `hugo.yaml` sets `publishDir: kodata`.
-- ~~The workflow pins `HUGO_VERSION: 0.159.0`~~ — fixed 2026-09-21, now 0.166.0.
+- Target, branch and base URL are data in `.clog.yaml` (`ci.targets.pages`, `ci.modes`).
+- `prod` only: there is one Pages site, and a dev build would overwrite the published docs.
+- `gh-pages` is force-pushed; it has no history worth keeping.
+- No secrets. The push uses the Actions token; `.clog.yaml` has no `ci.infisical` block.
+- `.clog-version` pins the clog that CI and laptops install. Bump it deliberately.
