@@ -1,5 +1,6 @@
 # flow:"stage",   build:"dev"  = auto-add to staging server
 # flow:"release", build:"prod" = to flag as a production release
+- {version: "v0.4.14", date: 2026-09-23, build: prod, flow: main, note: "CI only, no theme change - builds on mrmxf/clog v1.0.2 through its build-check and deploy-probe workflows; the hugo-version gate uses `clog BC semver satisfies` (the old form passed on any hugo); build output in _clog_build/; deploy docs rewritten to match"}
 - {version: "v0.4.13", date: 2026-09-21, build: prod, flow: main, note: pins clog v0.12.6 in .clog-version - the first PUBLIC clog release, from mrmxf/clog-sample, so CI can install it with no token; verified end to end with get-clog.sh unauthenticated, checksum verified, then a full build and deploy dry-run}
 - {version: "v0.4.12", date: 2026-09-21, build: prod, flow: main, note: github action rebuilt on the real util callable workflows - a v* tag builds and publishes the docs, a manual run rebuilds and republishes the newest release tag; the old workflow pointed at the archived mrmxf/clog repo and a deploy-ghpages workflow that never existed; needs clog v0.12.4}
 - {version: "v0.4.11", date: 2026-09-21, build: prod, flow: main, note: clog build/deploy take a mode argument - `clog deploy prod` forces a production deploy and a mistyped mode is an error rather than a silent dev build; needs clog v0.12.2}
