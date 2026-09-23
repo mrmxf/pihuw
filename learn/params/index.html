@@ -1,0 +1,101 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=generator content="Hugo 0.166.0"><meta name=robots content="index, follow"><meta name=description content="How pihuw resolves param values — and who controls each level"><link rel=icon type=image/svg href=/brand/logo.svg><link rel="shortcut icon" href=/brand/logo.svg><title>Parameter Cascade | PiHuW</title><script>(function(){var e=localStorage.getItem("pihuw-theme");(e==="light"||e==="dark")&&document.documentElement.setAttribute("data-theme",e)})()</script><link rel=stylesheet href=/pihuw/css/picnic.min.e53f106103d4391aced5a49625d3786e8c2294f893fa8b7a7cf7c9a5eadd9935.css integrity="sha256-5T8QYQPUORrO1aSWJdN4bowilPiT+ot6fPfJperdmTU=" crossorigin=anonymous><link rel=stylesheet href=/pihuw/css/pihuw.bundle.min.9ab5299d89bcd433300660be2d4fa9d3ae340ba62d092c3f5e491e69cb6cc10b.css integrity="sha256-mrUpnYm81DMwBmC+LU+p0640C6YtCSw/XkkeactswQs=" crossorigin=anonymous><link rel=stylesheet href=/pihuw/css/fa6.min.74005d7c17d4a02f2f25404ec0655d9bc2fdaa53166874c87d7b7eec69d9088a.css integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin=anonymous><script src=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin=anonymous referrerpolicy=no-referrer></script><script defer src=/pihuw/js/theme-toggle.min.8876637a24f0996fbf24249ebe776a2106e46aa3651233d1834e09b2304a1296.js integrity="sha256-iHZjeiTwmW+/JCSevndqIQbkaqNlEjPRg04JsjBKEpY=" crossorigin=anonymous></script><script src=/pihuw/js/pihuw.d00f2708d9845bdbbd89e69cb615115b58ab75454e8a7e0896c6fa1edb655c41.js integrity="sha256-0A8nCNmEW9u9ieacthURW1irdUVOin4Ilsb6HttlXEE=" crossorigin=anonymous></script><link rel=canonical href=https://mrmxf.github.io/pihuw/learn/params/><meta property="og:site_name" content="PiHuW"><meta property="og:type" content="website"><meta property="og:title" content="Parameter Cascade | PiHuW"><meta property="og:description" content="How pihuw resolves param values — and who controls each level"><meta property="og:url" content="https://mrmxf.github.io/pihuw/learn/params/"><meta property="og:locale" content="en"><meta name=twitter:card content="summary"><meta name=twitter:title content="Parameter Cascade | PiHuW"><meta name=twitter:description content="How pihuw resolves param values — and who controls each level"></head><body><a class=pi-skip href=#pi-main>Skip to main content</a><header><nav class=pi-nav><div class=pi-nav-brand><div class=logo><a href=/pihuw/><img src=/brand/logo.svg alt=logo></a></div><div class=title><a href=/pihuw/><span id=siteTitleMenu>PiHuW</span></a></div></div><div class=view-s><div class=dropdown><div class=dropbtn><i class="fa-solid fa-bars"></i></div><div class=dropdown-content><a class=button href=/pihuw/hook/>hook
+</a><a class=button href=/pihuw/kitchen_sink/>kitchen sink
+</a><a class="active button" href=/pihuw/learn/>learn
+</a><a class=button href=/pihuw/shortcodes/>shortcodes
+</a><a class=button href=/pihuw/tk/>tk
+</a><a class=button href=/pihuw/tmpl/>tmpl
+</a><a class=button href=/pihuw/tool/>tool</a></div></div></div><div class=view-m><div class=dropdown><div class=dropbtn><i class="fa-solid fa-bars"></i></div><div class=dropdown-content><a class=button href=/pihuw/hook/>hook
+</a><a class=button href=/pihuw/kitchen_sink/>kitchen sink
+</a><a class="active button" href=/pihuw/learn/>learn
+</a><a class=button href=/pihuw/shortcodes/>shortcodes
+</a><a class=button href=/pihuw/tk/>tk
+</a><a class=button href=/pihuw/tmpl/>tmpl
+</a><a class=button href=/pihuw/tool/>tool</a></div></div></div><div class=view-w><div><a class=button href=/pihuw/hook/>hook
+</a><a class=button href=/pihuw/kitchen_sink/>kitchen sink
+</a><a class="active button" href=/pihuw/learn/>learn
+</a><a class=button href=/pihuw/shortcodes/>shortcodes
+</a><a class=button href=/pihuw/tk/>tk
+</a><a class=button href=/pihuw/tmpl/>tmpl
+</a><a class=button href=/pihuw/tool/>tool</a></div><button data-theme-toggle title="Theme: system" style="background:0 0;border:none;cursor:pointer;padding:.3em .5em;font-size:1.1em;color:inherit">
+<i class="fa-solid fa-circle-half-stroke"></i></button></div></nav><div aria-label=breadcrumb class=breadcrumb><a href=/pihuw/><i class='fa-solid fa-house'></i></a>
+<i class='fa-solid fa-arrow-right'></i>
+<a class=section href=https://mrmxf.github.io/pihuw/learn/>learn</a>
+<i class='fa-solid fa-arrow-right'></i>
+<a class="active section" aria-current=page href=https://mrmxf.github.io/pihuw/learn/params/>params</a></div></header><div class=childbar-horizontal><small><em>this section:</em></small>
+<span class=divider>|</span></div><div class="flex one six-800 six-1100 pi-nav-pad"><div class="none sixth-1100"></div><div class="full two-third-1100" style=align-content:stretch><main id=pi-main tabindex=-1><div class="flex two grow page-title"><p class="three-fourth pi-page-title">Parameter Cascade</p><div class=fourth><small><p><i class="fa-regular fa-calendar-days"></i>
+<time datetime=2026-03-30T00:00:00+00:00>2026-03-30</time></p><span class=pi-reading-time><i class="fa-regular fa-hourglass"></i>
+~5 m</span></small></div></div><h2 id=tldr>TL;DR</h2><p>Parameters are resolved in this order. <strong>Later entries win.</strong></p><table><thead><tr><th>Priority</th><th>Source</th><th>Who sets it</th></tr></thead><tbody><tr><td>1</td><td>Inline string hardcoded in a theme partial</td><td>Theme developer</td></tr><tr><td>2</td><td>Theme <code>assets/data/defaults.yaml</code></td><td>Theme developer</td></tr><tr><td>3</td><td><code>site.Params.group.thing</code> in <code>config/_default/params.yaml</code></td><td>Webmaster</td></tr><tr><td>4</td><td>Site <code>assets/data/defaults.yaml</code> or site override partial</td><td>Webmaster</td></tr><tr><td>5</td><td><code>cascade:</code> block in a section <code>_index.md</code></td><td>Section editor</td></tr><tr><td>6</td><td><code>.Page.Params.thing</code> in page frontmatter</td><td>Page creator</td></tr><tr><td>7</td><td><code>hw</code> shortcode attribute</td><td>Page creator</td></tr></tbody></table><hr><h2 id=param-details>Param Details</h2><h3 id=priority-1--inline-string-in-a-theme-partial>Priority 1 — Inline string in a theme partial</h3><p><strong>What it is:</strong> A hardcoded fallback baked directly into the template source. It is
+the last resort when nothing else has been set.</p><p><strong>Stakeholder:</strong> Theme developer. This value ships with the theme and requires a code
+change to alter it.</p><p><strong>Examples:</strong></p><ul><li><p><code>tool/banner.html</code> — <code>$imgClass := .srcClass | default ""</code>. When no <code>srcClass</code> is
+passed and nothing in params.yaml says otherwise, the image div carries no extra
+CSS class. The empty string is a safe no-op default that the developer chose
+deliberately so the element still renders.</p></li><li><p><code>tool/feature.html</code> — <code>$headerClass := .headerClass | default "header"</code>. The
+string <code>"header"</code> is the PicnicCSS class that styles a bold feature heading. Any
+site that uses a different CSS framework can override this through the cascade;
+the inline string is the sensible starting point.</p></li></ul><hr><h3 id=priority-2--theme-assetsdatadefaultsyaml>Priority 2 — Theme <code>assets/data/defaults.yaml</code></h3><p><strong>What it is:</strong> Structured default values read at render time by <code>tk/get-defaults</code>.
+Unlike an inline string, these values are co-located in one YAML file, making them
+easy to audit and consistent across all components.</p><p><strong>Stakeholder:</strong> Theme developer, but easier to change than inline strings because
+you only edit one file.</p><p><strong>Examples:</strong></p><ul><li><p><code>tool/item.html</code> — reads <code>$default.class.item_m.srcGrid</code> to set the responsive
+column width for an item&rsquo;s image column. The theme ships a grid class that fills
+one-third of the row at medium breakpoint. Every <code>item</code> component shares this
+value automatically.</p></li><li><p><code>tool/block.html</code> — reads <code>$default.class.block.imgClass</code> for the CSS class
+applied to block images. Changing it in <code>defaults.yaml</code> updates every block
+across the entire site without touching any partial.</p></li></ul><hr><h3 id=priority-3--siteparams-in-config_defaultparamsyaml>Priority 3 — <code>site.Params</code> in <code>config/_default/params.yaml</code></h3><p><strong>What it is:</strong> Site-wide configuration set by whoever manages the Hugo project.
+These values override both inline strings and <code>defaults.yaml</code>.</p><p><strong>Stakeholder:</strong> Webmaster. This is the primary tuning point for adapting the theme
+to a specific site without overriding any template code.</p><p><strong>Examples:</strong></p><ul><li><p><code>tk/resource-image-featured.html</code> — reads <code>site.Params.FeaturedGlob</code> so the
+webmaster can change the glob used to find featured images across the whole site
+(e.g., <code>"hero*.*"</code> instead of the theme default <code>"featured*.*"</code>).</p></li><li><p><code>tool/gallery.html</code> — reads <code>site.Params.ui.gallery.default.colors</code> to generate
+CSS border and fill colours for each media type in gallery thumbnails. A webmaster
+for a dark-themed site sets these once in <code>params.yaml</code> and every gallery picks
+them up automatically.</p></li></ul><hr><h3 id=priority-4--site-assetsdatadefaultsyaml-or-site-override-partial>Priority 4 — Site <code>assets/data/defaults.yaml</code> or site override partial</h3><p><strong>What it is:</strong> A consumer site can replace the theme&rsquo;s <code>assets/data/defaults.yaml</code>
+by mounting its own version via <code>module.yaml</code>. It can also drop an identically-named
+partial into its own <code>layouts/</code> tree to completely replace a theme partial.</p><p><strong>Stakeholder:</strong> Webmaster, with more precision than <code>site.Params</code>. Overriding
+<code>defaults.yaml</code> changes CSS grid and class tokens; overriding a partial changes
+logic.</p><p><strong>Examples:</strong></p><ul><li><p>A site mounts its own <code>assets/data/defaults.yaml</code> and changes
+<code>class.item_m.srcGrid</code> from a one-third column to a one-quarter column. Every
+<code>item</code> and <code>item-include</code> component in that site adapts without any partial edits.</p></li><li><p>A site places its own <code>layouts/_partials/tk/resource-image-featured.html</code> to look
+for featured images in a different resource location or to apply a different fit
+size than <code>FeaturedWxH</code> allows. The site partial completely replaces the theme
+partial for that site.</p></li></ul><hr><h3 id=priority-5--cascade-block-in-a-section-_indexmd>Priority 5 — <code>cascade:</code> block in a section <code>_index.md</code></h3><p><strong>What it is:</strong> A Hugo-native mechanism where a section&rsquo;s <code>_index.md</code> pushes param
+values down to all child pages automatically. Child pages receive these as
+<code>.Page.Params</code> values without writing anything in their own frontmatter.</p><p><strong>Stakeholder:</strong> Section editor — the person who manages a content section but is
+not the webmaster and does not edit individual pages.</p><p><strong>Examples:</strong></p><ul><li><p>A <code>products/_index.md</code> sets:</p><div class=highlight><div style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>cascade</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>params</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>FeaturedGlob</span><span style=color:#111>:</span> <span style=color:#d88200>&#34;hero*.*&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>Every product page now picks up <code>hero-*.jpg</code> as its featured image without each
+page author knowing the glob exists.</p></li><li><p>A <code>blog/_index.md</code> sets:</p><div class=highlight><div style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>cascade</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>params</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>FeaturedWxH</span><span style=color:#111>:</span> <span style=color:#d88200>&#34;400x300&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>Blog post featured thumbnails site-wide become wider than the theme default
+<code>200x200</code>, matching the blog&rsquo;s wider content column — configured once by the
+section editor, not repeated on every post.</p></li></ul><hr><h3 id=priority-6--pageparams-in-page-frontmatter>Priority 6 — <code>.Page.Params</code> in page frontmatter</h3><p><strong>What it is:</strong> Params declared in the YAML front matter of a specific page.
+Overrides everything above for that page only.</p><p><strong>Stakeholder:</strong> Page creator. This is the everyday tuning point for content authors.</p><p><strong>Examples:</strong></p><ul><li><p><code>tk/resource-image-featured.html</code> — if a page sets <code>FeaturedGlob: "portrait*.*"</code>
+in its frontmatter, that page&rsquo;s featured image search uses the portrait glob while
+every other page uses the section or site default.</p></li><li><p><code>tool/gallery.html</code> — the gallery reads image paths from
+<code>$page.Params[$from]</code>, so the entire gallery content lives in page frontmatter:</p><div class=highlight><div style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:2;-o-tab-size:2;tab-size:2;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>params</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>photos</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    - <span style=color:#ae81ff>images/cat.jpg</span>
+</span></span><span style=display:flex><span>    - <span style=color:#ae81ff>images/dog.png</span>
+</span></span></code></pre></td></tr></table></div></div><p>No shortcode attribute controls which images appear; it is entirely the page
+creator&rsquo;s data.</p></li></ul><hr><h3 id=priority-7--hw-shortcode-attribute>Priority 7 — <code>hw</code> shortcode attribute</h3><p><strong>What it is:</strong> A value passed directly to a <code>{{&amp;lt; hw >}}</code> shortcode call inside
+the page body. Overrides everything, including the page&rsquo;s own frontmatter defaults.</p><p><strong>Stakeholder:</strong> Page creator, at the point of use. Useful when one page needs two
+instances of the same component with different settings.</p><p><strong>Examples:</strong></p><ul><li><p><code>tool/gallery.html</code> — <code>{{&amp;lt; hw t = "gallery" from = "photos" mode = "small" >}}</code>.
+The <code>mode</code> attribute switches thumbnail size to <code>small</code> for this gallery only.
+A second gallery on the same page could use <code>mode = "large"</code> without any frontmatter
+change.</p></li><li><p><code>tool/feature.html</code> — <code>{{&amp;lt; hw t = "feature" src = "logo.svg" link = "/about" >}}</code>.
+The <code>link</code> attribute is entirely caller-supplied; there is no frontmatter or
+site-param fallback for it. The page creator decides at the point of authoring
+where each feature block links.</p></li></ul></main></div><div class="none sixth-1100"></div></div><footer class="flex six"><div class="none sixth-1100"></div><div class="full two-third-1100 footer"><div class=left>PiHuW <small>v0.4.14</small><br><small>mod:</small>2026-09-12
+<small>build:</small>2026-09-23 18:57</small></div><div class=middle><div class=label>Theme:
+<a href=https://github.com/mrmxf/pihuw target=_blank>pihuw</a></div><div class=label>copyright ©
+<a href=https://mrmxf.com target=_blank>Mr MXF</a></div><div class=label><a href=/privacy/>Privacy Policy</a></div><div class=label><a href=/contact>Contact</a></div><div class=label><a href=/about>About</a></div></div><div class=right>GitHub source:</div></footer></body></html>
