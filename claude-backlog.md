@@ -29,6 +29,17 @@ Severity: **B** blocking / incorrect output · **M** moderate debt · **C** cosm
 | C-19 | `documentation/content/kitchen_sink/graph.md:12` | The bar-chart example passes inline `x`/`y` with no `from`, and `tool/graph` reports "no data source". Pre-dates v0.4.9; the kitchen-sink graph has never rendered. |
 | ~~B-14~~ | clog repo | WITHDRAWN 2026-09-21 — raised against `github.com/mrmxf/clog`, the archived pre-rename repo. The live project is `github.com/mrmxf/clog-mrmxf` at `/home/bruce/gr/clogs/clog-mrmxf`, which builds cleanly on `dev`. |
 
+## Found 2026-09-24 — first live check of the Pages site in months
+
+Pages served an Actions build from 2026-04-04 until the source was switched to the
+`gh-pages` branch on 2026-09-24, so v0.4.10–v0.4.13 were never live. These surfaced once
+v0.4.14 was.
+
+| # | Where | Issue |
+|---|---|---|
+| B-15 | `config/_default/params.yaml:134` | `ui.logo: /brand/logo.svg` — no such file in `assets/` or `static/`, and the leading `/` would drop the `/pihuw/` base anyway. The docs site's logo 404s. params.yaml is consumer-facing defaults, so fix with care. |
+| B-16 | `layouts/_partials/tmpl/head-css.html:63` | Loads Font Awesome JS from cdnjs, against the "no CDNs" rule, alongside the local `css/fa6.min.css`. A theme change - ships to every consumer. |
+
 ## Documentation gaps — found 2026-09-21
 
 Both are M. Neither blocks a build; both cost every new consumer the same hour.
