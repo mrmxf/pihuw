@@ -195,35 +195,6 @@ ui:
         link:  /about
   readingTime:
     enable: true
-#           _                         _
-#   __   __| |  _ _      _  _   _ _  | |  ___
-#  / _| / _` | | ' \    | || | | '_| | | (_-<
-#  \__| \__,_| |_||_|    \_,_| |_|   |_| /__/
-# certain resources will be pulled from cdn in _partials/tmpl/head-cdn.html
-# each url is {{prefix}}{{version}}{{suffix}} with no extra processing
-# .integrity is optional
-cdn:
-  - name: jQuery
-    version: 3.7.1
-    prefix: https://cdn.jsdelivr.net/npm/jquery@
-    suffix: /dist/jquery.min.js
-    integrity: sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=
-  - name: fomantic-ui css
-    version: 2.9.4
-    prefix: https://cdn.jsdelivr.net/npm/fomantic-ui@
-    suffix: /dist/semantic.min.css
-    integrity: sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=
-  - name: fomantic-ui js
-    version: 2.9.4
-    prefix: https://cdn.jsdelivr.net/npm/fomantic-ui@
-    suffix: /dist/semantic.min.js
-    integrity: sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=
-  - name: mermaid
-    version: 11.6.0
-    prefix: https://cdn.jsdelivr.net/npm/mermaid@
-    suffix: /dist/mermaid.min.js
-    integrity: sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=
-
 #   _
 #  | |_   __ _  __ __  ___   _ _    ___   _ __    _  _
 #  |  _| / _` | \ \ / / _ \ | ' \  / _ \ | '  \  | || |

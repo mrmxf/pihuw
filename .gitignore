@@ -1,50 +1,18 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
 # clog build and deploy artifacts — canonical names, never guess
 _clog_build/
 _clog_deploy/
 
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# any soft link to the content/ folder
-/content/
-
-#tmp files and folders
-public
-kodata
+# hugo asset cache and lock - output goes to _clog_build/public (hugo.yaml)
 resources/
+.hugo_build.lock
 
-# ignore npm or yarn generated postcss source files
-node_modules/
-# ignore the tmp folder but not the readme inside it
-megalinter-reports
+# scratch
+tmp/
 tmp-*
-tmp/*
-!*/readme.md
-libxml*
-__debug_*
 
-# Mac cruft
-.DS_Store
-# windows security cruft
-*Zone.Identifier
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
-go.work
-go.work.sum
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-# env file
+# env file - never commit secrets
 .env
-# vim temporary files
-*~
-*.sw?
+
+# OS cruft: Mac, and Windows zone markers on WSL copies
+.DS_Store
+*Zone.Identifier
