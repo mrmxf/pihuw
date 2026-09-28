@@ -3,8 +3,8 @@
 Hugo theme on PicnicCSS, consumed as a Hugo module by six sites. Small footprint, no
 CDNs, Hugo built-ins only — it targets Raspberry Pi and ESP32 hosting.
 
-`clog watch` serves locally. `clog Build` makes `kodata/`, `clog Deploy` publishes it to
-GitHub Pages. Both are thin: the logic is clog's generic `bc-*` workers, and `.clog.yaml`
+`clog watch` serves locally. `clog Build` makes `_clog_build/public/`, `clog Deploy`
+publishes it to GitHub Pages. Both are thin: the logic is clog's generic `bc-*` workers, and `.clog.yaml`
 holds only this repo's settings. Version and prod mode come from git tags via `clog BC`,
 never from `releases.yaml`.
 Verify any change with `hugo --quiet`: it must exit 0.

@@ -40,6 +40,12 @@ v0.4.14 was.
 | B-15 | `config/_default/params.yaml:134` | `ui.logo: /brand/logo.svg` — no such file in `assets/` or `static/`, and the leading `/` would drop the `/pihuw/` base anyway. The docs site's logo 404s. params.yaml is consumer-facing defaults, so fix with care. |
 | B-16 | `layouts/_partials/tmpl/head-css.html:63` | Loads Font Awesome JS from cdnjs, against the "no CDNs" rule, alongside the local `css/fa6.min.css`. A theme change - ships to every consumer. |
 
+## Found 2026-09-28 — repo tidy and security review
+
+| # | Where | Issue |
+|---|---|---|
+| B-17 | `tool/gallery.html:57-70`, `tk/help-tk.html:347` | Both call jQuery and Fomantic UI (`$(...)`, `.modal(...)`), and use Fomantic classes (`ui modal`, `ui olive corner label`). The theme loads neither library: they came from the `cdn:` params block and `tmpl/head-cdn.html`, both gone. Clicking a gallery thumbnail throws `$ is not defined`; no modal opens. help-tk logs its own error. Fix without a CDN: a small vanilla `<dialog>` modal in the theme CSS bundle. Compounds C-17/C-18, so the gallery has never worked end to end. |
+
 ## Documentation gaps — found 2026-09-21
 
 Both are M. Neither blocks a build; both cost every new consumer the same hour.
@@ -84,8 +90,9 @@ Wanted: a docs section covering both routes.
 
 - **Manually** — Hugo extended >= 0.166.0, and *why* extended (WebP encoding, not SASS:
   people keep assuming SASS and relaxing the requirement). That there is no `content/`
-  symlink: `module.yaml` mounts the docs. `hugo --quiet` must exit 0. `publishDir: kodata`,
-  not `public`, and that it is gitignored.
+  symlink: `module.yaml` mounts the docs. `hugo --quiet` must exit 0. The publishDir part is
+  DONE 2026-09-28: `learn/building.md` explains `_clog_build/public` and how a consumer sets
+  their own.
 - **With clog** — `clog watch`, `clog build`, `clog deploy prod`. What each does.
 - **Developing against a local checkout** — the `replacements:` line in a consumer's
   `module.yaml`, and the warning that it must be commented out before `hugo mod vendor`.
@@ -254,7 +261,8 @@ Consequence for the docs: `hook/` docs must state the version a hook appeared in
 on v0.4.3 reading current docs will write `hook/head-end` and get silence.
 
 Related: two consumers still carry a `cdn:` params block feeding `tmpl/head-cdn.html`, which
-this theme no longer ships. See `C-15`, and www-mrmxf-com `B-05`.
+this theme no longer ships. See `C-15`, and www-mrmxf-com `B-05`. The theme's own dead `cdn:`
+block was deleted from `params.yaml` on 2026-09-28; see B-17 for what still assumed it.
 
 ## Overrides in www-chiddingfoldbonfire that belong in this theme
 

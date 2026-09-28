@@ -5,8 +5,11 @@
 # cSpell:ignore docsy fortawesome fontawesome webfonts
 title: PiHuW
 
-# override publishing to public so that ko can build a lightweight container
-publishDir: kodata
+# Docs site only - a root key, so it never reaches a consumer, who gets hugo's
+# default public/ unless they set their own. It lives in _clog_build/ because
+# clog's CI hands only its canonical dirs from the build job to the deploy job.
+# .clog.yaml ci.targets.pages publishes it to gh-pages.
+publishDir: _clog_build/public
 # ----------------------------------------------------------------------------------------------------------------------
 #   __  __          _
 #  |  \/  |  __ _  (_)  _ _      _ __    ___   _ _    _  _

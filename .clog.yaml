@@ -14,9 +14,9 @@
 # is changelog history and is never read to decide dev-vs-prod.
 #
 #   clog watch              hugo server, from ci.stack[0].watch
-#   clog build [dev|prod]   every gate, then hugo -> kodata/
+#   clog build [dev|prod]   every gate, then hugo -> _clog_build/public/
 #   clog build --fast       no gates at all, and no claim about the branch
-#   clog deploy prod        kodata/ -> gh-pages -> mrmxf.github.io/pihuw
+#   clog deploy prod        _clog_build/public/ -> gh-pages -> mrmxf.github.io/pihuw
 #
 # The verbs are util's, not this repo's: there are no build/watch/deploy
 # snippets below any more. `clog build` means READY TO PUSH — it runs pre-build,
@@ -36,9 +36,9 @@ clog:
 # -----------------------------------------------------------------------------
 # `clog CI show policy` explains any decision this block produces.
 ci:
-  # the build job uploads _clog_build/ + kodata/ under this name and the deploy
-  # job downloads it - without ci.artifact the two jobs share nothing and the
-  # deploy finds an empty kodata/
+  # the build job uploads _clog_build/ (which holds hugo's publishDir) under this
+  # name and the deploy job downloads it - without ci.artifact the two jobs share
+  # nothing and the deploy finds an empty _clog_build/public/
   artifact: pihuw-site
   title: pihuw docs
 
@@ -53,8 +53,8 @@ ci:
       type: hugo
       # the hugo type assumes a site that also ships as a container. pihuw
       # publishes to Pages and builds no image, so ko is dropped from both
-      # lists. kodata/ is hugo's publishDir here for historical reasons - it is
-      # not ko-data, and nothing runs ko.
+      # lists. hugo's publishDir is _clog_build/public (hugo.yaml) so that CI
+      # carries it from the build job to the deploy job.
       tools: [hugo, trivy]
       make:  [hugo]
       # pre-build lint scan is the type default; `pihuw` is this repo's own
@@ -77,11 +77,11 @@ ci:
       secrets: true
       severity: HIGH,CRITICAL
       ignore-unfixed: true
-      # kodata is hugo's publishDir and resources/ is its asset cache - both are
+      # _clog_build/public is hugo's publishDir and resources/ its asset cache - both are
       # generated from what this sweep already reads, so scanning them again
-      # only slows it down. kodata's rendered output IS swept, for secrets, by
+      # only slows it down. The rendered output IS swept, for secrets, by
       # the pages target below.
-      skip-dirs: node_modules,vendor,public,kodata,resources,_clog_build,_clog_deploy
+      skip-dirs: node_modules,vendor,public,resources,_clog_build,_clog_deploy
 
   policy:
     # every event may build, including a laptop; only a release tag publishes
@@ -108,13 +108,13 @@ ci:
       # the published docs with a draft build.
       modes: [prod]
       prod:
-        dir: kodata          # hugo.yaml publishDir
+        dir: _clog_build/public   # hugo.yaml publishDir
         branch: gh-pages
       # github-pages has no default sweep and clog refuses to invent one, so
       # this block is required rather than optional.
       scan:
         # A rendered site has no lockfiles and no binaries: a filesystem
-        # vulnerability sweep of kodata/ finds nothing and reports it in green,
+        # vulnerability sweep of the site finds nothing and reports it in green,
         # which reads as coverage and is not. The dependencies are in the
         # source, and ci.scan.source above is where they get swept.
         vuln: none
@@ -126,7 +126,7 @@ ci:
         # artifact sweep deliberately ignores deploy-mode membership - it visits
         # this prod-only target on dev builds too, so that a pull request is
         # scanned. Leaving ref implicit would make it ask for prod data in dev.
-        ref: kodata
+        ref: _clog_build/public
 
 #               _                       _
 #   ||_  _ _   (_)  _ __   _ __   ___  | |_   ___

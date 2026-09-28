@@ -8,15 +8,15 @@ module — consumers get it from a git tag, so there is nothing to deploy for th
 ## Commands
 
 ```bash
-clog build prod              # every gate, then hugo -> kodata/. Refuses a HEAD that is not a clean v* tag
+clog build prod              # every gate, then hugo -> _clog_build/public/. Refuses a HEAD that is not a clean v* tag
 clog deploy prod --dry-run   # what would be published, publishing nothing
-clog deploy prod             # kodata/ -> force-push gh-pages -> https://mrmxf.github.io/pihuw/
+clog deploy prod             # _clog_build/public/ -> force-push gh-pages -> https://mrmxf.github.io/pihuw/
 ```
 
 ## A release
 
 Push a `v*` tag. [build-deploy.yaml](.github/workflows/build-deploy.yaml) calls mrmxf/clog's
-`build-check.yaml`, then `deploy-probe.yaml`, which publishes the exact `kodata/` the build
+`build-check.yaml`, then `deploy-probe.yaml`, which publishes the exact `_clog_build/public/` the build
 gated and then probes the live site. A push to `main` builds and stops. A manual run
 republishes the **newest release tag**, whichever branch it is launched from.
 
