@@ -92,6 +92,6 @@ override any of them by placing an identically-named file in their site's
 | Partial | Purpose |
 |---|---|
 | `get-blogs-date.html` | Returns all blog pages sorted newest-first |
-| `get-version-data.html` | Reads theme version metadata |
+| `get-version-data.html` | First entry of the site's own `data/releases.yaml` (empty dict if none) — the footer's site version |
 | `outputformat.html` | Handles alternate output formats (RSS, JSON) |
 | `dbg-template-comment.html` | Emits an HTML comment with the current template name — server only |

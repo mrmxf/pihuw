@@ -1,0 +1,32 @@
+{{- /*
+  tk/get-theme-version
+  Returns the installed pihuw version, e.g. "v0.4.16".
+
+  No params: the dot is ignored.
+
+  In a consumer, hugo.Deps lists github.com/mrmxf/pihuw at the version its go.mod
+  pins. In the theme's own docs site pihuw is the project (the dep with no Owner), so
+  the version comes from the repo's data/releases.yaml via tmpl/get-version-data.
+  A consumer on a HUGO_MODULE_REPLACEMENTS / replacements: working tree sees the
+  folder path, not the module path, so no version is known.
+
+  returns (string — version, or "" when unknown)
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+*/ -}}
+{{- $ret    := "" -}}
+{{- $module := "github.com/mrmxf/pihuw" -}}
+{{- $isDocs := false -}}
+{{- range hugo.Deps -}}
+  {{- if eq .Path $module -}}
+    {{- if .Owner -}}
+      {{- $ret = .Version -}}
+    {{- else -}}
+      {{- $isDocs = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $isDocs -}}
+  {{- $ret = (partial "tmpl/get-version-data" .).version | default "" -}}
+{{- end -}}
+{{- return $ret -}}

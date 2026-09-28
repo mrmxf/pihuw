@@ -65,6 +65,7 @@ The `$img` dict fields returned by `get-asset`:
 |---|---|---|
 | `get-defaults.html` | map | Parsed `assets/data/defaults.yaml` — component default class names |
 | `get-logo-path-string.html` | string | Site logo `src` path |
+| `get-theme-version.html` | string | Installed pihuw version from `hugo.Deps` (the consumer's `go.mod` pin); `""` on a local replacement |
 
 ## Opt validation
 

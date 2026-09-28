@@ -10,11 +10,15 @@
   leading "data/" and the extension are stripped to give the hugo.Data key, so a
   consumer's existing `releaseTracking: data/releases.yaml` keeps working.
 
-  returns (dict) — first entry from the YAML list, or "" if the file is missing/empty
+  The theme's own releases.yaml is not exported (v0.4.16), so this reads the SITE's
+  release history. For the installed theme version use tk/get-theme-version.
+
+  returns (dict) — first entry from the YAML list, or an empty dict (falsy) if the
+          file is missing/empty, so `.version` on the result is safe either way
 
   DO NOT call partial "tk/dbg-template" - it prevents return from working.
 */ -}}
-{{- $ret  := "" -}}
+{{- $ret  := dict -}}
 {{- $file := site.Params.releaseTracking | default "data/releases.yaml" -}}
 {{- $key  := strings.TrimSuffix (path.Ext $file) (strings.TrimPrefix "data/" $file) -}}
 {{- $node := hugo.Data -}}

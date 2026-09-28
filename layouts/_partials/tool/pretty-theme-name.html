@@ -12,15 +12,14 @@ Display stylized pihuw text:
 {{if strings.Contains . "q"}}{{$showText = false}}{{end}}
 {{if strings.Contains . "v"}}{{$showVersion = true}}{{end}}
 {{ end -}}
-<a href="https://github.com/mrmxf/pihuw" target="_blank">
+<a href="https://github.com/mrmxf/pihuw" target="_blank" rel="noopener">
   {{- if $showText}}<span style="color:red;">P</span><span style="color:grey;">i</span><span style="color:green;">H</span><span style="color:grey;">u</span><span style="color:blue;">W</span>{{end}}
-  {{if $showVersion}}
-  {{$versionData := (partial "tmpl/get-version-data")}}
-  {{$v := $versionData.version}}
-  {{$bits := split $v "."}}
-  {{$maj := index $bits 0 | default ""}}
-  {{$min := index $bits 1 | default ""}}
-  {{$pat := index $bits 2 | default ""}}
-  v<span class="logo-fo">{{$maj}}</span>.<span class="logo-hu">{{$min}}</span>.<span class="logo-w">{{$pat}}</span>
-  {{end -}}
+  {{- $v := "" -}}
+  {{- if $showVersion }}{{ $v = strings.TrimPrefix "v" (partial "tk/get-theme-version" .) }}{{ end -}}
+  {{- with $v }}
+  {{- $bits := split . "." }}
+  {{- if eq (len $bits) 3 }}
+  v<span class="logo-fo">{{ index $bits 0 }}</span>.<span class="logo-hu">{{ index $bits 1 }}</span>.<span class="logo-w">{{ index $bits 2 }}</span>
+  {{- else }} v{{ . }}{{ end }}
+  {{- end -}}
 </a>

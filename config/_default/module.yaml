@@ -12,6 +12,9 @@ hugoVersion:
 #   static/favicon.ico    — doc-site favicon
 #   static/logo.png       — doc-site logo
 #   static/rc/            — doc-site SVG icons
+#   data/                 — the theme's releases.yaml; exported, it became every
+#                           consumer's site version (fixed v0.4.16). Consumers read
+#                           the theme version from hugo.Deps instead.
 # Only static/webfonts is exported — required by assets/css/fa6.min.css.
 mounts:
 - source: layouts
@@ -20,8 +23,6 @@ mounts:
   target: assets
 - source: archetypes
   target: archetypes
-- source: data
-  target: data
 - source: i18n
   target: i18n
 - source: static/webfonts
@@ -36,8 +37,8 @@ imports:
   #   documentation/content -> content   (serves the docs pages)
   #   documentation/static  -> static    (serves favicon, logo, rc/)
   #   static                -> static    (serves webfonts alongside the above)
-  # data/ is NOT remounted here: the top-level mounts above already provide it, and
-  # mounting it twice makes Hugo warn that releases.yaml overrides itself.
+  # data/ needs no mount: Hugo always reads the project's own data/, which is how
+  # the docs site finds releases.yaml.
   mounts:
   - source: documentation/content
     target: content
