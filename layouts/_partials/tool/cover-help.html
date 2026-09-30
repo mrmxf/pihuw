@@ -85,6 +85,20 @@ Cover partial help using modular help system */ -}}
       "default" ""
     )
     (dict
+      "name" "beforeHTML"
+      "type" "string"
+      "required" false
+      "description" "Markup emitted verbatim inside the section, before the overlay (`.pi-cover-inner`). For a component at the top of the band in normal flow, e.g. an animated nav. It needs `position:relative` and `z-index` >= 1 to sit above the scrim."
+      "default" ""
+    )
+    (dict
+      "name" "afterHTML"
+      "type" "string"
+      "required" false
+      "description" "As beforeHTML, emitted after the overlay: a component at the bottom of the band, e.g. a slider."
+      "default" ""
+    )
+    (dict
       "name" "class"
       "type" "string"
       "required" false

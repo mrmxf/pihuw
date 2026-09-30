@@ -14,7 +14,12 @@
     2. picnic          the grid and base components
     3. the pihuw bundle  every assets/css/pihuw/*.css, concatenated in
                          filename order (see below)
-    4. fa6             icons
+    4. fa6             icons: the Font Awesome 6.7.2 CSS, drawing from the
+                       fonts in static/webfonts (solid, regular, brands — all
+                       6.7.2, matching the CSS). No SVG+JS: until v0.4.17 the
+                       cdnjs all.min.js also loaded here, against the no-CDN
+                       rule, and its SVGs hid a missing brands font and a solid
+                       font from a different FA build.
     5. site.css        the consumer's overrides — LAST so they win on equal
                        specificity
     6. theme-toggle.js deferred; skipped entirely when the toggle is hidden
@@ -60,7 +65,6 @@
 
 {{- with resources.Get "css/fa6.min.css" -}}
   {{- partial "tmpl/css-link" (dict "path" "css/fa6.min.css") -}}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{- end -}}
 
 {{- /* Site overrides, last.

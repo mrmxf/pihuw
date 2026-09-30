@@ -38,7 +38,7 @@ v0.4.14 was.
 | # | Where | Issue |
 |---|---|---|
 | B-15 | `config/_default/params.yaml:134` | `ui.logo: /brand/logo.svg` — no such file in `assets/` or `static/`, and the leading `/` would drop the `/pihuw/` base anyway. The docs site's logo 404s. params.yaml is consumer-facing defaults, so fix with care. |
-| B-16 | `layouts/_partials/tmpl/head-css.html:63` | Loads Font Awesome JS from cdnjs, against the "no CDNs" rule, alongside the local `css/fa6.min.css`. A theme change - ships to every consumer. |
+| ~~B-16~~ | `layouts/_partials/tmpl/head-css.html:63` | FIXED 2026-09-30 (v0.4.17) — the cdnjs `all.min.js` is gone. Its SVGs were masking two font faults, both fixed: `fa-brands-400.woff2` was never committed (every page using a brand icon logged a failed font download), and `fa-solid-900.woff2` came from a different FA build (font version 896.256, CFF) than the 6.7.2 CSS. All three fonts are now the 6.7.2 files. |
 
 ## Found 2026-09-28 — repo tidy and security review
 

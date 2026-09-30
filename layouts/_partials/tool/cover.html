@@ -14,6 +14,14 @@
   .innerHTML — as .inner but emitted verbatim (optional). For a partial calling
             cover directly with rendered markup: markdownify would turn indented
             HTML into a code block.
+  .beforeHTML — markup emitted verbatim inside the <section>, BEFORE .pi-cover-inner
+            (optional). With .afterHTML, the only place a component can sit at the
+            top or bottom of the band in normal flow, e.g. an animated nav or a
+            slider. .pi-cover-inner is position:relative with a max-width, so
+            innerHTML cannot break out of it. The slot content brings its own
+            classes and needs position:relative plus z-index >= 1 to sit above the
+            scrim. Stack them with `.pi-cover.your-class { flex-direction: column }`.
+  .afterHTML — as .beforeHTML, emitted AFTER .pi-cover-inner (optional).
   .class  — extra classes on the <section>, for site CSS to hook (optional)
   .height — CSS length for the band's min-height (optional; default "60svh")
   .page   — Hugo Page (supplied by the hw shortcode)
@@ -70,6 +78,9 @@
     <span class="pi-cover-scrim"></span>
   {{- end -}}
 {{- end }}
+{{- with .beforeHTML }}
+  {{ . | safeHTML }}
+{{- end }}
   <div class="pi-cover-inner">
     {{- with .header }}
     <h1>{{ with $.link }}<a href="{{ . }}">{{ end }}{{ $.header }}{{ with $.link }}</a>{{ end }}</h1>
@@ -87,4 +98,7 @@
     {{ . | safeHTML }}
     {{- end }}
   </div>
+{{- with .afterHTML }}
+  {{ . | safeHTML }}
+{{- end }}
 </section>

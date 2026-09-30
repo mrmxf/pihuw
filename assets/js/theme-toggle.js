@@ -21,10 +21,8 @@
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('pihuw-theme', theme);
     }
-    // Update all toggle button icons on the page.
-    // FA SVG+JS replaces <i> elements with <svg> after DOMContentLoaded, so we
-    // cannot rely on btn.querySelector('i'). Instead, replace the inner HTML with
-    // a fresh <i> — FA's mutation observer will re-process it into an SVG.
+    // Update all toggle button icons on the page. A fresh <i> is drawn by the
+    // Font Awesome webfont CSS (no FA SVG+JS since v0.4.17).
     document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
       btn.innerHTML = '<i class="fa-solid ' + effectiveIcon(theme) + '"></i>';
       btn.setAttribute('title', 'Theme: ' + theme);

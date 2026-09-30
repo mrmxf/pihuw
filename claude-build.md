@@ -35,7 +35,11 @@ identical to a symlinked build. Do not add one: a stale symlink shadows the moun
 ## The module contract
 
 `config/_default/module.yaml` `mounts:` is what consumers receive: layouts, assets,
-`static/webfonts` (required by `assets/css/fa6.min.css`).
+`static/webfonts` (required by `assets/css/fa6.min.css`). The CSS and all three fonts
+(`fa-solid-900`, `fa-regular-400`, `fa-brands-400`, woff2) are Font Awesome 6.7.2 and must
+be upgraded together: the CSS maps icon names to codepoints in THOSE fonts. The CSS's
+`.ttf` fallbacks are not shipped (every supported browser takes woff2). There is no FA
+JavaScript: icons are webfont glyphs in `<i>` elements.
 
 Deliberately NOT exported — adding any of these breaks consumer sites:
 
