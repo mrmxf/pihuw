@@ -1,0 +1,169 @@
+{{- /*
+  tool/heroslider
+  A slider of image + text slides, sized by CSS geometry, for the bottom (or top)
+  of a hero cover band. Also renders in normal flow anywhere else.
+
+      {{< hw t="heroslider" from="heroslider-sponsors" />}}
+      front matter  heroslider: heroslider-sponsors     (for your hero partial, below)
+
+  In a hero: render it and pass it to tool/cover as `afterHTML` (or `beforeHTML`
+  when tk/heroslider-config returns edge "top"), and add the class
+  `has-heroslider` to the cover. Cover becomes a column: the slider sits at that
+  end in normal flow and the heading content centres in what is left.
+
+  All settings, their layering and the data file format: tk/heroslider-config.
+  hw props used: from header class id height srcOn srcWidth process count skip.
+
+  Built from the theme's own machinery:
+    image  tool/media -> tool/image -> tk/get-asset with `process`. get-asset reads
+           .RelPermalink only AFTER Process, so the original is never published.
+           `fit` never upscales. SVG passes through.
+    text   tool/caption: <footer class="caption">, the slide header as its lead-in.
+           Restyled by `.heroslider .caption` in 68-component-heroslider.css.
+
+  Markup: .heroslider > .heroslider-track > article.heroslider-slide.heroslider-src-<srcOn>
+          > [a] > .heroslider-src + .heroslider-txt. Either half is left out when
+          the slide has none, and the other fills the slide.
+
+  Geometry reaches CSS as custom properties on the section:
+    --heroslider-width --heroslider-height --heroslider-offset --heroslider-src-width
+  plus the classes heroslider-top|bottom and heroslider-align-left|center|right.
+
+  display_order random: the config shuffles once per build; the script below
+  reshuffles the slides on every page load, before first paint, and renumbers
+  their "n of m" labels.
+
+  Narrow screens (max-width 40em): a left/right slide would stack its
+  image over its text, too small to read. Instead such a slide gets the class
+  heroslider-flip and shows the image full-height, slides up to the text, then
+  holds the text until the next slide. The animation is pure CSS, timed from
+  --heroslider-dwell (the interval, rendered here); the script only marks the
+  current slide (is-current restarts it) and pauses it with the auto-advance
+  (heroslider-paused). It is gated on heroslider-js, which the script adds only
+  when auto-advance runs, so no JS, interval 0 or reduced motion keep the stack.
+
+  The track is a scroll-snap strip, so it swipes with no JS. The script adds
+  prev/next and an auto-advance that pauses on hover, on focus and on the pause
+  button (WCAG 2.2.2), and never starts under prefers-reduced-motion.
+*/ -}}
+{{- $page := .page -}}
+{{- $c := partial "tk/heroslider-config" . -}}
+{{- $n := len $c.slides -}}
+{{- $vidExts := site.Params.extensions.video | default (slice) -}}
+{{- $style := printf "--heroslider-width:%s;--heroslider-height:%s;--heroslider-offset:%s"
+      $c.width $c.height $c.offset -}}
+{{- if gt $c.interval 0.0 -}}{{- $style = printf "%s;--heroslider-dwell:%gs" $style $c.interval -}}{{- end -}}
+<section class="heroslider heroslider-{{ $c.edge }} heroslider-align-{{ $c.align }}{{ with $c.class }} {{ . }}{{ end }}"
+         id="{{ $c.id }}" aria-roledescription="carousel" aria-label="{{ $c.header }}"
+         style="{{ $style | safeCSS }}">
+  <div class="heroslider-track">
+  {{- range $i, $s := $c.slides }}
+    {{- $flip := and $s.src (or $s.header $s.text) (in (slice "left" "right") $s.srcOn) }}
+    <article class="heroslider-slide heroslider-src-{{ $s.srcOn }}{{ if $flip }} heroslider-flip{{ end }}" aria-roledescription="slide"
+             aria-label="{{ add $i 1 }} of {{ $n }}"
+             style="{{ printf "--heroslider-src-width:%g%%" (mul $s.srcWidth 100) | safeCSS }}">
+    {{- with $s.link }}
+      <a href="{{ . }}"{{ if strings.HasPrefix . "http" }} target="_blank" rel="noopener"{{ end }}>
+    {{- end }}
+    {{- with $s.src }}
+      <div class="heroslider-src">
+        {{- partial "tool/media" (dict
+              "src"        .
+              "alt"        $s.alt
+              "process"    $s.process
+              "page"       $page
+              "srcClass"   "heroslider-img"
+              "srcIsVideo" (in $vidExts (strings.ToLower (path.Ext .)))) -}}
+      </div>
+    {{- end }}
+    {{- if or $s.header $s.text }}
+      <div class="heroslider-txt">
+        {{- $text := "" -}}{{- with $s.text -}}{{- $text = . | markdownify -}}{{- end -}}
+        {{- partial "tool/caption" (dict "header" $s.header "text" $text) -}}
+      </div>
+    {{- end }}
+    {{- with $s.link }}
+      </a>
+    {{- end }}
+    </article>
+  {{- end }}
+  </div>
+  {{- if gt $n 1 }}
+  <div class="heroslider-controls">
+    <button type="button" class="heroslider-prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+    {{- if gt $c.interval 0.0 }}
+    <button type="button" class="heroslider-pause" aria-label="Pause slides" aria-pressed="false" hidden><i class="fa-solid fa-pause" aria-hidden="true"></i></button>
+    {{- end }}
+    <button type="button" class="heroslider-next" aria-label="Next slide"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+  </div>
+<script>
+(function () {
+  const root  = document.getElementById({{ $c.id }});
+  const track = root.querySelector('.heroslider-track');
+  const n     = track.children.length;
+  {{- if eq $c.order "random" }}
+  // display_order: random. Fisher-Yates, then renumber the slide labels.
+  // Snapping is OFF while the nodes move: the browser remembers which slide the
+  // track snapped to on first layout and, if that node moves, scrolls after it,
+  // so the page opened on a random slide with its flip already under way.
+  // Back to the start and a forced layout before snapping resumes, so the snap
+  // target is picked afresh: the new first slide.
+  const deck = Array.from(track.children);
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  track.style.scrollSnapType = 'none';
+  deck.forEach(function (s, i) { s.setAttribute('aria-label', (i + 1) + ' of ' + n); track.appendChild(s); });
+  track.scrollLeft = 0;
+  void track.offsetWidth;
+  track.style.scrollSnapType = '';
+  {{- end }}
+  const ms    = {{ $c.interval }} * 1000;
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pause = root.querySelector('.heroslider-pause');
+  let stopped = false, held = false, timer = null, cur = -1, settle = null;
+
+  // is-current (re)starts the narrow-screen image->text flip on that slide.
+  function mark(i) {
+    if (i === cur) return;
+    if (track.children[cur]) track.children[cur].classList.remove('is-current');
+    cur = i;
+    track.children[cur].classList.add('is-current');
+  }
+  function at()   { return Math.round(track.scrollLeft / track.clientWidth); }
+  function go(i)  { i = (i + n) % n; mark(i); track.scrollTo({ left: i * track.clientWidth, behavior: still ? 'auto' : 'smooth' }); }
+  function tick() {
+    clearTimeout(timer);
+    const run = ms && !still && !stopped && !held;
+    root.classList.toggle('heroslider-paused', !run);
+    if (run) timer = setTimeout(function () { go(at() + 1); tick(); }, ms);
+  }
+
+  if (ms && !still) root.classList.add('heroslider-js');
+  mark(0);
+  // A swipe changes slide without go(): mark whichever slide it settles on.
+  track.addEventListener('scroll', function () { clearTimeout(settle); settle = setTimeout(function () { mark(at()); }, 120); });
+
+  root.querySelector('.heroslider-prev').addEventListener('click', function () { go(at() - 1); tick(); });
+  root.querySelector('.heroslider-next').addEventListener('click', function () { go(at() + 1); tick(); });
+  root.addEventListener('mouseenter', function () { held = true;  tick(); });
+  root.addEventListener('mouseleave', function () { held = false; tick(); });
+  root.addEventListener('focusin',    function () { held = true;  tick(); });
+  root.addEventListener('focusout',   function (e) { if (!root.contains(e.relatedTarget)) { held = false; tick(); } });
+
+  if (pause && !still) {
+    pause.hidden = false;
+    pause.addEventListener('click', function () {
+      stopped = !stopped;
+      pause.setAttribute('aria-pressed', stopped);
+      pause.setAttribute('aria-label', stopped ? 'Play slides' : 'Pause slides');
+      pause.firstElementChild.className = stopped ? 'fa-solid fa-play' : 'fa-solid fa-pause';
+      tick();
+    });
+  }
+  tick();
+})();
+</script>
+  {{- end }}
+</section>

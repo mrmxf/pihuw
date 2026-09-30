@@ -1,0 +1,115 @@
+{{partial "tk/dbg-template" .}}{{/*
+Heroslider partial help using modular help system */ -}}
+{{ partial "tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "{{&lt; hw t=\"heroslider\" from=\"heroslider-sponsors\" &gt;}}"
+  "color" "orange"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "heroslider"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "from" "required" false "example" "heroslider-sponsors")
+    (dict "name" "height" "required" false "example" "30svh")
+    (dict "name" "srcOn" "required" false "example" "top")
+  )
+  "note" "A slider of image + text slides from a data file, sized by CSS geometry. In a hero it sits at the top or bottom of the band and the heading content lays out around it."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Renders one slide per item of a data-file list. Each slide is any combination of image (`src`) and text (`header` + `text`), optionally linked. Images go through tool/media and tk/get-asset with `process`, so only the processed copy is published. Text goes through tool/caption, restyled by `.heroslider .caption`. Settings layer: built-in defaults, then the data file, then the page's `heroslider` front matter, then hw props."
+  "notes" (slice
+    "**Hero use:** front matter `heroslider: <data file>` (or a map of settings). a hero partial passes it to tool/cover as `afterHTML`, or `beforeHTML` when geometry sets `top`, and adds the class `has-heroslider`"
+    "**Geometry** is CSS: `width`, `height`, `align` (left|center|right) and ONE of `top` | `bottom`"
+    "**Separate data:** `includedata: sponsors.yaml` + `slides: sponsors` + `map: {header: name, src: logo}` shows an existing list without changing it"
+    "**Retired items:** `active: false` is dropped"
+    "**Order:** `display_order: default | reversed | random` (data file or front matter). default is by `weight` (lowest first) when the list has one, else the file's order; reversed is that backwards; random shuffles per build and again on every page load"
+    "**Motion:** scroll-snap works without JS; auto-advance pauses on hover, focus and the pause button, and never runs under reduced motion"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict "name" "from" "type" "string" "required" false
+      "description" "Data file holding the settings (and the slides unless it sets `includedata`). Extension optional; yaml, json or toml"
+      "default" "front matter `heroslider`, else data/heroslider")
+    (dict "name" "header" "type" "string" "required" false
+      "description" "The carousel's aria-label. Not a heading: the hero owns the page's h1"
+      "default" "Slides")
+    (dict "name" "srcOn" "type" "string" "required" false
+      "description" "left | right (side by side), top (image over text), bottom (text over image). Also per slide. Via hw, `left` cannot override a data file's value"
+      "default" "left")
+    (dict "name" "srcWidth" "type" "number" "required" false
+      "description" "0.0-1.0: the image's share of a left/right slide. Also per slide"
+      "default" "0.4")
+    (dict "name" "process" "type" "string" "required" false
+      "description" "Hugo process string for raster slides. Also per slide"
+      "default" "fit 600x400 webp q80")
+    (dict "name" "height" "type" "string" "required" false
+      "description" "CSS length; overrides geometry.height"
+      "default" "25svh")
+    (dict "name" "count" "type" "number" "required" false
+      "description" "Show at most this many slides. Via hw, only values above 1 apply"
+      "default" "all")
+    (dict "name" "skip" "type" "number" "required" false
+      "description" "Skip this many slides from the start"
+      "default" "0")
+    (dict "name" "class" "type" "string" "required" false
+      "description" "Extra classes on the `.heroslider` section"
+      "default" "")
+    (dict "name" "id" "type" "string" "required" false
+      "description" "Anchor id of the section"
+      "default" "heroslider-<hash of from>")
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "Hero slider from front matter"
+      "code" "{{- $slider := partial \"tool/heroslider\" (dict \"page\" .Page) -}}\n{{- partial \"tool/cover\" (dict \"page\" .Page \"src\" .Params.image\n      \"header\" .Title \"class\" \"has-heroslider\" \"afterHTML\" $slider) -}}"
+      "note" "A hero partial, with `heroslider: heroslider-sponsors` in the page front matter. The slider sits at the bottom of the band, 80vw x 25svh, 1em from the edge"
+    )
+    (dict
+      "description" "Front matter overrides"
+      "code" "heroslider:\n  from: heroslider-sponsors\n  srcOn: top\n  geometry: {top: 2em, height: 30svh}"
+      "note" "`top` replaces the data file's `bottom`: the slider moves to the top of the band"
+    )
+    (dict
+      "description" "Data file (data/heroslider-sponsors.yaml)"
+      "code" "includedata: sponsors.yaml\nslides: sponsors\nmap: {header: name, text: summary, src: logo, link: link}\ninterval: 6\ngeometry: {width: 80vw, height: 25svh, bottom: 1em, align: center}"
+      "note" "Omit `includedata` and put a `slides:` list of src/header/text/link items in the file itself"
+    )
+    (dict
+      "description" "In normal flow on any page"
+      "code" "{{&lt;hw t=\"heroslider\" from=\"heroslider-sponsors\" height=\"20svh\" /&gt;}}"
+      "note" "Same markup outside a hero; geometry.top/bottom become margins"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Guessable CSS:** `.heroslider`, `.heroslider-slide.heroslider-src-<srcOn>`, `.heroslider-src`, `.heroslider-txt`, `.heroslider .caption`; tokens `--heroslider-width|height|offset|src-width`"
+    "**Front matter keys** are lowercased by Hugo; the config reads every layer case-insensitively"
+  )
+  "warnings" (slice
+    "**Both top and bottom** in one geometry layer fails the build"
+    "**Bad input fails the build:** missing data file, missing list, unknown srcOn, srcWidth outside 0-1, a slide with nothing to show"
+    "**Long text** is faded out at the slide's height, not scrolled"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "tk/help-card.html" $cardData -}}

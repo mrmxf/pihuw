@@ -1,0 +1,231 @@
+/* ≡≡≡  pihuw · 68-component-heroslider  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/heroslider — image + text slides, geometry tokens, narrow-screen image->text flip                          */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* Per instance, set inline by tool/heroslider from the data file:
+     --heroslider-width --heroslider-height --heroslider-offset --heroslider-dwell
+     --heroslider-src-width (per slide)
+   Colours: component tokens, so a site restyles the slider by redefining four
+   custom properties on .heroslider in its site.css.
+     --heroslider-bg      panel
+     --heroslider-fg      text and controls on the panel
+     --heroslider-accent  slide header and focus ring (defaults to fg: an accent
+                          colour's contrast on the panel is the site's to check)
+     --heroslider-tile    behind the image, so dark and transparent logos show
+   Default contrast, worst case = the panel over a pure-white photo pixel with no
+   scrim: --pi-scrim .75 (light) -> 10.41:1, .85 (dark) -> 15.08:1 for white fg.
+
+   In a cover, `has-heroslider` on the cover makes it a column: the slider sits
+   at one end (cover's beforeHTML/afterHTML slot) in normal flow and the heading
+   content centres in what is left, so the two never overlap. */
+.heroslider {
+  --heroslider-bg:     var(--pi-scrim);
+  --heroslider-fg:     var(--pi-on-scrim);
+  --heroslider-accent: var(--heroslider-fg);
+  --heroslider-tile:   oklch(1 0 0);
+}
+.pi-cover.has-heroslider {
+  display: flex;               /* cover is a centred grid; a column needs flex */
+  flex-direction: column;
+  align-items: center;
+}
+.pi-cover.has-heroslider .pi-cover-inner { margin-block: auto; }
+
+.heroslider {
+  position: relative;
+  z-index: 2;                  /* above cover's scrim (z-index 1) */
+  box-sizing: border-box;
+  width: var(--heroslider-width, 80vw);
+  max-width: 100%;
+  height: var(--heroslider-height, 25svh);
+  min-height: 10rem;
+  margin-inline: auto;
+  background: var(--heroslider-bg);
+  border-radius: .4rem;
+  color: var(--heroslider-fg);
+  text-align: left;
+}
+.heroslider-top    { margin-top:    var(--heroslider-offset, 1em); }
+.heroslider-bottom { margin-bottom: var(--heroslider-offset, 1em); }
+.heroslider-align-left   { margin-inline: 0 auto; align-self: flex-start; }
+.heroslider-align-center { margin-inline: auto;   align-self: center; }
+.heroslider-align-right  { margin-inline: auto 0; align-self: flex-end; }
+
+.heroslider-track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.heroslider-track::-webkit-scrollbar { display: none; }
+
+.heroslider-slide {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 1rem 3rem;          /* the side gutters hold prev/next */
+  scroll-snap-align: start;
+}
+/* The slide, or its link when it has one, lays out the two halves. */
+.heroslider-slide,
+.heroslider-slide > a {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  min-height: 0;
+}
+.heroslider-slide > a { width: 100%; height: 100%; color: inherit; text-decoration: none; }
+.heroslider-slide > a:focus-visible { outline: 2px solid var(--heroslider-accent); outline-offset: 4px; }
+
+/* srcOn: where the image sits relative to the text. */
+.heroslider-src-left,   .heroslider-src-left > a   { flex-direction: row; }
+.heroslider-src-right,  .heroslider-src-right > a  { flex-direction: row-reverse; }
+.heroslider-src-top,    .heroslider-src-top > a    { flex-direction: column; }
+.heroslider-src-bottom, .heroslider-src-bottom > a { flex-direction: column-reverse; }
+
+.heroslider-src {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 var(--heroslider-src-width, 40%);
+  height: 100%;
+  min-width: 0;
+  padding: .5rem;
+  background: var(--heroslider-tile);
+  border-radius: .3rem;
+}
+.heroslider-src-top .heroslider-src,
+.heroslider-src-bottom .heroslider-src { flex: 1 1 0; width: 100%; height: auto; min-height: 0; }
+.heroslider-src:only-child { flex: 1 1 auto; }
+/* Beats 80-media.css `section img { height: 70% }` — the slider is a <section>. */
+.heroslider .heroslider-img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Text longer than the slide fades out rather than scrolling: a scrollable
+   region the keyboard cannot reach fails WCAG 2.1.1. */
+.heroslider-txt {
+  flex: 1 1 0;
+  min-width: 0;
+  max-height: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, oklch(0% 0 0) 80%, oklch(0% 0 0 / 0));
+}
+.heroslider-src-top .heroslider-txt,
+.heroslider-src-bottom .heroslider-txt { flex: 0 1 auto; width: 100%; }
+
+/* tool/caption's <footer class="caption">. Beats 80-media.css `main footer.caption`
+   (0,1,2) and 40-layout.css `div.feature footer.caption` (0,1,2) at 0,2,0. */
+.heroslider .caption {
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: var(--heroslider-fg);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(.85rem, 1.6vw, 1rem);
+  line-height: 1.4;
+  text-align: left;
+}
+.heroslider .caption > span {  /* the header: its fomantic `ui blue text` is inert */
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--heroslider-accent);
+  font-size: 1.15em;
+}
+.heroslider .caption p { margin: 0 0 .4rem; }
+
+.heroslider-controls button,
+.heroslider-controls button:hover {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: .5rem .75rem;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: var(--heroslider-fg);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.heroslider-controls .heroslider-prev { left: 0; }
+.heroslider-controls .heroslider-next { right: 0; }
+.heroslider-controls .heroslider-pause,
+.heroslider-controls .heroslider-pause:hover {
+  top: auto;
+  bottom: .25rem;
+  right: .25rem;
+  transform: none;
+  font-size: .85rem;
+}
+.heroslider-controls button:focus-visible { outline: 2px solid var(--heroslider-accent); outline-offset: -2px; }
+
+/* Too narrow to share a row: the image goes over the text. */
+@media (max-width: 40em) {
+  .heroslider-src-left,  .heroslider-src-left > a,
+  .heroslider-src-right, .heroslider-src-right > a { flex-direction: column; }
+  .heroslider-src-left .heroslider-src,
+  .heroslider-src-right .heroslider-src { flex: 1 1 0; width: 100%; height: auto; min-height: 0; }
+  .heroslider-src-left .heroslider-txt,
+  .heroslider-src-right .heroslider-txt { flex: 0 1 auto; width: 100%; }
+  .heroslider-slide { padding: .75rem 2.25rem; }
+}
+
+/* ...unless the slider is auto-advancing: then a left/right slide with both an
+   image and text (tool/heroslider marks it .heroslider-flip) shows the image
+   full-height, slides up to the text, and holds the text until the next slide.
+   Of each dwell (--heroslider-dwell, the data file's `interval`, rendered by
+   Hugo): image for --heroslider-flip-at, the slide takes --heroslider-flip-for,
+   text for the rest. Keyframe percentages cannot read custom properties, so the
+   split is an animation-delay and duration instead.
+   .heroslider-js is added by the script only when auto-advance runs, so no JS,
+   `interval: 0` and reduced motion (also excluded here) keep the stack above.
+   .is-current restarts the animation; .heroslider-paused holds it with the
+   auto-advance (hover, focus, pause button). */
+.heroslider {
+  --heroslider-flip-at:  .4;
+  --heroslider-flip-for: .1;
+}
+@keyframes heroslider-flip {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+@media (max-width: 40em) and (prefers-reduced-motion: no-preference) {
+  .heroslider-js .heroslider-flip { padding-block: 0; }
+  .heroslider-js .heroslider-flip,
+  .heroslider-js .heroslider-flip > a { flex-direction: column; gap: 0; overflow: hidden; }
+  .heroslider-js .heroslider-flip .heroslider-src,
+  .heroslider-js .heroslider-flip .heroslider-txt {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+  /* Both halves exactly the slide's height, so translateY(-100%) moves them the
+     same distance. The logo tile is inset with padding, not margin. */
+  .heroslider-js .heroslider-flip .heroslider-src {
+    padding: .5rem;
+    border: .75rem solid transparent;
+    border-inline-width: 0;
+    background-clip: padding-box;
+  }
+  .heroslider-js .heroslider-flip .heroslider-txt { padding-block: .75rem; }
+  .heroslider-js .heroslider-flip.is-current .heroslider-src,
+  .heroslider-js .heroslider-flip.is-current .heroslider-txt {
+    animation: heroslider-flip
+               calc(var(--heroslider-dwell, 6s) * var(--heroslider-flip-for)) ease-in-out
+               calc(var(--heroslider-dwell, 6s) * var(--heroslider-flip-at)) both;
+  }
+  .heroslider-paused .heroslider-flip.is-current .heroslider-src,
+  .heroslider-paused .heroslider-flip.is-current .heroslider-txt { animation-play-state: paused; }
+}

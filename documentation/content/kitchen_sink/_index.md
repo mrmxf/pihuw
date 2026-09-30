@@ -69,6 +69,13 @@ reference, or add `help = "yes"` to any `hw` shortcode in your own page.
 
 {{< hw
     t  = "include"
+  from = "/content/kitchen_sink/heroslider.md"
+/>}}
+
+---
+
+{{< hw
+    t  = "include"
   from = "/content/kitchen_sink/slideshow.md"
 />}}
 

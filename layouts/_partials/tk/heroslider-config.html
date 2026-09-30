@@ -1,0 +1,228 @@
+{{- /*
+  tk/heroslider-config
+  Resolves a heroslider's settings and slides into one dict. Called by
+  tool/heroslider (to render) and by a consumer's hero partial (to pick the
+  cover slot from "edge").
+
+  Layers, last one wins:
+    1. built-in defaults (below)
+    2. the data file named by `from`
+    3. the page's `heroslider` front matter: a string (the data file name) or a
+       map with the same keys as the data file, `from` included. It applies only
+       to the slider it names: an hw call with a different `from` skips it
+    4. hw props passed to this partial
+
+  Data file keys (all optional):
+    includedata  data file the slides come from; omit and they are in this file
+    slides       list key inside that file (default: its basename, then "slides")
+    map          {hwName: dataKey} per slide, e.g. {header: name, src: logo};
+                 an omitted hw name reads the key of the same name
+    header       the carousel's aria-label (not a heading: the hero owns the h1)
+    srcOn        left | right | top | bottom — image beside, over or under text
+    srcWidth     0.0-1.0, the image's share of a left/right slide
+    process      Hugo process string for raster slides
+    interval     seconds between auto-advances; 0 = manual only
+    display_order  default | reversed | random. default is by `weight`, lowest
+                 first, when the list has one, else the data file's order;
+                 reversed is that backwards.
+                 random shuffles here, once per build, AND tool/heroslider's script
+                 reshuffles on every page load; the build shuffle is what a
+                 visitor without JS sees. Applied before skip/count, so random
+                 with a count shows a different subset per build.
+    count, skip  limit the list / skip from its start
+    geometry     CSS values: width, height, align (left|center|right), and ONE
+                 of top | bottom (the offset from that edge of the hero). A layer
+                 setting one replaces the other from the layers below it; setting
+                 both in one layer is an error.
+
+  List handling: items with `active: false` are dropped, then display_order is
+  applied, then skip and count.
+
+  Caveat for hw props: the hw shortcode always sends count=1 and srcOn="left", so
+  those two values cannot be told from "not set" and are ignored as props.
+
+  Front matter keys arrive lowercased from Hugo; every layer is lowercased here
+  so `srcOn` and `srcon` are the same key.
+
+  DO NOT call partial "tk/dbg-template" - it prevents return from working.
+
+  returns (dict
+    "slides"   []dict  — src alt header text link srcOn srcWidth process, per slide
+    "edge"     string  — "top" or "bottom"
+    "offset"   string  — CSS length from that edge
+    "width" "height" "align"  string — geometry
+    "header" "class" "id"     string
+    "interval" number
+    "order"    string  — default | reversed | random
+  )
+*/ -}}
+{{- $page := .page -}}
+
+{{- /* ---- layer 3 first: it may name the data file ---------------------------- */ -}}
+{{- $fm := dict -}}
+{{- $fmFrom := "" -}}
+{{- with $page -}}{{- with .Params.heroslider -}}
+  {{- if reflect.IsMap . -}}
+    {{- range $k, $v := . -}}{{- $fm = merge $fm (dict (lower $k) $v) -}}{{- end -}}
+    {{- $fmFrom = $fm.from -}}
+  {{- else -}}
+    {{- $fmFrom = . -}}
+  {{- end -}}
+{{- end -}}{{- end -}}
+
+{{- $from := .from | default $fmFrom | default "heroslider" -}}
+{{- /* Front matter configures the slider it names, not every slider on the page. */ -}}
+{{- if and .from (ne .from $fmFrom) -}}{{- $fm = dict -}}{{- end -}}
+
+{{- /* ---- load a data file by name: "sponsors", "sponsors.yaml", "dir/name" ---- */ -}}
+{{- $cfgName := strings.TrimSuffix (path.Ext $from) $from -}}
+{{- $raw := hugo.Data -}}
+{{- range split $cfgName "/" -}}{{- if $raw -}}{{- $raw = index $raw . -}}{{- end -}}{{- end -}}
+{{- if not (reflect.IsMap $raw) -}}
+  {{- errorf "heroslider: no data file %q (looked for data/%s.{yaml,json,toml}) on %s" $from $cfgName $page.File.Path -}}
+{{- end -}}
+{{- $cfg := dict -}}
+{{- range $k, $v := $raw -}}{{- $cfg = merge $cfg (dict (lower $k) $v) -}}{{- end -}}
+
+{{- /* ---- layers 1-3: scalar settings --------------------------------------- */ -}}
+{{- $o := dict
+      "header"   "Slides"
+      "srcon"    "left"
+      "srcwidth" 0.4
+      "process"  "fit 600x400 webp q80"
+      "interval" 6
+      "display_order" "default"
+      "count"    0
+      "skip"     0
+      "class"    ""
+      "map"      dict
+-}}
+{{- $keys := slice "header" "srcon" "srcwidth" "process" "interval" "count" "skip" "class" "map" "slides" "includedata" "display_order" -}}
+{{- range $layer := slice $cfg $fm -}}
+  {{- range $keys -}}
+    {{- /* `slides` is a setting only as a string (the list's key); as a list it
+           IS the slides, held in this file, and is read below as data. */ -}}
+    {{- if and (isset $layer .) (not (and (eq . "slides") (reflect.IsSlice (index $layer .)))) -}}
+      {{- $o = merge $o (dict . (index $layer .)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* ---- layer 4: hw props (see the caveat above for count and srcOn) ------- */ -}}
+{{- with .header   -}}{{- $o = merge $o (dict "header" .) -}}{{- end -}}
+{{- with .srcWidth -}}{{- $o = merge $o (dict "srcwidth" .) -}}{{- end -}}
+{{- with .process  -}}{{- $o = merge $o (dict "process" .) -}}{{- end -}}
+{{- with .class    -}}{{- $o = merge $o (dict "class" .) -}}{{- end -}}
+{{- with .skip     -}}{{- $o = merge $o (dict "skip" .) -}}{{- end -}}
+{{- if gt (int (.count | default 0)) 1 -}}{{- $o = merge $o (dict "count" .count) -}}{{- end -}}
+{{- if and .srcOn (ne .srcOn "left") -}}{{- $o = merge $o (dict "srcon" .srcOn) -}}{{- end -}}
+
+{{- /* ---- geometry: one edge, top or bottom --------------------------------- */ -}}
+{{- $width  := "80vw" -}}
+{{- $height := "25svh" -}}
+{{- $align  := "center" -}}
+{{- $edge   := "bottom" -}}
+{{- $offset := "1em" -}}
+{{- range $layer := slice $cfg.geometry $fm.geometry -}}
+  {{- with $layer -}}
+    {{- $g := dict -}}
+    {{- range $k, $v := . -}}{{- $g = merge $g (dict (lower $k) $v) -}}{{- end -}}
+    {{- if and (isset $g "top") (isset $g "bottom") -}}
+      {{- errorf "heroslider %q: geometry sets both top and bottom; use one" $from -}}
+    {{- end -}}
+    {{- with $g.width  -}}{{- $width  = . -}}{{- end -}}
+    {{- with $g.height -}}{{- $height = . -}}{{- end -}}
+    {{- with $g.align  -}}{{- $align  = . -}}{{- end -}}
+    {{- with $g.top    -}}{{- $edge = "top"    -}}{{- $offset = . -}}{{- end -}}
+    {{- with $g.bottom -}}{{- $edge = "bottom" -}}{{- $offset = . -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- with .height -}}{{- $height = . -}}{{- end -}}
+{{- if not (in (slice "left" "center" "right") $align) -}}
+  {{- errorf "heroslider %q: geometry.align %q is not left, center or right" $from $align -}}
+{{- end -}}
+
+{{- /* ---- the slide list ----------------------------------------------------- */ -}}
+{{- $src := $cfg -}}
+{{- $srcName := $cfgName -}}
+{{- with $o.includedata -}}
+  {{- $srcName = strings.TrimSuffix (path.Ext .) . -}}
+  {{- $src = hugo.Data -}}
+  {{- range split $srcName "/" -}}{{- if $src -}}{{- $src = index $src . -}}{{- end -}}{{- end -}}
+  {{- if not (reflect.IsMap $src) -}}
+    {{- errorf "heroslider %q: includedata %q is not a data file" $from . -}}
+  {{- end -}}
+{{- end -}}
+{{- $listKey := $o.slides | default (path.Base $srcName) -}}
+{{- if and (not $o.slides) (not (isset $src $listKey)) -}}{{- $listKey = "slides" -}}{{- end -}}
+{{- $list := index $src $listKey -}}
+{{- if not (reflect.IsSlice $list) -}}
+  {{- errorf "heroslider %q: data/%s has no list %q" $from $srcName $listKey -}}
+{{- end -}}
+{{- $list = where $list "active" "!=" false -}}
+{{- $order := $o.display_order -}}
+{{- if not (in (slice "default" "reversed" "random") $order) -}}
+  {{- errorf "heroslider %q: display_order %q is not default, reversed or random" $from $order -}}
+{{- end -}}
+{{- if and $list (isset (index $list 0) "weight") -}}{{- $list = sort $list "weight" -}}{{- end -}}
+{{- if eq $order "reversed" -}}
+  {{- $rev := slice -}}
+  {{- range $list -}}{{- $rev = slice . | append $rev -}}{{- end -}}
+  {{- $list = $rev -}}
+{{- else if eq $order "random" -}}
+  {{- $list = shuffle $list -}}
+{{- end -}}
+{{- with int $o.skip -}}{{- $list = after . $list -}}{{- end -}}
+{{- with int $o.count -}}{{- $list = first . $list -}}{{- end -}}
+{{- if not $list -}}
+  {{- errorf "heroslider %q: no slides left in data/%s.%s after dropping active:false" $from $srcName $listKey -}}
+{{- end -}}
+
+{{- /* ---- map each item onto hw names -------------------------------------- */ -}}
+{{- $map := dict -}}
+{{- range $k, $v := $o.map -}}{{- $map = merge $map (dict (lower $k) $v) -}}{{- end -}}
+{{- $get := dict -}}{{- /* hw name -> data key */ -}}
+{{- range $low := slice "src" "alt" "header" "text" "link" "srcon" "srcwidth" "process" -}}
+  {{- $canon := index (dict "srcon" "srcOn" "srcwidth" "srcWidth") $low | default $low -}}
+  {{- $get = merge $get (dict $low (index $map $low | default $canon)) -}}
+{{- end -}}
+{{- $slides := slice -}}
+{{- range $item := $list -}}
+  {{- $header := index $item $get.header -}}
+  {{- $text   := index $item $get.text -}}
+  {{- $img    := index $item $get.src -}}
+  {{- $srcOn  := index $item $get.srcon | default $o.srcon -}}
+  {{- if not (in (slice "left" "right" "top" "bottom") $srcOn) -}}
+    {{- errorf "heroslider %q: srcOn %q is not left, right, top or bottom" $from $srcOn -}}
+  {{- end -}}
+  {{- $sw := float (index $item $get.srcwidth | default $o.srcwidth) -}}
+  {{- if or (le $sw 0.0) (ge $sw 1.0) -}}
+    {{- errorf "heroslider %q: srcWidth %v is not between 0 and 1" $from $sw -}}
+  {{- end -}}
+  {{- if not (or $img $header $text) -}}
+    {{- errorf "heroslider %q: a slide in data/%s has no src, header or text" $from $srcName -}}
+  {{- end -}}
+  {{- $slides = $slides | append (dict
+        "src"      $img
+        "alt"      (index $item $get.alt | default $header | default "")
+        "header"   $header
+        "text"     $text
+        "link"     (index $item $get.link)
+        "srcOn"    $srcOn
+        "srcWidth" $sw
+        "process"  (index $item $get.process | default $o.process)) -}}
+{{- end -}}
+
+{{- return (dict
+      "slides"   $slides
+      "edge"     $edge
+      "offset"   $offset
+      "width"    $width
+      "height"   $height
+      "align"    $align
+      "header"   $o.header
+      "class"    $o.class
+      "id"       (.id | default (printf "heroslider-%s" (substr (sha1 $from) 0 8)))
+      "interval" (float $o.interval)
+      "order"    $order
+   ) -}}
