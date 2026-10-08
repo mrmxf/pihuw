@@ -127,6 +127,9 @@ warning if it returns a value.
 - Override a partial by name in the consumer's `layouts/`. Never fork or copy one.
 - Exception: the whole `hook/` folder may be copied, because every file is empty by contract.
 - Multi-theme precedence is out of scope. See `documentation/content/hook/_index.md`.
+- A consumer site's Cloudflare Workers are named `www-<site>-<what>` (`www-mrmxf-admin`,
+  `www-hahahaa-form-contact`). Every website shares one account; the `www-` prefix keeps
+  their Workers apart from everything else in it.
 
 ### Docs
 - New `tool/X`: add `X.html`, `X-help.html`, `"X"` to `$tools` in `tk/help.html`,
