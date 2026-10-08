@@ -35,7 +35,10 @@ identical to a symlinked build. Do not add one: a stale symlink shadows the moun
 ## The module contract
 
 `config/_default/module.yaml` `mounts:` is what consumers receive: layouts, assets,
-`static/webfonts` (required by `assets/css/fa6.min.css`). The CSS and all three fonts
+`static/webfonts` (required by `assets/css/fa6.min.css` and `02-fonts.css`). The text
+faces are Atkinson Hyperlegible (body: 400, 400 italic, 700) and Raleway (headings, variable,
+500-700), latin and latin-ext subsets only, from Google Fonts with their OFL licences beside
+them. `02-fonts.css` holds Google's unicode-ranges; refresh files and CSS together. The CSS and all three FA fonts
 (`fa-solid-900`, `fa-regular-400`, `fa-brands-400`, woff2) are Font Awesome 6.7.2 and must
 be upgraded together: the CSS maps icon names to codepoints in THOSE fonts. The CSS's
 `.ttf` fallbacks are not shipped (every supported browser takes woff2). There is no FA

@@ -13,6 +13,7 @@ Splitting the source costs the visitor nothing.
 | Prefix | What lives there                                    |
 | ------ | --------------------------------------------------- |
 | `00`   | design tokens — palette, derived colours, typography |
+| `02`   | `@font-face` — the body and heading faces            |
 | `05`   | dark mode tri-state                                  |
 | `10`   | base HTML elements                                   |
 | `20`   | PicnicCSS overrides                                  |

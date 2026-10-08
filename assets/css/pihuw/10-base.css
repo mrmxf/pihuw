@@ -15,6 +15,14 @@ body {
   padding: 0;
 }
 
+/* Heading face — headings, the page title and cover subtitle (styled as headings), the nav and buttons */
+h1, h2, h3, h4, h5, h6,
+.pi-page-title, .pi-cover-subtitle,
+.button, .pi-nav {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+}
+
 /* Headings — colour tokens only, no layout */
 h1, h2 { color: var(--hi1); }
 h3, h4 { color: var(--hi2); }

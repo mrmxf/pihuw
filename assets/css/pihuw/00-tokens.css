@@ -73,10 +73,13 @@
   --pi-tooltip-fg:   var(--hi1);
 
   /* ── 1d  Typography ───────────────────────────────────────────────────────────────────────────────────────────── */
-  /* Google Fonts: uncomment the @import at the top of site.css and replace these values.                            */
-  --font-body:        'Arial', sans-serif;
-  --font-mono:        'Courier New', monospace;
-  --font-narrow:      'Arial Narrow', Arial, sans-serif;
+  /* Body and heading faces are served by the theme (02-fonts.css, no CDN). Redefine these in site.css to change them;  */
+  /* a face nobody names is never downloaded. Fallbacks stay sans-serif and wide-apertured: never a serif.             */
+  --font-body:           'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', Arial, sans-serif;
+  --font-heading:        'Raleway', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading-weight: 500;
+  --font-mono:           'Courier New', monospace;
+  --font-narrow:         'Arial Narrow', Arial, sans-serif;
   --font-size-base:   16px;
   --line-height-base: 1.25;
 

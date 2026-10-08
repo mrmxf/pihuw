@@ -15,7 +15,8 @@ hugoVersion:
 #   data/                 — the theme's releases.yaml; exported, it became every
 #                           consumer's site version (fixed v0.4.16). Consumers read
 #                           the theme version from hugo.Deps instead.
-# Only static/webfonts is exported — required by assets/css/fa6.min.css.
+# Only static/webfonts is exported — required by assets/css/fa6.min.css and
+# assets/css/pihuw/02-fonts.css (the body and heading faces).
 mounts:
 - source: layouts
   target: layouts

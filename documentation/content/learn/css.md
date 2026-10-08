@@ -111,15 +111,20 @@ Two deliberate exceptions:
 ### 1d — Typography
 
 ```css
---font-body: "Arial", sans-serif;
+--font-body: "Atkinson Hyperlegible", "Verdana", "Segoe UI", Arial, sans-serif;
+--font-heading: "Raleway", "Helvetica Neue", Arial, sans-serif;
+--font-heading-weight: 500;
 --font-mono: "Courier New", monospace;
 --font-narrow: "Arial Narrow", Arial, sans-serif;
 --font-size-base: 16px;
 --line-height-base: 1.25;
 ```
 
-To use Google Fonts: add `@import url(...)` at the top of `static/site.css` and
-override these variables in `:root` there.
+The theme serves **Atkinson Hyperlegible** (body) and **Raleway** (headings, the page
+title, the nav and buttons) itself, from `/webfonts/` - no CDN, no third party.
+Atkinson Hyperlegible was drawn by the Braille Institute for low-vision readers.
+To use other faces, redefine these tokens in `assets/css/site.css`; see
+[styling](../styling/#web-fonts). A face no rule names is never downloaded.
 
 ### 1e — Breakpoints
 

@@ -44,6 +44,23 @@ ignoreLogs:
 
 ### Web fonts
 
+The theme already serves two faces from its own `/webfonts/`, with no CDN:
+**Atkinson Hyperlegible** for body text and **Raleway** 500 for headings, the page
+title, the nav and buttons. To keep them, do nothing. To swap one, redefine its token in
+`site.css`:
+
+```css
+:root {
+  --font-body:           "Georgia", serif;
+  --font-heading:        "Raleway", sans-serif;
+  --font-heading-weight: 700;
+}
+```
+
+A face you no longer name is never downloaded. To bring in a different web font, either
+add its woff2 files and an `@font-face` to your site (no third party, the theme's own
+approach), or load it from a font service as below.
+
 Do not `@import` a font stylesheet at the top of `site.css`. An `@import` cannot
 start downloading until the importing stylesheet has itself arrived and been
 parsed, which serialises two round trips before any text can paint. Use a real
@@ -55,8 +72,9 @@ parsed, which serialises two round trips before any text can paint. Use a real
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=...&display=swap">
 ```
 
-Then redeclare `--font-body`, `--font-narrow` and `--font-mono` in your
-`site.css`.
+Then redeclare `--font-body`, `--font-heading`, `--font-narrow` or `--font-mono` in
+your `site.css`. A font service sees every visitor's IP address: say so in your
+privacy policy.
 
 ## Overriding the theme's own CSS
 
