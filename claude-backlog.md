@@ -46,6 +46,18 @@ v0.4.14 was.
 |---|---|---|
 | B-17 | `tool/gallery.html:57-70`, `tk/help-tk.html:347` | Both call jQuery and Fomantic UI (`$(...)`, `.modal(...)`), and use Fomantic classes (`ui modal`, `ui olive corner label`). The theme loads neither library: they came from the `cdn:` params block and `tmpl/head-cdn.html`, both gone. Clicking a gallery thumbnail throws `$ is not defined`; no modal opens. help-tk logs its own error. Fix without a CDN: a small vanilla `<dialog>` modal in the theme CSS bundle. Compounds C-17/C-18, so the gallery has never worked end to end. |
 
+## Found 2026-09-28 — chiddingfold overrides still needed at v0.4.16
+
+www-chiddingfoldbonfire forces dark mode unconditionally (no toggle, no `data-theme`, any OS
+setting). Its `site.css` still has to carry these against v0.4.16; each is a theme gap, not
+site styling. The `footer-left` markup is already C-07, still present at v0.4.16.
+
+| # | Where | Issue |
+|---|---|---|
+| M-25 | `50-component-banner.css`, `70-taxonomy.css`, `05-theme-dark.css:50-55,125-130` | `.banner` and `.pi-tax-1..4.label` hard-code the light tint `oklch(from var(--hiN) 0.9x … h)` in their base rules instead of reading `var(--bgN)`, which `00-tokens.css` already defines as that same formula. So `05-theme-dark.css` has to restate all five selectors in both dark blocks ("must override via class"), and a consumer that makes `--bgN` dark in `:root` still gets near-white banners and labels whenever neither dark block fires. Fix: base rules use `var(--bg3)` for `.banner` and `var(--bg3/2/1/4)` for `.pi-tax-1..4`. Light output is identical, and the ten duplicated dark rules can go. While there: the dark `--bg1..4` are still hex (`#2D281B`…), missed by the 0.4.9 oklch migration. |
+| M-26 | `00-tokens.css`, `05-theme-dark.css` | The theme declares no `color-scheme` in any state, so in dark mode the UA still draws light scrollbars, form controls, autofill and `<select>` popups on a dark page. Fix: `color-scheme: light dark` on `:root` (system), `dark` in both dark blocks, `light` under `[data-theme="light"]`. Chiddingfold sets `color-scheme: dark` itself. |
+| M-27 | `05-theme-dark.css` section 1c tokens, `params.yaml` `ui.hide.themeToggle` | **No way to force a theme.** A consumer can hide the toggle but not pin the mode, so forced dark means copying every per-state token into `site.css`: `--pi-scrim*`, `--pi-shadow*`, `--pi-tooltip-bg` (0.4.9 section 1c), plus M-25 and M-26. Any token a later release adds to the dark blocks silently comes out light for an OS-light visitor. Fix: a param (e.g. `ui.forceTheme: dark\|light`) that emits `data-theme` on `<html>` server-side, so the existing `[data-theme]` block applies and new tokens are covered automatically. Related: `--pi-tooltip-fg` defaults to `--hi1`, whose contrast on the panel is only AA for the theme's own palette. Chiddingfold's red on it is 2.57:1, so it uses `--pi-body`. Default to `--pi-body` and make the accent opt-in, or document that a consumer changing `--hi1` must recheck it. |
+
 ## Planned 2026-09-28 — requested work
 
 | # | Where | Work |
