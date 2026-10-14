@@ -63,7 +63,7 @@ extensions:
      "jpg", "jpeg", "png", "gif", "svg"
    ]
    video: [
-     "mp4", "webm", "ogg", "mxf"
+     "mp4", "webm", "ogg", "mxf", "mkv"
    ]
 
 # --- defaults - loaded to partials with tk/get-defaults ----------------------

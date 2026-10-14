@@ -86,8 +86,12 @@ Props(see tool/help partial or insert `hw t="help"` in your code):
 {{- with $src -}}
 {{ $ext := strings.ToLower (path.Ext $src) }}
 {{ $imgExt := slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".svg"}}
-{{ $vidExt := slice ".mp4" ".mkv" }}
-{{ $srcIsVideo = in $vidExt $ext }}
+{{- /* Video = site.Params.extensions.video, dotless on both sides as tk/get-asset. */ -}}
+{{- $vidExt := slice -}}
+{{- range site.Params.extensions.video | default (slice) -}}
+  {{- $vidExt = $vidExt | append (strings.TrimPrefix "." (strings.ToLower .)) -}}
+{{- end -}}
+{{- $srcIsVideo = in $vidExt (strings.TrimPrefix "." $ext) -}}
 {{ $srcIsImage = in $imgExt $ext }}
 {{- end -}}
 {{/* ---  grid logic            ----------------------------------------------
