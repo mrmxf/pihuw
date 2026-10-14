@@ -1,0 +1,142 @@
+{{- /*
+  tool/hero-message
+  The message in a hero band, from the page's `hero-message:` front matter.
+
+  .page — Hugo Page — whose front matter to read (required)
+
+  tool/cover calls this for its page whenever it emits the h1 (has .header), unless
+  passed message=false. A hero that wants the message elsewhere in its innerHTML
+  passes message=false to cover and calls this partial itself.
+
+  Front matter `hero-message:` is either one message (a map) or a list of them:
+
+      hero-message:
+        - date: 2026-10-13          # shown from this date on (build date)
+          md: |
+            Our event is free to attend.<br>
+            Thank you for your support!
+        - text: Shown until the first dated message is due.
+        - media: img/logo.png       # or { src: ..., alt: ... }
+          text: Beside the image, centred on it vertically.
+
+  Which message (first match wins):
+    1. a map: always that one
+    2. the list entry with the latest `date` on or before the build date
+    3. the first list entry with no `date` (no dated entry is due yet)
+  None of these: nothing is rendered.
+
+  Its content (first key present wins):
+    html  emitted as-is, with a WRN (id pihuw-hero-message-html, which
+          ignoreLogs can silence): the author owns that markup
+    md    markdown via the page's RenderString, so the site's render hooks apply
+    text  plain text, escaped, no <p>
+
+  Optional `media:` (with or without content): an image or video, a path as
+  tk/get-asset takes it, or { src, alt }; alt defaults to "" (decorative). It is
+  rendered BESIDE the content, not inside it, so 69-component-hero-message.css can
+  centre the two vertically. A raster gets a WebP srcset capped at its native
+  width and the original is never published; SVG, GIF and video keep their src.
+
+  "Build date": the site is static, so a dated message appears at the first build
+  on or after its date, not at midnight on it.
+
+  Bad input (no html/md/text/media, an unparseable date, a scalar, media with no
+  src or that cannot be found) calls errorf.
+
+  Styles: assets/css/pihuw/69-component-hero-message.css. No colours: the text
+  inherits the cover's.
+*/ -}}
+{{- if hugo.IsServer -}}{{ partial "tk/dbg-template" . }}{{- end -}}
+{{- $page := .page -}}
+{{- $raw  := index $page.Params "hero-message" -}}
+
+{{- $msg := dict -}}
+{{- with $raw -}}
+  {{- if reflect.IsMap . -}}
+    {{- $msg = . -}}
+  {{- else if reflect.IsSlice . -}}
+    {{- $now     := now.Unix -}}
+    {{- $best    := dict -}}
+    {{- $bestAt  := 0 -}}
+    {{- $undated := dict -}}
+    {{- range $i, $m := . -}}
+      {{- if not (reflect.IsMap $m) -}}
+        {{- errorf "hero-message: %s entry %d is not a map" $page.File.Path $i -}}
+      {{- end -}}
+      {{- with $m.date -}}
+        {{- $at := (time.AsTime .).Unix -}}
+        {{- if and (le $at $now) (or (not $best) (gt $at $bestAt)) -}}
+          {{- $best   = $m -}}
+          {{- $bestAt = $at -}}
+        {{- end -}}
+      {{- else -}}
+        {{- if not $undated -}}{{- $undated = $m -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $msg = $best | default $undated -}}
+  {{- else -}}
+    {{- errorf "hero-message: %s must be a map or a list, got %T" $page.File.Path . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $msg -}}
+  {{- $html := "" -}}
+  {{- if .html -}}
+    {{- warnidf "pihuw-hero-message-html" "hero-message: %s uses html:, emitted unchecked" $page.File.Path -}}
+    {{- $html = .html | safeHTML -}}
+  {{- else if .md -}}
+    {{- $html = $page.RenderString (dict "display" "block") .md -}}
+  {{- else if .text -}}
+    {{- $html = .text | htmlEscape | safeHTML -}}
+  {{- else if not .media -}}
+    {{- errorf "hero-message: %s message has no html, md, text or media" $page.File.Path -}}
+  {{- end -}}
+
+  {{- $media := "" -}}
+  {{- with .media -}}
+    {{- $src := . -}}
+    {{- $alt := "" -}}
+    {{- if reflect.IsMap . -}}{{- $src = .src -}}{{- $alt = .alt | default "" -}}{{- end -}}
+    {{- if not $src -}}
+      {{- errorf "hero-message: %s media has no src" $page.File.Path -}}
+    {{- end -}}
+    {{- /* get-asset defaults an empty alt to the basename; keep the caller's "". */ -}}
+    {{- $img := partial "tk/get-asset" (dict "asset" $src "page" $page "alt" $alt "noPublish" true) -}}
+    {{- if $img.isVideo -}}
+      {{- if not $img.src -}}
+        {{- errorf "hero-message: %s media %q not found" $page.File.Path $src -}}
+      {{- end -}}
+      {{- $media = printf `<video src="%s" controls muted playsinline preload="metadata"%s></video>`
+            $img.src (cond (ne $alt "") (printf ` aria-label="%s"` (htmlEscape $alt)) "") -}}
+    {{- else if and $img.isRaster $img.res -}}
+      {{- /* Only offer widths the source can supply: Hugo upscales silently. */ -}}
+      {{- $native := $img.res.Width -}}
+      {{- $srcset := slice -}}
+      {{- range $w := (slice 320 480 800) -}}
+        {{- if le $w $native -}}
+          {{- $v := partial "tk/img-process" (dict "img" $img "processing" (printf "resize %dx webp q80" $w)) -}}
+          {{- $srcset = $srcset | append (printf "%s %dw" $v.src $w) -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $fb := partial "tk/img-process" (dict "img" $img "processing" (printf "resize %dx webp q80" (int (math.Min $native 800)))) -}}
+      {{- $media = printf `<img src="%s"%s sizes="(max-width: 800px) 33vw, 260px" width="%d" height="%d" alt="%s" loading="lazy" decoding="async">`
+            $fb.src (cond (gt (len $srcset) 0) (printf ` srcset="%s"` (delimit $srcset ", ")) "")
+            $fb.width $fb.height (htmlEscape $alt) -}}
+    {{- else if $img.src -}}
+      {{- /* SVG, GIF or static: nothing to process. */ -}}
+      {{- $media = printf `<img src="%s" alt="%s" loading="lazy" decoding="async">` $img.src (htmlEscape $alt) -}}
+    {{- else -}}
+      {{- errorf "hero-message: %s media %q not found" $page.File.Path $src -}}
+    {{- end -}}
+  {{- end }}
+{{- if $media }}
+<div class="hero-message has-media">
+  <div class="hero-message-media">{{ $media | safeHTML }}</div>
+  {{- with $html }}
+  <div class="hero-message-body">{{ . }}</div>
+  {{- end }}
+</div>
+{{- else }}
+<div class="hero-message">{{ $html }}</div>
+{{- end }}
+{{- end -}}

@@ -31,7 +31,7 @@
     "isSvg"     bool
     "isRaster"  bool     — png/jpg/webp/tiff/bmp; excludes gif
     "isGif"     bool     — gif; may be animated, process with care
-    "isVideo"   bool     — extension in site.Params.extensions.video
+    "isVideo"   bool     — extension in site.Params.extensions.video ("mp4" or ".mp4")
     "isImage"   bool     — convenience: isSvg or isRaster or isGif (not video, not static-unknown)
     "isStatic"  bool     — from static/, no resource object, no processing possible
     "width"     int      — native px width after process; 0 for SVG, video, and static
@@ -78,10 +78,16 @@ Set DBG to templates.Current.Parent.Name to enable debug output of search steps 
 {{- $h        := 0 -}}
 {{- $src      := "" -}}
 
-{{/* video extension check — runs for both resource and static paths */}}
-{{- $vidExts := site.Params.extensions.video | default (slice) -}}
+{{/* video extension check — runs for both resource and static paths.
+     params.yaml lists extensions without the dot ("mp4"), path.Ext returns ".mp4":
+     compare both sides dotless, so a consumer list in either form works.
+     Before v0.4.21 the two never matched and isVideo was always false. */}}
+{{- $vidExts := slice -}}
+{{- range site.Params.extensions.video | default (slice) -}}
+  {{- $vidExts = $vidExts | append (strings.TrimPrefix "." (strings.ToLower .)) -}}
+{{- end -}}
 {{- $ext     := strings.ToLower (path.Ext $path) -}}
-{{- $isVideo  = in $vidExts $ext -}}
+{{- $isVideo  = in $vidExts (strings.TrimPrefix "." $ext) -}}
 
 {{- if $res -}}
 

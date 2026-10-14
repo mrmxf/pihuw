@@ -22,6 +22,10 @@
             classes and needs position:relative plus z-index >= 1 to sit above the
             scrim. Stack them with `.pi-cover.your-class { flex-direction: column }`.
   .afterHTML — as .beforeHTML, emitted AFTER .pi-cover-inner (optional).
+  .message — false (or "false") to NOT render the page's `hero-message:` front matter
+            (optional; default: rendered via tool/hero-message, after .innerHTML,
+            whenever this cover emits the h1). Pass false when your hero places
+            tool/hero-message itself.
   .class  — extra classes on the <section>, for site CSS to hook (optional)
   .height — CSS length for the band's min-height (optional; default "60svh")
   .page   — Hugo Page (supplied by the hw shortcode)
@@ -96,6 +100,10 @@
     {{- end }}
     {{- with .innerHTML }}
     {{ . | safeHTML }}
+    {{- end }}
+    {{- /* An explicit test, not default: `false | default true` is true. */ -}}
+    {{- if and .header $page (not (in (slice false "false") .message)) }}
+    {{ partial "tool/hero-message" (dict "page" $page) }}
     {{- end }}
   </div>
 {{- with .afterHTML }}

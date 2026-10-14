@@ -1,0 +1,95 @@
+{{partial "tk/dbg-template" .}}{{/*
+Hero-message partial help using modular help system */ -}}
+{{ partial "tk/help-tk.html" . }}
+
+{{- $cardData := dict
+  "title" "hero-message: (front matter)"
+  "color" "orange"
+  "Inner" ""
+-}}
+
+{{- $headerData := dict
+  "shortcode" "hero-message"
+  "type" "partial"
+  "params" (slice
+    (dict "name" "page" "required" true "example" ".Page")
+  )
+  "note" "A message in the hero band, written in the page's front matter. tool/cover renders it for you whenever the cover emits the page's h1."
+-}}
+
+{{- $descriptionData := dict
+  "description" "Reads `hero-message:` from the page's front matter: one message (a map), or a list of dated messages so next week's notice can be written today. Each message is `html`, `md` or `text`, optionally with `media` (an image or video) shown beside it."
+  "notes" (slice
+    "**Which message:** a map always wins; from a list, the entry with the latest `date` on or before the build date; else the first entry with no `date`; else nothing"
+    "**Which content:** `html` (emitted as-is, with a WRN), then `md` (markdown, the site's render hooks apply), then `text` (escaped, no `<p>`)"
+    "**media:** a path or `{src, alt}`. Shown beside the content, a third of the row wide, with the content centred on it vertically. A raster gets a WebP srcset and the original is never published"
+    "**Build date:** the site is static, so a dated message appears at the first build on or after its date"
+  )
+-}}
+
+{{- $paramsData := dict
+  "params" (slice
+    (dict "name" "date" "type" "date" "required" false
+      "description" "Show this entry from this date on. List entries only"
+      "default" "undated: the fallback")
+    (dict "name" "html" "type" "string" "required" false
+      "description" "Raw HTML, emitted unchecked. Logs WRN id `pihuw-hero-message-html`; silence it with ignoreLogs"
+      "default" "")
+    (dict "name" "md" "type" "string" "required" false
+      "description" "Markdown, rendered with the page's RenderString"
+      "default" "")
+    (dict "name" "text" "type" "string" "required" false
+      "description" "Plain text, HTML-escaped, no paragraph"
+      "default" "")
+    (dict "name" "media" "type" "string | map" "required" false
+      "description" "Image or video path (as tk/get-asset takes it), or `{src, alt}`. alt defaults to \"\": decorative"
+      "default" "")
+  )
+-}}
+
+{{- $examplesData := dict
+  "examples" (slice
+    (dict
+      "description" "One message"
+      "code" "hero-message:\n  md: Doors open at **6pm**."
+      "note" "A map: shown on every build"
+    )
+    (dict
+      "description" "Dated messages"
+      "code" "hero-message:\n  - text: Tickets on sale soon.\n  - date: 2026-10-01\n    md: Tickets **on sale now**.\n  - date: 2026-11-08\n    text: Thank you for coming!"
+      "note" "Before 1 Oct the undated entry shows; from then the latest dated entry that is due"
+    )
+    (dict
+      "description" "Media beside the text"
+      "code" "hero-message:\n  media: {src: img/poster.jpg, alt: \"This year's poster\"}\n  md: |\n    Our event is free to attend.<br>\n    Thank you for your support!"
+      "note" "A video (an extension in `site.Params.extensions.video`) gets controls and never autoplays"
+    )
+    (dict
+      "description" "Placing it yourself"
+      "code" "{{- partial \"tool/cover\" (dict \"page\" .Page \"header\" .Title\n      \"innerHTML\" $extras \"message\" false) -}}\n{{/* ...and inside $extras: */}}\n{{- partial \"tool/hero-message\" (dict \"page\" .Page) -}}"
+      "note" "`message: false` stops cover rendering it, so it is not shown twice"
+    )
+  )
+-}}
+
+{{- $notesData := dict
+  "notes" (slice
+    "**Guessable CSS:** `.hero-message`, `.hero-message.has-media`, `.hero-message-media`, `.hero-message-body` in 69-component-hero-message.css. No colours: the text inherits the cover's"
+    "**Front matter key** is `hero-message`, hyphenated"
+  )
+  "warnings" (slice
+    "**Bad input fails the build:** a message with no html/md/text/media, an unparseable date, a scalar, media with no src"
+    "**html is not sanitised:** the author owns it"
+  )
+-}}
+
+{{- /* Build the complete help content */ -}}
+{{- $content := "" -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-header.html" $headerData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-description.html" $descriptionData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-params.html" $paramsData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-examples.html" $examplesData) -}}
+{{- $content = printf "%s%s" $content (partial "tk/help-notes.html" $notesData) -}}
+
+{{- $cardData = merge $cardData (dict "Inner" $content) -}}
+{{- partial "tk/help-card.html" $cardData -}}

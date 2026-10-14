@@ -126,7 +126,7 @@ get-asset partial help using modular help system */ -}}
       "name" "isVideo"
       "type" "bool"
       "required" false
-      "description" "True when the file extension matches site.Params.extensions.video. Detection is extension-based so it works for both resource and static files. .res may still be a valid resource if the file is in assets/."
+      "description" "True when the file extension matches site.Params.extensions.video, listed with or without the dot (always false before v0.4.21, when only the dotted form could match and params.yaml lists them dotless). Detection is extension-based so it works for both resource and static files. .res may still be a valid resource if the file is in assets/."
       "default" "false"
     )
     (dict

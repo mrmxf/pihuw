@@ -1,0 +1,32 @@
+/* ≡≡≡  pihuw · 69-component-hero-message  ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡ */
+/* tool/hero-message — the page's `hero-message:` front matter, inside a cover                                       */
+/* Bundled by tmpl/head-css. Override: drop a file of the same name in your site's assets/css/pihuw/. */
+
+/* No colours: the text inherits the cover's (--pi-on-scrim over media). Single-class
+   selectors, so a site restyles it from site.css without a specificity fight.
+
+   Media inside md/html keeps its aspect ratio at a third of the column and sits left;
+   the text stays centred, as the rest of the cover. A `media:` item is rendered
+   beside the text instead (.has-media): a third of the row, the text centred on it
+   vertically. */
+.hero-message { line-height: 1.4; }
+.hero-message p { margin: 0; }
+.hero-message :is(img, video, picture, svg, iframe) {
+  display: block;
+  max-width: 33%;
+  height: auto;
+  margin-inline: 0 auto;
+}
+.hero-message iframe { width: 100%; aspect-ratio: 16 / 9; }
+
+.hero-message.has-media {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.hero-message-media { flex: 0 0 33%; }
+.hero-message .hero-message-media :is(img, video, picture, svg) {
+  width: 100%;
+  max-width: 100%;
+}
+.hero-message-body { flex: 1; }
