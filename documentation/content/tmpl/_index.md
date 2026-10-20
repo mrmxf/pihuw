@@ -24,9 +24,8 @@ override any of them by placing an identically-named file in their site's
 | `head.html` | Assembles the full `<head>` element — calls head-css, head-js, head-favicons, head-seo, page-description |
 | `head-css.html` | Injects theme CSS; includes theme-init.js inline before CSS to prevent flash of wrong theme |
 | `head-js.html` | Injects JavaScript includes for libraries enabled in params.yaml |
-| `head-favicons.html` | Renders favicon link tags from the site logo (`ui.logo`, expected in `assets/`) |
+| `head-favicons.html` | Favicon link tags derived from the site logo: a raster logo is packed into a 32×32 icon and a 180×180 apple-touch-icon; an SVG logo is linked as the icon, with the PNGs packed from a `.png` beside it — no PNG there warns `pihuw-favicon-svg-no-png` |
 | `head-seo.html` | Canonical URL, Open Graph and Twitter card meta. Suppress with `ui.hide.seo` |
-| `favicons.html` | PNG favicon packer (32×32, 180×180) from an `assets/` logo — not called yet |
 | `body-scripts.html` | Deferred scripts injected just before `</body>` |
 
 ## Navigation
@@ -65,9 +64,9 @@ override any of them by placing an identically-named file in their site's
 
 | Partial | Purpose |
 |---|---|
-| `footer.html` | Full footer row — calls footer-left and footer-right |
-| `footer-left.html` | Left-side footer content (site name, links) |
-| `footer-right.html` | Right-side footer content (social icons, credits) |
+| `footer.html` | The footer, two rows: pihuw version (1/3) and `ui.footer.links` credits (2/3), then the build metadata across the width. One column below the `-s` breakpoint |
+| `footer-left.html` | Build metadata items for row 2 — site title, version, mod and build dates, each behind a `ui.footer.show*` flag |
+| `footer-right.html` | GitHub source item appended to row 2 — icon, `source: view · edit · issue`, when `github.url` and `github.repo` are set |
 
 ## Pagination
 

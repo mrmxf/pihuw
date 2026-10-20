@@ -1,26 +1,40 @@
-{{partial "tk/dbg-template" .}}
-{{/* The footer is already a row in the overall page grid ----------------- */}}
-{{ $links := site.Params.ui.footer.links }}
-{{ $color := site.Params.ui.footer.backgroundColor }}
-{{ $textClass := "text-white" }}
-{{partial "tmpl/footer-left" .}}
-<div class="middle">
-  {{range site.Params.ui.footer.links}}
-  {{template "footer-pihuw-label" .}}
-  {{end}}
-</div>
-{{partial "tmpl/footer-right" .}}
+{{partial "tk/dbg-template" .}}{{/*
+  tmpl/footer - the site footer, inside baseof's <footer> row
 
-{{ define "footer-pihuw-label" -}}
-{{$target := ""}}
-{{$link := .link | default .url }}
-{{if hasPrefix $link "http"}}{{$target = " target=\"_blank\""}}{{end}}
-<div class="label">
-  {{ with .label -}}{{.}}{{end}}
-  {{ if .title -}}
-  {{with $link}}<a href="{{.}}" {{$target|safeHTMLAttr}}>{{end}}
-    {{.title}}
-    {{with $link}}</a>{{end}}
-  {{end}}
+  . — Page (required)
+
+  Two rows, laid out by 51-component-footer.css as a grid:
+    row 1  .pi-footer-theme (1/3)   pihuw and its version
+           .pi-footer-credits (2/3) site.Params.ui.footer.links
+    row 2  .pi-footer-meta (full)   tmpl/footer-left (site title, version, dates)
+                                    then tmpl/footer-right (GitHub source links)
+  Below the -s breakpoint every block takes a full row.
+*/}}
+<div class="pi-footer-theme">
+  {{- $v := partial "tk/get-theme-version" . -}}
+  <a href="https://github.com/mrmxf/pihuw" target="_blank" rel="noopener">pihuw</a>
+  {{- with $v }} <small>{{ . }}</small>{{ end -}}
 </div>
-{{end}}
+<div class="pi-footer-credits">
+  {{- range site.Params.ui.footer.links }}
+  {{ template "footer-pihuw-label" . }}
+  {{- end }}
+</div>
+<div class="pi-footer-meta">
+  {{- partial "tmpl/footer-left" . -}}
+  {{- partial "tmpl/footer-right" . -}}
+</div>
+
+{{- define "footer-pihuw-label" -}}
+{{- $target := "" -}}
+{{- $link := .link | default .url -}}
+{{- if hasPrefix $link "http" }}{{ $target = " target=\"_blank\" rel=\"noopener\"" }}{{ end -}}
+<span class="label">
+  {{- with .label }}{{ . }} {{ end -}}
+  {{- if .title -}}
+    {{- with $link }}<a href="{{ . }}"{{ $target | safeHTMLAttr }}>{{ end -}}
+    {{- .title -}}
+    {{- with $link }}</a>{{ end -}}
+  {{- end -}}
+</span>
+{{- end -}}

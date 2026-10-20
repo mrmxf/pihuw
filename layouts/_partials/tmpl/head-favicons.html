@@ -1,9 +1,40 @@
-{{partial "tk/dbg-template" .}}
-{{- /* Same size as the navbar logo, so a raster logo's full-size original is never
-       published. Proper 32/180 favicon packing is B-19. */ -}}
-{{- $img := partial "tk/get-logo-path-string" (dict "page" . "process" (index site.Params.ui "logo-navbar-process")) }}
-<!-- Favicons from svg -->
-{{with $img}}
-<link rel="icon" type="image/svg" href="{{$img}}">
-<link rel="shortcut icon"         href="{{$img}}" >
-{{end -}}
+{{partial "tk/dbg-template" .}}{{/*
+  tmpl/head-favicons - favicon <link> tags, derived from the site logo
+
+  . — Page (required)
+
+  The logo comes from tk/get-logo (ui.logo, else assets/brand/logo.svg or .png).
+    raster logo   → 32×32 PNG icon and 180×180 apple-touch-icon, packed from it
+    SVG logo      → the SVG as the icon, plus the PNGs packed from a raster
+                    beside it (brand/logo.svg → brand/logo.png). Hugo cannot
+                    rasterise SVG, so with no PNG there it warns
+                    pihuw-favicon-svg-no-png and ships the SVG icon alone
+    static/ logo  → linked as-is; nothing can be packed
+  A raster original is never published — only the packed sizes are.
+*/}}
+{{- $logo := partial "tk/get-logo" (dict "page" . "noPublish" true) -}}
+{{- $png  := false -}}
+{{- if and $logo.isRaster (not $logo.isStatic) -}}
+  {{- $png = $logo -}}
+{{- else if $logo.isSvg -}}
+  {{- $svgPath := $logo.src -}}
+  {{- if not $logo.isStatic -}}{{- $svgPath = $logo.res.Name -}}{{- end -}}
+  {{- $pngPath := replaceRE `\.svg$` ".png" $svgPath -}}
+  {{- with resources.Get $pngPath -}}
+    {{- $png = partial "tk/get-asset" (dict "asset" $pngPath "noPublish" true) -}}
+  {{- else -}}
+    {{- warnidf "pihuw-favicon-svg-no-png" "pihuw: the logo %s is an SVG and there is no %s in assets/, so there is no PNG favicon or apple-touch-icon (Safari and iOS ignore SVG icons). Add a square PNG there, or silence this with  ignoreLogs: ['pihuw-favicon-svg-no-png']  in your site config." $svgPath $pngPath -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $logo.isSvg }}
+<link rel="icon" type="image/svg+xml" href="{{ $logo.src }}">
+{{- else if $logo.isStatic }}
+<link rel="icon" href="{{ $logo.src }}">
+{{- end -}}
+{{- with $png -}}
+  {{- $icon  := partial "tk/img-process" (dict "img" . "processing" "fit 32x32 png") -}}
+  {{- $touch := partial "tk/img-process" (dict "img" . "processing" "fit 180x180 png") }}
+<link rel="icon" type="image/png" sizes="32x32" href="{{ $icon.src }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ $touch.src }}">
+{{- end }}

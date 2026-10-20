@@ -127,7 +127,8 @@ warning if it returns a value.
 - The site logo lives in `assets/` — `ui.logo`; unset, the first of `assets/brand/logo.svg` and `logo.png`. Only an
   `assets/` logo is a resource, so only it can be sized for the navbar or packed into PNG
   favicons. A `static/` logo resolves but is linked as-is. `ui.logo-navbar-process` sizes the
-  navbar logo and favicon; proper favicon packing is not wired yet (B-19).
+  navbar logo; `tmpl/head-favicons` packs 32/180 PNGs from a raster logo, or from the
+  `.png` beside an SVG one. Use `tk/get-logo` when you need the logo's `$img` dict.
 - Override a partial by name in the consumer's `layouts/`. Never fork or copy one.
 - Exception: the whole `hook/` folder may be copied, because every file is empty by contract.
 - Multi-theme precedence is out of scope. See `documentation/content/hook/_index.md`.

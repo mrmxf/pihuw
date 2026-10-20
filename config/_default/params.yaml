@@ -178,7 +178,8 @@ ui:
   pageDate:
     color: var(--hi2)                   # highlight color 2 == purple
     format: 2 January 2006
-  # elements in the footer
+  # elements in the footer — row 1 is pihuw's version (always) and these links;
+  # row 2 is the show* metadata, then GitHub source links when github: is set
   footer:
     showSiteTitle: true
     showSiteVersion: true
@@ -186,9 +187,6 @@ ui:
     showBuildDate: true
     menuName: footer
     links:
-      - label: 'Theme:'
-        title: pihuw
-        link:  https://github.com/mrmxf/pihuw
       - label: copyright ©
         title: Mr MXF
         link:  https://mrmxf.com

@@ -100,11 +100,21 @@ var in your `site.css` to restyle that component on every page.
 | `--pi-shadow-float` | black / 0.30  | black / 0.65  | floating elevation — phone mock          |
 | `--pi-tooltip-bg`   | `#222222`     | `#4D4D4D`     | `tool/tooltip` surface and arrow         |
 | `--pi-tooltip-fg`   | `--hi1`       | `--hi1`       | `tool/tooltip` text                      |
+| `--pi-footer-bg`         | `--bg2` at lightness 0.24 | same formula | the footer band — always dark          |
+| `--pi-footer-fg`         | lightness 0.93 | same          | footer text                              |
+| `--pi-footer-dim`        | lightness 0.74 | same          | footer labels, mod and build dates      |
+| `--pi-footer-link`       | `--hi2` at 0.80 | same         | footer links                             |
+| `--pi-footer-link-hover` | `--hi1` at 0.88 | same         | footer link hover                        |
+| `--pi-footer-label-bg`   | band + 0.07   | same          | footer label pills                       |
 
 Two deliberate exceptions:
 
 - **Scrims and `--pi-on-scrim` do not invert.** They sit over photographs, where the text
   contrast floor has to hold whatever the page theme is. Only their strength changes.
+- **The footer does not invert.** It is a dark band in both themes. Each `--pi-footer-*`
+  token pins its lightness and takes only its hue from the palette, so the footer follows
+  your `--bg2` and `--hi2` — and dark mode's own values — while staying dark. There is no
+  dark-mode block to keep in step. Redefine `--pi-footer-bg` in `site.css` to recolour it.
 - **`tool/smschat` phone chrome is not themed.** It depicts a physical iOS screen, so its
   status and input bars stay iOS-coloured. Only its drop shadow uses a token.
 
@@ -216,7 +226,7 @@ Structural layout for the content area: `section>div.block`, `.src.block`, `.txt
 Each sub-component has its own ASCII heading:
 
 - **Banner** — `.banner`, `.banner .text`, `.banner .header`
-- **Footer** — `.footer` and all child selectors, `.pi-footer-label`, `.pi-footer-title`
+- **Footer** — `body > footer` (the full-width band), `.footer` and all child selectors, `.pi-footer-label`, `.pi-footer-title`. Colours come from the `--pi-footer-*` tokens
 - **Sidebar** — bare `sidebar {}` selector (custom HTML element, not a class — do not rename)
 - **Childbar** — `.childbar-horizontal`
 - **Definition block** — `.definition-block .card`, `.definition-block .card header`

@@ -72,6 +72,15 @@
   --pi-tooltip-bg:   oklch(from var(--pi-dark) 0.25 c h);   /* -> #222222 */
   --pi-tooltip-fg:   var(--hi1);
 
+  /* Footer — always a dark band, in both themes. Each token pins its lightness and takes its hue from the     */
+  /* palette, so it follows --bg2/--hi2 (and dark mode's own values) but never inverts: no dark-mode override needed. */
+  --pi-footer-bg:         oklch(from var(--bg2) 0.24 c h);                      /* darkened --bg2 — dark mauve  */
+  --pi-footer-fg:         oklch(from var(--pi-footer-bg) 0.93 calc(c * 0.5) h); /* body text                    */
+  --pi-footer-dim:        oklch(from var(--pi-footer-bg) 0.74 calc(c * 0.5) h); /* labels, mod/build dates      */
+  --pi-footer-link:       oklch(from var(--hi2) 0.80 calc(c * 0.8) h);          /* light --hi2                  */
+  --pi-footer-link-hover: oklch(from var(--hi1) 0.88 c h);                      /* light --hi1                  */
+  --pi-footer-label-bg:   oklch(from var(--pi-footer-bg) calc(l + 0.07) c h);   /* pill, a step off the band    */
+
   /* ── 1d  Typography ───────────────────────────────────────────────────────────────────────────────────────────── */
   /* Body and heading faces are served by the theme (02-fonts.css, no CDN). Redefine these in site.css to change them;  */
   /* a face nobody names is never downloaded. Fallbacks stay sans-serif and wide-apertured: never a serif.             */

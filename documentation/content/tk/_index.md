@@ -64,7 +64,8 @@ The `$img` dict fields returned by `get-asset`:
 | Partial | Returns | Purpose |
 |---|---|---|
 | `get-defaults.html` | map | Parsed `assets/data/defaults.yaml` — component default class names |
-| `get-logo-path-string.html` | string | Site logo `src` path, from `ui.logo`, resized by `.process` when the logo is a raster in `assets/`. The logo is expected in `assets/` (unset: `assets/brand/logo.svg`, else `logo.png`) — a `static/` logo resolves but cannot be resized or packed into favicons |
+| `get-logo.html` | `$img` | The site logo as an `$img` dict — `ui.logo`, else `assets/brand/logo.svg`, else `logo.png`; takes `.process` and `.noPublish` |
+| `get-logo-path-string.html` | string | Site logo `src` path via `get-logo`, resized by `.process` when the logo is a raster in `assets/`. The logo is expected in `assets/` (unset: `assets/brand/logo.svg`, else `logo.png`) — a `static/` logo resolves but cannot be resized or packed into favicons |
 | `get-theme-version.html` | string | Installed pihuw version from `hugo.Deps` (the consumer's `go.mod` pin); `""` on a local replacement |
 
 ## Opt validation

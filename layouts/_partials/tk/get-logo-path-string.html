@@ -1,42 +1,19 @@
 {{/*
   tk/get-logo-path-string - the site logo's src
 
-  .page    — Page — page context for tk/get-asset (optional)
-  .process — string — Hugo process string for a raster logo, e.g. "resize x90".
-             A bare size such as "x90" or "200x" gets "resize " prepended
-             (optional, default unprocessed)
+  .page    — Page — page context (optional)
+  .process — string — process string for a raster logo (optional) — see tk/get-logo
 
   A bare page as the dot is still accepted, for callers written before v0.4.22;
-  it means no processing.
-
-  site.Params.ui.logo — string — logo path (optional). Unset, the first of
-                        assets/brand/logo.svg, assets/brand/logo.png that exists;
-                        neither, "brand/logo.svg" via the static fallback as before
-
-  The logo is assumed to be in assets/, which makes it a resource that can be
-  resized and packed into favicons. A static/ logo still resolves, through
-  tk/get-asset's static fallback, but cannot be processed; nor can an SVG.
-  A processed logo publishes only the processed copy, never the original.
+  it means no processing. Resolution rules live in tk/get-logo.
 
   returns (string — the logo's src, ready for an <img> or <link>)
 
   DO NOT call partial "tk/dbg-template" - it prevents return from working.
 */}}
-{{- $page    := . -}}
-{{- $process := "" -}}
+{{- $args := dict "page" . -}}
 {{- if reflect.IsMap . -}}
-  {{- $page    = .page -}}
-  {{- $process = .process | default "" -}}
+  {{- $args = dict "page" .page "process" .process -}}
 {{- end -}}
-{{- if and $process (not (in (slice "resize" "fit" "fill" "crop" "process") (index (split $process " ") 0))) -}}
-  {{- $process = printf "resize %s" $process -}}
-{{- end -}}
-{{- $logo := site.Params.ui.logo -}}
-{{- if not $logo -}}
-  {{- $logo = "brand/logo.svg" -}}
-  {{- if and (not (resources.Get $logo)) (resources.Get "brand/logo.png") -}}
-    {{- $logo = "brand/logo.png" -}}
-  {{- end -}}
-{{- end -}}
-{{- $img  := partial "tk/get-asset" (dict "page" $page "asset" $logo "process" $process) -}}
+{{- $img := partial "tk/get-logo" $args -}}
 {{- return $img.src -}}
