@@ -11,4 +11,4 @@ summary:   Includes the rendered content of another page inline.
 
 {{< hw
   t    = "include"
-  from = "/content/headless/include-example.md" />}}
+  from = "/headless/include-example.md" />}}

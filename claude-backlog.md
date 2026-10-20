@@ -37,8 +37,24 @@ v0.4.14 was.
 
 | # | Where | Issue |
 |---|---|---|
-| B-15 | `config/_default/params.yaml:134` | `ui.logo: /brand/logo.svg` — no such file in `assets/` or `static/`, and the leading `/` would drop the `/pihuw/` base anyway. The docs site's logo 404s. params.yaml is consumer-facing defaults, so fix with care. |
+| ~~B-15~~ | `config/_default/params.yaml:134` | FIXED 2026-10-20 — params.yaml untouched; the docs site supplies `documentation/assets/brand/logo.png` (the PiHuW logo, moved from `static/rc/`) via a local-dev `assets` mount. `ui.logo` is no longer set in params.yaml; unset, `tk/get-logo-path-string` takes the first of `brand/logo.svg`, `brand/logo.png` in assets, so consumers relying on the SVG default are unchanged. The static-fallback half is now M-28; the logo-in-`assets/` contract and what it is for are B-18/B-19. Was: `ui.logo: /brand/logo.svg` — no such file in `assets/` or `static/`, and the leading `/` would drop the `/pihuw/` base anyway. The docs site's logo 404s. params.yaml is consumer-facing defaults, so fix with care. |
 | ~~B-16~~ | `layouts/_partials/tmpl/head-css.html:63` | FIXED 2026-09-30 (v0.4.17) — the cdnjs `all.min.js` is gone. Its SVGs were masking two font faults, both fixed: `fa-brands-400.woff2` was never committed (every page using a brand icon logged a failed font download), and `fa-solid-900.woff2` came from a different FA build (font version 896.256, CFF) than the 6.7.2 CSS. All three fonts are now the 6.7.2 files. |
+
+## Found 2026-10-20 — the logo pipeline, checked while fixing B-15
+
+The contract is that the site logo lives in `assets/` — `ui.logo`, or unset the first of
+`assets/brand/logo.svg` and `assets/brand/logo.png`. Only an `assets/` logo is a resource, so only it can be resized for the
+navbar or packed into PNG favicons; a `static/` logo has no resource object
+(`isStatic`) and can only be linked as-is. Navbar sizing is wired (B-18, fixed);
+favicon packing is not (B-19).
+
+| # | Where | Issue |
+|---|---|---|
+| ~~B-18~~ | `tk/get-logo-path-string.html`, `params.yaml:137` | FIXED 2026-10-20 — `tmpl/navbar-brand` passes `ui.logo-navbar-process` to `get-logo-path-string`, which now takes a dict (`.page`, `.process`; a bare page still works, unprocessed) and hands the process to `tk/get-asset`. A bare size like `x90` gets `resize ` prepended. `tmpl/head-favicons` uses the same size, so the original is never published: the docs logo went from 300 KB to a 9.7 KB 90×90 PNG. Verified with an SVG logo (untouched), a static logo (untouched), `fit 200x200`, and a consumer override passing a bare page. Was: `ui.logo-navbar-process: x90` is read nowhere. The partial returns `$img.src` with no process, so a raster logo ships full size into the navbar and is shrunk by CSS. Fix: pass the process string to `tk/get-asset` (raster resources only — SVG and static ignore it already). |
+| B-19 | `tmpl/favicons.html` | The PNG favicon packer (32×32 icon, 180×180 apple-touch-icon) is never called — `tmpl/head.html` calls `head-favicons` only. It is also wrong if called: it looks up `ui.logo + ".png"`, i.e. `/brand/logo.svg.png`, and uses `.Fit`, which CLAUDE.md forbids. Fix: resolve the logo through `tk/get-asset`; raster → `tk/img-process` to each size; SVG → look for a sibling `brand/logo.png`, since Hugo cannot rasterise SVG. Then call it from `tmpl/head`. |
+| C-20 | `tmpl/head-favicons.html:5` | Emits `type="image/svg"` (not a MIME type; `image/svg+xml` is) for every logo, including PNGs. Use the `$img` dict's `mediaType`. |
+| M-29 | `tool/video.html:33` | Emits `.src` raw instead of resolving it through `tk/get-asset`, against the tool/ rules. An `assets/` video is never published and a `static/` one drops the base path. The kitchen-sink example passes `/brand/logo.png`, which a `<video>` cannot play anyway — give it a real `.mp4`. |
+| M-28 | `tk/get-asset.html` static fallback | Returns a `static/` path verbatim, without `relURL`, so on a sub-path site (`/pihuw/`) a static logo — or any static image — drops the base path and 404s. Split out of B-15. |
 
 ## Found 2026-09-28 — repo tidy and security review
 

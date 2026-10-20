@@ -16,6 +16,13 @@ clog build                            # every gate, then hugo -> _clog_build/pub
 2026-09-21: a fresh `git clone` with no symlink builds all 73 pages, and the file set is
 identical to a symlinked build. Do not add one: a stale symlink shadows the mount.
 
+`documentation/` is the whole docs site — `content/`, `static/`, `assets/` (the
+`brand/logo.png`, the PiHuW logo, found by the `ui.logo` default) and `data/` (`heroslider-demo.yaml`),
+each mounted by the self-import. Docs-only files go there, never in the theme's own
+`assets/` or `data/`: the use-pihuw page tells newcomers to `cp -r documentation/*` into
+a fresh site, so anything outside it is missing from their copy. The root `data/` holds
+only `releases.yaml`.
+
 ## Facts
 
 - Requires Hugo >= 0.166.0 **extended** (`config/_default/module.yaml`). 0.166.0 is installed.
@@ -47,7 +54,7 @@ JavaScript: icons are webfont glyphs in `<i>` elements.
 Deliberately NOT exported — adding any of these breaks consumer sites:
 
 - `content/` — doc-site pages; consumers supply their own
-- `static/favicon.ico`, `static/logo.png`, `static/rc/` — doc-site branding
+- `documentation/static/` (favicon, `rc/` icons) and `documentation/assets/brand/logo.png` — doc-site branding. The root `static/` holds only `webfonts/`
 
 Consumers upgrade with `hugo mod get github.com/mrmxf/pihuw@latest`, then `hugo mod vendor`.
 A consumer's `module.yaml` may hold a `replacements:` line pointing at this working tree;

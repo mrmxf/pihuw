@@ -10,8 +10,6 @@ hugoVersion:
 # or submodule.  Deliberately omits:
 #   content/              — doc-site pages; consumers supply their own content
 #   static/favicon.ico    — doc-site favicon
-#   static/logo.png       — doc-site logo
-#   static/rc/            — doc-site SVG icons
 #   data/                 — the theme's releases.yaml; exported, it became every
 #                           consumer's site version (fixed v0.4.16). Consumers read
 #                           the theme version from hugo.Deps instead.
@@ -38,13 +36,20 @@ imports:
   #   documentation/content -> content   (serves the docs pages)
   #   documentation/static  -> static    (serves favicon, logo, rc/)
   #   static                -> static    (serves webfonts alongside the above)
-  # data/ needs no mount: Hugo always reads the project's own data/, which is how
-  # the docs site finds releases.yaml.
+  #   documentation/assets  -> assets    (brand/logo.png — the PiHuW logo, found
+  #                                       by the ui.logo default; not exported)
+  #   documentation/data    -> data      (heroslider-demo.yaml for the kitchen sink)
+  # The root data/ needs no mount: Hugo always reads the project's own data/,
+  # which is how the docs site finds releases.yaml.
   mounts:
   - source: documentation/content
     target: content
   - source: documentation/static
     target: static
+  - source: documentation/assets
+    target: assets
+  - source: documentation/data
+    target: data
   - source: static
     target: static
   - source: layouts

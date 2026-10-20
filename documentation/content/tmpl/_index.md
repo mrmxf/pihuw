@@ -24,9 +24,9 @@ override any of them by placing an identically-named file in their site's
 | `head.html` | Assembles the full `<head>` element — calls head-css, head-js, head-favicons, head-seo, page-description |
 | `head-css.html` | Injects theme CSS; includes theme-init.js inline before CSS to prevent flash of wrong theme |
 | `head-js.html` | Injects JavaScript includes for libraries enabled in params.yaml |
-| `head-favicons.html` | Renders favicon link tags |
+| `head-favicons.html` | Renders favicon link tags from the site logo (`ui.logo`, expected in `assets/`) |
 | `head-seo.html` | Canonical URL, Open Graph and Twitter card meta. Suppress with `ui.hide.seo` |
-| `favicons.html` | Favicon asset resolution helper |
+| `favicons.html` | PNG favicon packer (32×32, 180×180) from an `assets/` logo — not called yet |
 | `body-scripts.html` | Deferred scripts injected just before `</body>` |
 
 ## Navigation

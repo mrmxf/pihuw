@@ -9,4 +9,4 @@ summary:   Auto-advancing image carousel.
 
 ## slideshow · [parameters →](/tool/slideshow)
 
-{{< hw t = "slideshow" src = "/rc/logo.png" alt = "logo"/>}}
+{{< hw t = "slideshow" src = "/brand/logo.png" alt = "logo"/>}}

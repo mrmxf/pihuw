@@ -38,6 +38,9 @@ imports:
   - path: github.com/mrmxf/pihuw
 ```
 
+New to Hugo? The docs site's **use pihuw** page walks through it from an empty GitLab
+project, starting from a copy of the documentation site.
+
 ## Shortcodes
 
 There is essentially one shortcode, `hw`, and a tool name selects the component:

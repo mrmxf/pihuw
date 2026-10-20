@@ -13,161 +13,161 @@ reference, or add `help = "yes"` to any `hw` shortcode in your own page.
 
 {{< hw
   t    = "include"
-  from = "/content/kitchen_sink/banner.md"
+  from = "/kitchen_sink/banner.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/cover.md"
+  from = "/kitchen_sink/cover.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/block.md"
+  from = "/kitchen_sink/block.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/feature-group.md"
+  from = "/kitchen_sink/feature-group.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/accordion.md"
+  from = "/kitchen_sink/accordion.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/image.md"
+  from = "/kitchen_sink/image.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/media.md"
+  from = "/kitchen_sink/media.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/gallery.md"
+  from = "/kitchen_sink/gallery.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/heroslider.md"
+  from = "/kitchen_sink/heroslider.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/slideshow.md"
+  from = "/kitchen_sink/slideshow.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/slideshow-static.md"
+  from = "/kitchen_sink/slideshow-static.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/video.md"
+  from = "/kitchen_sink/video.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/item.md"
+  from = "/kitchen_sink/item.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/item-group-blog.md"
+  from = "/kitchen_sink/item-group-blog.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/children.md"
+  from = "/kitchen_sink/children.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/blog.md"
+  from = "/kitchen_sink/blog.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/caption.md"
+  from = "/kitchen_sink/caption.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/label.md"
+  from = "/kitchen_sink/label.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/md-param.md"
+  from = "/kitchen_sink/md-param.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/include.md"
+  from = "/kitchen_sink/include.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/smschat.md"
+  from = "/kitchen_sink/smschat.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/graph.md"
+  from = "/kitchen_sink/graph.md"
 />}}
 
 ---
 
 {{< hw
     t  = "include"
-  from = "/content/kitchen_sink/tables.md"
+  from = "/kitchen_sink/tables.md"
 />}}
 
 ---

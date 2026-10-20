@@ -1,32 +1,38 @@
 {{partial "tk/dbg-template" .}}{{/*
-   Include another page as a block File path is relative to content/ */}}
+  tool/include - render another page's content inline
+
+  .from — string — content path of the page, e.g. /headless/include-example.md
+                   A leading /content is stripped, so old-style paths still work (required)
+
+  The page is found with site.GetPage, so module mounts are honoured and its
+  shortcodes render. params.includeSummary on that page replaces its body.
+  A path that is not a page falls back to readFile, which sees only the real
+  project directory — not mounts.
+*/}}
 {{- $f := .from -}}
-{{ if $f}}
-  {{- if fileExists $f -}}
-
-    {{/* --- trim front matter and spew out the rest of the included file --- */}}
-    {{ $content := "" }}
-    {{/* check the page for a Params.IncludeSummary substitution */}}
-    {{ $p := site.GetPage $f }}
-    {{ if $p.Page.Params.IncludeSummary }}
-      {{ $content = $p.Page.Params.IncludeSummary | markdownify }}
-    {{end -}}{{/* end of GetPage */}}
-    
-    {{ if not $content }}
-      {{ if eq ".md" (path.Ext $f) }}
-        {{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | markdownify }}
-      {{else}}
-        {{ $content = (printf "%s" $f) | readFile | replaceRE "^---[\\s\\S]+?---" "" | safeHTML }}
-      {{end}}{{/* end of md / html switch */}}
-    {{end -}}{{/* end of content unset */}}
-    {{$content}}
-
+{{- if $f -}}
+  {{- $content := "" -}}
+  {{- $p := site.GetPage (replaceRE "^/?content/" "/" $f) -}}
+  {{- with $p -}}
+    {{- $content = .Content -}}
+    {{- with .Params.includeSummary -}}
+      {{- $content = . | markdownify -}}
+    {{- end -}}
   {{- else -}}
-    {{/* else if file doesn't exist */}}
-    {{ $err := printf "%s from field does not point to a valid file:%s" templates.Current.Name $f }}
-    {{ partial "tk/dbg" (dict "err" $err) }}
-  {{- end -}}{{/* end of if file exists */}}
-{{else}}
-  {{ $err := printf "%s from field seems to be empty!" templates.Current.Name}}
-  {{ partial "tk/dbg" (dict "err" $err) }}
-{{end}}
+    {{- if fileExists $f -}}
+      {{- $raw := readFile $f | replaceRE "^---[\\s\\S]+?---" "" -}}
+      {{- if eq ".md" (path.Ext $f) -}}
+        {{- $content = $raw | markdownify -}}
+      {{- else -}}
+        {{- $content = $raw | safeHTML -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $content -}}
+    {{- $content -}}
+  {{- else -}}
+    {{- partial "tk/dbg" (dict "err" (printf "%s: from=%q is not a page or a project file" templates.Current.Name $f)) -}}
+  {{- end -}}
+{{- else -}}
+  {{- partial "tk/dbg" (dict "err" (printf "%s: from is empty" templates.Current.Name)) -}}
+{{- end -}}

@@ -1,8 +1,8 @@
 {{partial "tk/dbg-template" .}}
-{{/* from hugo 149 all logos must be in assets/brands */}}
+{{/* The logo is expected in assets/ (assets/brand/logo.svg or .png) — see tk/get-logo-path-string */}}
 {{- if not (and site.Params.ui.hide.navbar.logo site.Params.ui.hide.navbar.title) }}
 
-  {{- $img := partial "tk/get-logo-path-string" .}}
+  {{- $img := partial "tk/get-logo-path-string" (dict "page" . "process" (index site.Params.ui "logo-navbar-process")) }}
 
   <div class="pi-nav-brand">
   {{- if and $img (not site.Params.ui.hide.navbar.logo) }}

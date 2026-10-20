@@ -11,7 +11,7 @@ summary:   Full-bleed hero image with overlaid heading and text.
 
 {{< hw
   t      = "cover"
-  src    = "/rc/logo.png"
+  src    = "/brand/logo.png"
   alt    = "logo"
   header = "Welcome to PiHuW"
   text   = "A minimal Hugo theme for embedded web servers and beyond."

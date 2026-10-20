@@ -18,7 +18,7 @@ Hugo partial that renders HTML5 video elements with optional links and captions
 {{$u := urls.Parse $link}}
 
 {{- if and $link (not $u.IsAbs) -}}
-  {{if not (fileExists $u.Path)}}
+  {{if not (or (fileExists $u.Path) (site.GetPage $u.Path))}}
     {{$err := printf "bad link(%s) for video" $link}}
     {{- partial "tk/dbg" (dict "wrn" $err "kv" . ) -}}
   {{end}}

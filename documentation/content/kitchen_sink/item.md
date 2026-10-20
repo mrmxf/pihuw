@@ -12,7 +12,7 @@ summary:   Single content card with media and text.
 {{< hw t = "item"
   header = "An item card"
   description = "Items show media on one side and heading, tags, meta, and description on the other. They are the building block of item-group listings."
-  src = "/rc/logo.png"
+  src = "/brand/logo.png"
   srcOn = "left"
   meta = "2 min read"
   tags = "example demo"

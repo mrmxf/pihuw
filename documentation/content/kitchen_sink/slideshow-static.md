@@ -9,4 +9,4 @@ summary:   Manual-navigation image slideshow.
 
 ## slideshow-static · [parameters →](/tool/slideshow-static)
 
-{{< hw t = "slideshow-static" src = "/rc/logo.png" alt = "logo"/>}}
+{{< hw t = "slideshow-static" src = "/brand/logo.png" alt = "logo"/>}}

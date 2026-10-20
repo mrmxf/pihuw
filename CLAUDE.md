@@ -9,8 +9,8 @@ holds only this repo's settings. Version and prod mode come from git tags via `c
 never from `releases.yaml`.
 Verify any change with `hugo --quiet`: it must exit 0.
 
-`documentation/content/` is the docs site. `module.yaml`'s local-dev self-import mounts it
-as `content/`, so a bare clone builds it. There is no symlink anywhere any more — if you
+`documentation/` is the docs site: `content/`, `static/`, `assets/`, `data/`, each mounted
+by `module.yaml`'s local-dev self-import, so a bare clone builds it. There is no symlink anywhere any more — if you
 find `ln -s documentation/content content`, it is stale and it shadows the mount.
 
 ## Detail — read on demand, not every query
@@ -124,6 +124,10 @@ warning if it returns a value.
 - Defaults go in `params.yaml` and `assets/data/defaults.yaml`.
 
 ### Consumers
+- The site logo lives in `assets/` — `ui.logo`; unset, the first of `assets/brand/logo.svg` and `logo.png`. Only an
+  `assets/` logo is a resource, so only it can be sized for the navbar or packed into PNG
+  favicons. A `static/` logo resolves but is linked as-is. `ui.logo-navbar-process` sizes the
+  navbar logo and favicon; proper favicon packing is not wired yet (B-19).
 - Override a partial by name in the consumer's `layouts/`. Never fork or copy one.
 - Exception: the whole `hook/` folder may be copied, because every file is empty by contract.
 - Multi-theme precedence is out of scope. See `documentation/content/hook/_index.md`.

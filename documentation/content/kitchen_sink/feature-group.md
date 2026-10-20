@@ -14,21 +14,21 @@ summary:   Responsive grid of feature highlights.
       t      = "feature"
       header = "Minimal footprint"
       text   = "No CDNs, no build tools, no Node. Just Hugo and a CSS file."
-      src    = "/rc/logo.png"
+      src    = "/brand/logo.png"
       alt    = "logo"
   />}}
   {{< hw
       t      = "feature"
       header = "Author friendly"
       text   = "Write markdown. Use shortcodes. Never touch a template."
-      src    = "/rc/logo.png"
+      src    = "/brand/logo.png"
       alt    = "logo"
   />}}
   {{< hw
       t      = "feature"
       header = "Extensible"
       text   = "Drop a partial in your layouts/ folder and the hw shortcode finds it automatically."
-      src    = "/rc/logo.png"
+      src    = "/brand/logo.png"
       alt    = "logo"
   />}}
 {{< /hw >}}

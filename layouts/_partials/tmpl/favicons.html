@@ -1,6 +1,8 @@
 {{partial "tk/dbg-template" .}}{{/*
 Favicons as generated from /assets/brand/logo.png
 If logo.svg exists, then this will be used everywheere else
+
+NOT CALLED by any template, and its lookup is wrong — see B-19 in claude-backlog.md.
 */}}
 {{- $logoAsset := printf "%s.png" site.Params.ui.logo}}
 {{- $logo := resources.Get $logoAsset}}

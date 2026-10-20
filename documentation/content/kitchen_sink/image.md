@@ -11,7 +11,7 @@ summary:   Responsive image with optional caption and link.
 
 {{< hw
     t      = "image"
-    src    = "/rc/logo.png"
+    src    = "/brand/logo.png"
     alt    = "PiHuW logo"
     header = "Figure 1"
     text   = "The PiHuW theme logo rendered via the image tool."

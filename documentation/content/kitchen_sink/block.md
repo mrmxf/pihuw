@@ -13,7 +13,7 @@ summary:  Generic content block with media and text.
   t           = "block"
   header      = "A block with an image on the left"
   description = "The block tool places media and text side by side. Use srcOn to move the image right or remove it entirely."
-  src         = "/rc/logo.png"
+  src         = "/brand/logo.png"
   alt         = "logo"
   srcOn       = "left"
 />}}

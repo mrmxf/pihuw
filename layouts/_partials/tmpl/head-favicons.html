@@ -1,5 +1,7 @@
 {{partial "tk/dbg-template" .}}
-{{- $img := partial "tk/get-logo-path-string" .}}
+{{- /* Same size as the navbar logo, so a raster logo's full-size original is never
+       published. Proper 32/180 favicon packing is B-19. */ -}}
+{{- $img := partial "tk/get-logo-path-string" (dict "page" . "process" (index site.Params.ui "logo-navbar-process")) }}
 <!-- Favicons from svg -->
 {{with $img}}
 <link rel="icon" type="image/svg" href="{{$img}}">

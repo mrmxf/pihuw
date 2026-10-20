@@ -130,10 +130,15 @@ github:
 #  | || | | |
 #   \_,_| |_|
 ui:
-  # look for logo.svg
-  logo: /brand/logo.svg
-  # if you use png or jpg then you might want to specify the processed size of
-  # the logo for the navbar https://gohugo.io/content-management/image-processing/#dimensions
+  # The site logo, as a path in assets/. Unset, the theme uses the first of
+  # assets/brand/logo.svg and assets/brand/logo.png that exists.
+  # Keep it in assets/: only an assets/ logo can be resized for the navbar and
+  # packed into PNG favicons. A logo in static/ is linked exactly as it is.
+  # logo: /brand/logo.svg
+  # How a png/jpg/webp logo is resized for the navbar and favicon — a Hugo process
+  # string https://gohugo.io/content-management/image-processing/#dimensions
+  # A bare size such as x90 means "resize x90". Ignored for SVG and static/ logos.
+  # 90 high is about twice the navbar height, so it stays sharp on high-DPI screens.
   logo-navbar-process: x90  # 90 high logo
   # some elements of the ui can be hidden
   hide:

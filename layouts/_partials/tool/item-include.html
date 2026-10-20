@@ -1,26 +1,13 @@
 {{partial "tk/dbg-template" .}}{{/*
 Include another page as an item in a list
 
-from = filepath e.g. /assets/doc/banana.md
+from = content path of the page, e.g. /docs/banana.md (a leading /content is stripped)
+       found with site.GetPage, so module mounts are honoured
 src = /path/to/image  ... if not specified, resource-image-featured is used
 */}}
 {{- $from := .from -}}
-{{- if fileExists $from -}}
-
-{{/* --- trim front matter and spew out the rest of the included file --- */}}
-{{ $summary := "" }}
-{{/* check the page for a Params.IncludeSummary substitution */}}
-{{ $p := site.GetPage $from }}{{ if $p.Page.Params.IncludeSummary }}
-{{ $summary = $p.Page.Params.IncludeSummary | markdownify }}
-{{end -}}{{/* end of GetPage */}}
-
-{{ if not $summary }}{{/* -- make a summary if one is not provided ------------------------------------------------ */}}
-  {{ if eq ".md" (path.Ext $from) }}{{/* == make a plain text string of the words in the file ===================== */}}
-    {{ $summary = (printf "%s" $from) | readFile | replaceRE "^---[\\s\\S]+?---" "" | markdownify }}
-  {{else}}
-    {{ $summary = (printf "%s" $from) | readFile | replaceRE "^---[\\s\\S]+?---" "" | safeHTML }}
-  {{end}}{{/* end of md / html summary maker ====================================================================== */}}
-{{end -}}{{/* -- end of no summary -------------------------------------------------------------------------------- */}}
+{{- $p := site.GetPage (replaceRE "^/?content/" "/" ($from | default "")) -}}
+{{- if and $from $p -}}
 {{ $link := $p.RelPermalink }}
 {{ $header := $p.Page.LinkTitle }}
 {{- $img := partial "tk/resource-image-featured" (dict "page" $p.Page) -}}
@@ -50,7 +37,7 @@ src = /path/to/image  ... if not specified, resource-image-featured is used
 {{- else -}}
 
 {{- partial "tk/dbg" (dict
-  "err" (printf "cannot include unknown project file: %s" $from)
+  "err" (printf "item-include: from=%q is not a page" $from)
   "kv" (dict "template" templates.Current.Parent.Name))
 -}}
-{{- end -}}{{/* end of if file exists */}}
+{{- end -}}{{/* end of if page found */}}
