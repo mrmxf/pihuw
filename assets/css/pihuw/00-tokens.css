@@ -44,7 +44,7 @@
 
   --pi-meta:       oklch(from var(--pi-dark) 0.683 0 h);
   --pi-code:       var(--mm-blue);
-  --pi-link:       oklch(from var(--hi4) calc(l - 0.151) calc(c * 0.5361) h);  /* hi4 dimmed for light bg */
+  --pi-link:       oklch(from var(--hi3) calc(l * 0.8) calc(c * 0.8) h);  /* hi3 darkened for link text on light bg */
 
   --pi-teal:          #35BDB2;   /* teal brand colour for logo — use --hi* for theme colours */
   --hugo-theme-color: #FF4088;
@@ -91,6 +91,7 @@
   --font-narrow:         'Arial Narrow', Arial, sans-serif;
   --font-size-base:   16px;
   --line-height-base: 1.25;
+  --font-link-weight: 600;  /* links are bolded for accessibility */
 
   /* ── 1e  Breakpoints ──────────────────────────────────────────────────────────────────────────────────────────── */
   /* NOTE: CSS variables cannot be used inside @media queries — keep px values in sync with these.                   */

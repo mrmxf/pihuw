@@ -62,7 +62,7 @@
 
   --pi-body-bg: #F5F3F0;   /* wheat-white page background */
   --pi-bg:      #FFFFFF;   /* component surface (white) */
-  --pi-link:    oklch(from var(--hi4) calc(l - 0.151) calc(c * 0.5361) h);  /* hi4 dimmed for light bg */
+  --pi-link:    oklch(from var(--hi3) calc(l * 0.8) calc(c * 0.8) h);  /* hi3 darkened for light bg - keep in sync with 00-tokens */
 
   /* hi, bg and meta restored too — the @media dark block above sets all of these, and an
      attribute selector only wins for the properties it actually declares. Without these,

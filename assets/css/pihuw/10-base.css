@@ -31,9 +31,10 @@ h5, h6 { color: var(--hi3); }
 /* h6 is used for summary text & subheadings, not structural headings */
 h6 { font-size: 0.8em; font-weight: medium; font-style: italic; }
 
-/* Links — hi4 dimmed in light mode, brightened in dark mode */
+/* Links — hi3 darkened in light mode, hi4 brightened in dark mode; bold (--font-link-weight) */
 a {
   color: var(--pi-link);
+  font-weight: var(--font-link-weight);
 }
 
 /* Inline code — uses --pi-code derived token */
