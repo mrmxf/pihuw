@@ -56,7 +56,7 @@ sidebar can be hidden with Params.ui.hide.sidebar
 {{- if gt $depth $initialOpenLevel -}}{{- $isActive = "" -}}{{- end -}}
 {{/* --------------------------------------------------------------------- */}}
 {{- $target := "" -}}
-{{- if $s.Param "manualLinkTarget" -}}{{- $target = fmt.Print "target=\"%s\"" $s.Params.manuallinktitle -}}{{- end -}}
+{{- with $s.Param "manualLinkTarget" -}}{{- $target = . -}}{{- end -}}
 
 {{- if $withChild -}}
 {{$accordionStart | safeHTML}}
@@ -65,7 +65,7 @@ sidebar can be hidden with Params.ui.hide.sidebar
   <label for="{{$depth}}-{{$id}}" class="tab__label">
     <span class="pi-tog"><i class="fa-solid fa-chevron-right pi-tog-c"></i><i class="fa-solid fa-chevron-down pi-tog-o"></i></span>
     {{$iconHtml | safeHTML}}
-    <a href="{{ $link }}" title="{{ $title }}" {{$target}}="{{ . }}" id="{{ $mid }}">
+    <a href="{{ $link }}" title="{{ $title }}" {{ with $target }}target="{{ . }}" {{ end }}id="{{ $mid }}">
       <small>{{ $s.LinkTitle }}</small>
     </a>
   </label>
