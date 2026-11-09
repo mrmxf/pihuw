@@ -43,6 +43,9 @@ opts tokens, combine freely:
 {{- $hide := false -}}
 {{- with site.Params.ui.hide }}{{ if isset . "childbar" }}{{ $hide = .childbar }}{{ end }}{{ end -}}
 {{- with .Params.ui }}{{ with .hide }}{{ if isset . "childbar" }}{{ $hide = .childbar }}{{ end }}{{ end }}{{ end -}}
+{{/* the 404 page has no children: Hugo gives it every regular page as .Pages,
+     so the bar would list the whole site. No front matter can turn it off. */}}
+{{- if eq .Kind "404" }}{{ $hide = true }}{{ end -}}
 
 {{/* ---- opts ---------------------------------------------------------------- */}}
 {{- $opts := $cfg.opts | default "" -}}
