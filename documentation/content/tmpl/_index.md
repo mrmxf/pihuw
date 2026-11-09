@@ -21,12 +21,26 @@ override any of them by placing an identically-named file in their site's
 
 | Partial | Purpose |
 |---|---|
-| `head.html` | Assembles the full `<head>` element — calls head-css, head-js, head-favicons, head-seo, page-description |
+| `head.html` | Assembles the full `<head>` element — calls head-css, head-js, head-favicons, head-seo, page-description. Writes the robots meta: `noindex, nofollow` when the page sets `noindex: true`, otherwise `index, follow` |
 | `head-css.html` | Injects theme CSS; includes theme-init.js inline before CSS to prevent flash of wrong theme |
 | `head-js.html` | Injects JavaScript includes for libraries enabled in params.yaml |
 | `head-favicons.html` | Favicon link tags derived from the site logo: a raster logo is packed into a 32×32 icon and a 180×180 apple-touch-icon; an SVG logo is linked as the icon, with the PNGs packed from a `.png` beside it — no PNG there warns `pihuw-favicon-svg-no-png` |
 | `head-seo.html` | Canonical URL, Open Graph and Twitter card meta. Suppress with `ui.hide.seo` |
 | `body-scripts.html` | Deferred scripts injected just before `</body>` |
+
+### Keeping a page out of search engines
+
+Two front matter settings, which do different jobs:
+
+| Front matter | Effect |
+|---|---|
+| `noindex: true` | The robots meta says `noindex, nofollow` and the page is left out of `sitemap.xml`. Search engines that find the URL some other way — a link posted elsewhere, a printed URL — leave it out of their results. The page is still listed on the site |
+| `build: {list: never}` | Hugo leaves the page out of every page collection: section lists, childbars, menus built from pages, RSS and the sitemap. The page is still built at its URL |
+
+For a page only people with the link should find, set both. See the
+[noindex example][nix].
+
+[nix]: /tmpl/noindex/
 
 ## Navigation
 

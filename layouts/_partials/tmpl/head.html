@@ -7,11 +7,12 @@
 {{ range .AlternativeOutputFormats -}}
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}">
 {{ end -}}
-{{- if and hugo.IsProduction (eq "print" (partial "tmpl/outputformat" .)) -}}
-<meta name="robots" content="noindex, nofollow">
-{{ else -}}
-<meta name="robots" content="index, follow">
-{{ end -}}
+{{- /* front matter `noindex: true` asks search engines to leave the page out.
+     It does not hide it: pair it with `build: {list: never}` to drop the page
+     from every list, menu and childbar too. tmpl sitemap.xml skips it as well. */ -}}
+{{- $noindex := .Params.noindex | default false -}}
+{{- if and hugo.IsProduction (eq "print" (partial "tmpl/outputformat" .)) }}{{ $noindex = true }}{{ end -}}
+<meta name="robots" content="{{ if $noindex }}noindex, nofollow{{ else }}index, follow{{ end }}">
 <meta name="description" content="{{ partial "tmpl/page-description" . }}">
 
 {{ partialCached "tmpl/head-favicons" . }}
