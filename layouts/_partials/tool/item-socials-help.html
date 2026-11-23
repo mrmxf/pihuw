@@ -23,7 +23,7 @@ item-socials partial help using modular help system */ -}}
   "description" "Renders a row of social icons. With no parameters it shows every platform that has a handle in site.Params.social, in a fixed order. The from parameter picks specific platforms, and can override a handle inline for a one-off link. Handles are turned into URLs by a built-in pattern per platform; a value that starts with http is used verbatim, which is the escape hatch for anything the patterns get wrong."
   "notes" (slice
     "**Configure once** in `site.Params.social`, e.g. `social: {instagram: mrmxf}`"
-    "**Supported**: twitter, facebook, instagram, linkedin, youtube, mastodon, bluesky, tiktok, github, email"
+    "**Supported**: twitter, facebook, instagram, linkedin, youtube, mastodon, bluesky, tiktok, vimeo, github, gitlab, email"
     "**Email** renders as `mailto:` and correctly omits `target=\"_blank\"`"
     "**External links** get `target=\"_blank\"` and `rel=\"noopener\"`"
     "**Accessible**: each link carries an `aria-label`; the icon itself is `aria-hidden`"
@@ -96,7 +96,7 @@ item-socials partial help using modular help system */ -}}
 {{- $notesData := dict
   "notes" (slice
     "**One style block per page**, guarded by a page Store flag"
-    "**Default order** is twitter, facebook, instagram, linkedin, youtube, mastodon, bluesky, tiktok, github, email"
+    "**Default order** is twitter, facebook, instagram, linkedin, youtube, mastodon, bluesky, tiktok, vimeo, github, gitlab, email"
     "**Nothing renders** when no platform resolves to a handle — no empty container"
   )
   "warnings" (slice

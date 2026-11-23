@@ -21,7 +21,7 @@
 {{- $cfg  := site.Params.social | default dict -}}
 
 {{- /* platform -> icon, URL pattern, accessible label. Order is the default order. */ -}}
-{{- $order := slice "twitter" "facebook" "instagram" "linkedin" "youtube" "mastodon" "bluesky" "tiktok" "github" "email" -}}
+{{- $order := slice "twitter" "facebook" "instagram" "linkedin" "youtube" "mastodon" "bluesky" "tiktok" "vimeo" "github" "gitlab" "email" -}}
 {{- $map := dict
   "twitter"   (dict "icon" "fa-brands fa-x-twitter"  "url" "https://x.com/%s"                  "label" "Twitter")
   "facebook"  (dict "icon" "fa-brands fa-facebook"   "url" "https://facebook.com/%s"           "label" "Facebook")
@@ -31,7 +31,9 @@
   "mastodon"  (dict "icon" "fa-brands fa-mastodon"   "url" "https://mastodon.social/@%s"       "label" "Mastodon")
   "bluesky"   (dict "icon" "fa-brands fa-bluesky"    "url" "https://bsky.app/profile/%s"       "label" "Bluesky")
   "tiktok"    (dict "icon" "fa-brands fa-tiktok"     "url" "https://tiktok.com/@%s"            "label" "TikTok")
+  "vimeo"     (dict "icon" "fa-brands fa-vimeo-v"    "url" "https://vimeo.com/%s"              "label" "Vimeo")
   "github"    (dict "icon" "fa-brands fa-github"     "url" "https://github.com/%s"             "label" "GitHub")
+  "gitlab"    (dict "icon" "fa-brands fa-gitlab"     "url" "https://gitlab.com/%s"             "label" "GitLab")
   "email"     (dict "icon" "fa-solid fa-envelope"    "url" "mailto:%s"                         "label" "Email")
 -}}
 

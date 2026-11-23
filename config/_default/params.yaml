@@ -18,7 +18,9 @@ social:
   mastodon: ""
   bluesky: ""
   tiktok: ""
+  vimeo: ""
   github: ""
+  gitlab: ""
   email: ""
 ogImage: ""              # e.g. brand/social-card.png
 
